@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GymGestion Pro - Dashboard la Vigilante Gymnastique</title>
+    <title>GymGestion - La Vigilante Gymnastique</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -49,9 +49,6 @@
             background: rgba(10, 13, 20, 0.9);
             backdrop-filter: blur(20px);
         }
-        .badge-pulse {
-            box-shadow: 0 0 10px rgba(20, 184, 166, 0.5);
-        }
     </style>
 </head>
 <body class="h-full font-sans antialiased bg-slate-950 text-slate-100 flex flex-col md:flex-row overflow-x-hidden">
@@ -86,9 +83,6 @@
                     <p id="sidebar-user-role" class="text-[10px] text-teal-400 font-semibold truncate">Membre du Bureau (Admin)</p>
                 </div>
             </div>
-            <button onclick="openSwitchUserModal()" title="Changer d'utilisateur connecté" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-xs shrink-0">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
         </div>
 
         <!-- Main Navigation Links -->
@@ -96,13 +90,6 @@
             <a href="#dashboard" onclick="navigateTo('dashboard')" class="nav-item active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-teal-300 bg-teal-500/10 border border-teal-500/20 transition">
                 <i class="fa-solid fa-chart-pie text-lg w-5 text-center"></i>
                 <span>Tableau de Bord</span>
-            </a>
-            <a href="#users" onclick="navigateTo('users')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                <i class="fa-solid fa-users-gear text-lg w-5 text-center"></i>
-                <div class="flex-1 flex justify-between items-center">
-                    <span>Gestion Profils</span>
-                    <span id="badge-users-count" class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
-                </div>
             </a>
             <a href="#justaucorps" onclick="navigateTo('justaucorps')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
                 <i class="fa-solid fa-shirt text-lg w-5 text-center"></i>
@@ -122,18 +109,10 @@
                 <i class="fa-solid fa-user-ninja text-lg w-5 text-center"></i>
                 <span>Gymnastes & Équipes</span>
             </a>
-            <a href="#data-sync" onclick="navigateTo('data-sync')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                <i class="fa-solid fa-database text-lg w-5 text-center"></i>
-                <span>Sauvegarde & Import</span>
-            </a>
         </nav>
 
-        <!-- Footer System Info -->
         <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
             <span>GymGestion v2.4</span>
-            <button onclick="resetDemoData()" title="Réinitialiser la base" class="hover:text-rose-400 transition">
-                <i class="fa-solid fa-rotate-left"></i> Vider
-            </button>
         </div>
     </aside>
 
@@ -155,47 +134,16 @@
                     <i class="fa-solid fa-shirt"></i>
                     <span>Louer Justaucorps</span>
                 </button>
-                <button onclick="openStockModal('out')" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm rounded-xl transition flex items-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-teal-400"></i>
-                    <span>Vente Buvette</span>
-                </button>
             </div>
         </header>
 
-        <!-- Dynamic Role Context Banner -->
-        <div id="role-context-banner" class="mb-6 p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div id="role-banner-icon" class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0 text-lg">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <div>
-                    <h4 id="role-banner-title" class="font-bold text-sm text-white">Connecté en tant que Membre du Bureau</h4>
-                    <p id="role-banner-desc" class="text-xs text-slate-400">Accès administrateur complet sur les profils, les finances et la buvette.</p>
-                </div>
-            </div>
-            <button onclick="openSwitchUserModal()" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl font-medium transition whitespace-nowrap">Changer de compte</button>
-        </div>
-
         <!-- VIEW 1: DASHBOARD -->
         <section id="view-dashboard" class="view-section space-y-6">
-            <!-- Stats Counters -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
-                    <div class="space-y-1">
-                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Membres & Staff</p>
-                        <h3 id="stat-users-count" class="text-3xl font-bold text-white">0</h3>
-                        <p class="text-xs text-purple-400 flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Actifs sur la plateforme</p>
-                    </div>
-                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-users-gear"></i>
-                    </div>
-                </div>
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
                     <div class="space-y-1">
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Justaucorps Loués</p>
                         <h3 id="stat-rented-count" class="text-3xl font-bold text-pink-400">0</h3>
-                        <p id="stat-rented-percent" class="text-xs text-slate-400">0% du stock loué</p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-shirt"></i>
@@ -206,7 +154,6 @@
                     <div class="space-y-1">
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Santé Buvette</p>
                         <h3 id="stat-stock-health" class="text-3xl font-bold text-emerald-400">OK</h3>
-                        <p id="stat-stock-alerts-count" class="text-xs text-amber-400">0 alerte de niveau</p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-boxes-stacked"></i>
@@ -217,7 +164,6 @@
                     <div class="space-y-1">
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cautions Garanties</p>
                         <h3 id="stat-cautions-total" class="text-3xl font-bold text-amber-400">0 €</h3>
-                        <p class="text-xs text-slate-400">Chèques/Espèces en coffre</p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-vault"></i>
@@ -227,117 +173,18 @@
 
             <!-- Dashboard Center Widgets -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Active Rentals Panel -->
                 <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg text-white">Dernières Locations & Retours Attendu</h3>
-                            <p class="text-xs text-slate-400">Justaucorps actuellement attribués aux gymnastes du club</p>
-                        </div>
-                        <button onclick="navigateTo('justaucorps')" class="text-xs text-teal-400 hover:text-teal-300 font-semibold flex items-center gap-1">
-                            Tout voir <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div id="dash-rentals-list" class="space-y-3">
-                        <!-- Dynamic JS -->
-                    </div>
+                    <h3 class="font-bold text-lg text-white">Dernières Locations & Retours Attendus</h3>
+                    <div id="dash-rentals-list" class="space-y-3"></div>
                 </div>
-
-                <!-- Buvette Live Status Widget -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-lg text-white">Alertes Stock Buvette</h3>
-                            <span class="text-xs px-2.5 py-1 rounded-full bg-slate-900 text-slate-300 border border-slate-800">Seuil: &le; 5</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-4">Articles nécessitant un réapprovisionnement pour les compétitions.</p>
-
-                        <div id="dash-stock-alerts-widget" class="space-y-2.5">
-                            <!-- JS Dynamic -->
-                        </div>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-800 space-y-2">
-                        <p class="text-xs font-semibold text-slate-300">Saisie Buvette Express :</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="openStockModal('out')" class="py-2.5 px-3 bg-pink-500/10 hover:bg-pink-500/20 text-pink-300 border border-pink-500/30 rounded-xl text-xs font-semibold transition text-center">
-                                <i class="fa-solid fa-minus text-pink-400 mr-1"></i> Vente Directe
-                            </button>
-                            <button onclick="openStockModal('in')" class="perm-bureau py-2.5 px-3 bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 rounded-xl text-xs font-semibold transition text-center">
-                                <i class="fa-solid fa-plus text-teal-400 mr-1"></i> Approvisionner
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW 2: USERS & PROFILES MANAGEMENT -->
-        <section id="view-users" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-3 flex-1 min-w-[280px]">
-                    <div class="relative flex-1">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="text" id="user-search" oninput="renderUsersGrid()" placeholder="Rechercher un membre par nom, email ou rôle..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                    <select id="user-role-filter" onchange="renderUsersGrid()" class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none">
-                        <option value="ALL">Tous les Rôles</option>
-                        <option value="Bureau">Bureau (Admin)</option>
-                        <option value="Coach">Entraîneur / Coach</option>
-                        <option value="Bénévole">Bénévole Buvette</option>
-                    </select>
-                </div>
-
-                <button onclick="openCreateUserModal()" class="perm-bureau px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-purple-500/20 flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus"></i> Nouveau Profil
-                </button>
-            </div>
-
-            <!-- Users Grid -->
-            <div id="users-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <!-- Dynamic JS Render -->
             </div>
         </section>
 
         <!-- VIEW 3: LEOTARDS MANAGEMENT -->
         <section id="view-justaucorps" class="view-section hidden space-y-6">
             <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-                <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
-                    <div class="relative flex-1 min-w-[180px]">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="text" id="leotard-search" oninput="renderLeotards()" placeholder="Rechercher par nom, ID ou gymnaste..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                    <select id="leotard-filter-size" onchange="renderLeotards()" class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none">
-                        <option value="ALL">Toutes Tailles</option>
-                        <option value="4A">4 ans</option>
-                        <option value="6A">6 ans</option>
-                        <option value="8A">8 ans</option>
-                        <option value="10A">10 ans</option>
-                        <option value="12A">12 ans</option>
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                    </select>
-                    <select id="leotard-filter-cat" onchange="renderLeotards()" class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none">
-                        <option value="ALL">Toutes Disciplines</option>
-                        <option value="Compétition GAF">GAF Féminine</option>
-                        <option value="Compétition GAM">GAM Masculine</option>
-                        <option value="GR">GR (Rythmique)</option>
-                        <option value="TeamGym">TeamGym</option>
-                        <option value="Gala">Gala / Loisir</option>
-                    </select>
-                    <select id="leotard-filter-status" onchange="renderLeotards()" class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none">
-                        <option value="ALL">Tous Statuts</option>
-                        <option value="Disponible">Disponible</option>
-                        <option value="Loué">Loué</option>
-                        <option value="Maintenance">En Lavage / Rép.</option>
-                    </select>
-                </div>
-
                 <div class="flex items-center gap-3">
-                    <button onclick="openAddLeotardModal()" class="perm-bureau px-4 py-2 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/30 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                    <button onclick="openAddLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/30 rounded-xl text-sm font-semibold transition flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Nouveau Justaucorps
                     </button>
                     <button onclick="openRentalModal()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl text-sm shadow-lg shadow-pink-500/20 transition flex items-center gap-2">
@@ -346,201 +193,41 @@
                 </div>
             </div>
 
-            <!-- Leotards Cards Grid -->
-            <div id="leotards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- JS Dynamic -->
-            </div>
+            <div id="leotards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
 
-        <!-- VIEW 4: BUVETTE & FOOD INVENTORY -->
+        <!-- VIEW 4: BUVETTE -->
         <section id="view-buvette" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-                <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
-                    <div class="relative flex-1 min-w-[180px]">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="text" id="stock-search" oninput="renderStockTable()" placeholder="Rechercher une denrée..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                    <select id="stock-filter-cat" onchange="renderStockTable()" class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none">
-                        <option value="ALL">Toutes catégories</option>
-                        <option value="Boissons">Boissons</option>
-                        <option value="Snacks Sucrés">Snacks Sucrés</option>
-                        <option value="Snacks Salés">Snacks Salés</option>
-                        <option value="Produits Frais">Produits Frais</option>
-                        <option value="Consommables">Consommables</option>
-                    </select>
-                </div>
-
-                <div class="flex items-center gap-3">
-                    <button onclick="openStockModal('out')" class="px-4 py-2 bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/40 rounded-xl text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-cart-arrow-down"></i> Vente Directe
-                    </button>
-                    <button onclick="openStockModal('in')" class="perm-bureau px-4 py-2 bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 rounded-xl text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-truck-ramp-box"></i> Entrée en Stock
-                    </button>
-                    <button onclick="openAddStockItemModal()" class="perm-bureau px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-semibold transition" title="Ajouter une référence">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
+            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                <button onclick="openAddStockItemModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-plus"></i> Nouvel Article Buvette
+                </button>
             </div>
-
             <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-900/90 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
-                            <tr>
-                                <th class="py-3.5 px-4 font-bold">Article / Produit</th>
-                                <th class="py-3.5 px-4 font-bold">Catégorie</th>
-                                <th class="py-3.5 px-4 font-bold text-center">Quantité Stock</th>
-                                <th class="py-3.5 px-4 font-bold text-right">Prix Unitaire</th>
-                                <th class="py-3.5 px-4 font-bold text-center">État Stock</th>
-                                <th class="py-3.5 px-4 font-bold text-right">Actions Rapides</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stock-table-body" class="divide-y divide-slate-800/60">
-                            <!-- JS Dynamic -->
-                        </tbody>
-                    </table>
-                </div>
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-900/90 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                        <tr>
+                            <th class="py-3.5 px-4 font-bold">Article</th>
+                            <th class="py-3.5 px-4 font-bold text-center">Quantité</th>
+                            <th class="py-3.5 px-4 font-bold text-right">Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-table-body" class="divide-y divide-slate-800/60"></tbody>
+                </table>
             </div>
         </section>
 
         <!-- VIEW 5: GYMNASTS DIRECTORY -->
         <section id="view-adherents" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-                <div class="relative flex-1 min-w-[240px]">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                    <input type="text" id="gymnast-search" oninput="renderGymnasts()" placeholder="Chercher un gymnaste ou responsable légal..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-                <button onclick="openAddGymnastModal()" class="perm-bureau px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
+            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                <button onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
             </div>
-
-            <div id="gymnasts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- JS Dynamic -->
-            </div>
-        </section>
-
-        <!-- VIEW 6: DATA EXPORT & IMPORT (JSON BACKUP) -->
-        <section id="view-data-sync" class="view-section hidden space-y-6">
-            <div class="glass-card p-6 rounded-2xl space-y-6">
-                <div>
-                    <h3 class="font-bold text-xl text-white mb-1">Sauvegarde & Partage des Données</h3>
-                    <p class="text-xs text-slate-400">Puisque le site est hébergé en statique sur GitHub Pages, vous pouvez exporter le fichier JSON complet pour le transmettre aux autres membres du bureau ou le sauvegarder.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Export Card -->
-                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-file-export"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-sm text-white">Exporter la Base de Données</h4>
-                                <p class="text-xs text-slate-400">Générer un fichier JSON avec tous les profils, justaucorps et stocks.</p>
-                            </div>
-                        </div>
-                        <button onclick="exportDatabaseJSON()" class="w-full py-2.5 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-download"></i> Télécharger Sauvegarde (.json)
-                        </button>
-                    </div>
-
-                    <!-- Import Card -->
-                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-file-import"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-sm text-white">Importer une Sauvegarde</h4>
-                                <p class="text-xs text-slate-400">Remplacer les données actuelles par un fichier JSON du club.</p>
-                            </div>
-                        </div>
-                        <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleDatabaseImport(event)">
-                        <button onclick="document.getElementById('import-file-input').click()" class="w-full py-2.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-upload"></i> Sélectionner le Fichier JSON
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <div id="gymnasts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
     </main>
-
-    <!-- MODAL: SWITCH ACTIVE USER LOGIN -->
-    <div id="modal-switch-user" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-5">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-users-viewfinder text-teal-400"></i> Choisir l'Utilisateur Connecté
-                </h3>
-                <button onclick="closeSwitchUserModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p class="text-xs text-slate-300">Sélectionnez votre profil dans la liste pour adapter vos permissions d'accès :</p>
-            
-            <div id="modal-users-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
-                <!-- Dynamic JS Render -->
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: CREATE / EDIT USER PROFILE -->
-    <div id="modal-user-edit" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 id="modal-user-edit-title" class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-purple-400"></i> Créer un Profil Utilisateur
-                </h3>
-                <button onclick="closeUserEditModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <form id="form-user-edit" onsubmit="handleUserFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="edit-user-id" value="">
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
-                        <input type="text" id="user-firstname" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
-                        <input type="text" id="user-lastname" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Adresse Email *</label>
-                    <input type="email" id="user-email" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Rôle & Droits *</label>
-                        <select id="user-role" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                            <option value="Bureau">Membre du Bureau (Admin)</option>
-                            <option value="Coach">Entraîneur / Coach</option>
-                            <option value="Bénévole">Bénévole Buvette</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Code PIN (4 chiffres)</label>
-                        <input type="password" id="user-pin" maxlength="4" placeholder="1234" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Équipes / Groupes gérés (Optionnel)</label>
-                    <input type="text" id="user-teams" placeholder="ex: GAF Poussines, GAM Compétition" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeUserEditModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-purple-500/20">Enregistrer Profil</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- MODAL: RENT LEOTARD -->
     <div id="modal-rental" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -555,37 +242,19 @@
             <form id="form-rental" onsubmit="handleRentalSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Choisir le Justaucorps *</label>
-                    <select id="rent-select-leotard" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                        <!-- Dynamic JS -->
-                    </select>
+                    <select id="rent-select-leotard" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500"></select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Gymnaste Bénéficiaire *</label>
-                    <select id="rent-select-gymnast" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                        <!-- Dynamic JS -->
-                    </select>
+                    <select id="rent-select-gymnast" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500"></select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date d'emprunt</label>
-                        <input type="date" id="rent-date-start" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-200">
-                    </div>
-                    <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Caution (€)</label>
                         <input type="number" id="rent-caution-amount" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-200">
                     </div>
-                </div>
-
-                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800">
-                    <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" id="rent-caution-paid" checked class="w-4 h-4 rounded text-teal-500 bg-slate-800 border-slate-700">
-                        <div>
-                            <span class="text-xs font-semibold text-slate-200">Chèque de caution ou espèces réceptionné</span>
-                            <p class="text-[11px] text-slate-400">Sera restitué au retour de la tenue en bon état.</p>
-                        </div>
-                    </label>
                 </div>
 
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
@@ -596,158 +265,33 @@
         </div>
     </div>
 
-    <!-- MODAL: STOCK MOVEMENT -->
-    <div id="modal-stock-movement" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 id="modal-stock-title" class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-boxes-stacked text-teal-400"></i> Mouvement de Stock
-                </h3>
-                <button onclick="closeStockModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <form id="form-stock-movement" onsubmit="handleStockMovementSubmit(event)" class="space-y-4">
-                <input type="hidden" id="stock-move-type" value="out">
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Article concerné</label>
-                    <select id="stock-move-item" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                        <!-- Filled by JS -->
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Quantité (Unités)</label>
-                    <input type="number" id="stock-move-qty" min="1" value="1" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeStockModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" id="btn-stock-submit" class="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs transition shadow-lg shadow-teal-500/20">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        /* TABLEAUX 100% VIERGES PAR DÉFAUT */
-        const DEFAULT_USERS = [
-            {
-                id: "USR-01",
-                firstName: "Admin",
-                lastName: "Bureau",
-                email: "admin@club-gym.fr",
-                role: "Bureau",
-                pin: "1234",
-                teams: "Direction",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
-            }
-        ];
+        // State Management - Synchronisé avec MongoDB Atlas
+        let leotards = [];
+        let stock = [];
+        let gymnasts = [];
 
-        const DEFAULT_LEOTARDS = [];
-        const DEFAULT_STOCK = [];
-        const DEFAULT_GYMNASTS = [];
-
-        // Forcer le nettoyage du cache si d'anciennes données de démo existent
-        if (localStorage.getItem('gym_v2_leotards') && JSON.parse(localStorage.getItem('gym_v2_leotards')).length > 0) {
-            localStorage.removeItem('gym_v2_leotards');
-            localStorage.removeItem('gym_v2_stock');
-            localStorage.removeItem('gym_v2_gymnasts');
-        }
-
-        // State Management
-        let users = JSON.parse(localStorage.getItem('gym_v2_users')) || DEFAULT_USERS;
-        let activeUserId = localStorage.getItem('gym_v2_active_user') || (users[0] ? users[0].id : "USR-01");
-        let leotards = JSON.parse(localStorage.getItem('gym_v2_leotards')) || DEFAULT_LEOTARDS;
-        let stock = JSON.parse(localStorage.getItem('gym_v2_stock')) || DEFAULT_STOCK;
-        let gymnasts = JSON.parse(localStorage.getItem('gym_v2_gymnasts')) || DEFAULT_GYMNASTS;
-
-        // Initialize application on load
-        window.onload = function() {
-            saveAllState();
-            updateActiveUserUI();
+        window.onload = async function() {
+            await fetchAllData();
             navigateTo('dashboard');
         };
 
-        function saveAllState() {
-            localStorage.setItem('gym_v2_users', JSON.stringify(users));
-            localStorage.setItem('gym_v2_active_user', activeUserId);
-            localStorage.setItem('gym_v2_leotards', JSON.stringify(leotards));
-            localStorage.setItem('gym_v2_stock', JSON.stringify(stock));
-            localStorage.setItem('gym_v2_gymnasts', JSON.stringify(gymnasts));
-            updateBadgesAndStats();
-        }
+        async function fetchAllData() {
+            try {
+                const [resGym, resLeo, resStk] = await Promise.all([
+                    fetch('/api/gymnasts'),
+                    fetch('/api/leotards'),
+                    fetch('/api/stocks')
+                ]);
 
-        function getActiveUser() {
-            return users.find(u => u.id === activeUserId) || users[0] || DEFAULT_USERS[0];
-        }
+                if (resGym.ok) gymnasts = await resGym.json();
+                if (resLeo.ok) leotards = await resLeo.json();
+                if (resStk.ok) stock = await resStk.json();
 
-        function updateActiveUserUI() {
-            const user = getActiveUser();
-            if (!user) return;
-            
-            // Sidebar display
-            document.getElementById('sidebar-user-avatar').src = user.avatar;
-            document.getElementById('sidebar-user-name').textContent = `${user.firstName} ${user.lastName}`;
-            document.getElementById('sidebar-user-role').textContent = user.role === 'Bureau' ? 'Membre du Bureau (Admin)' : (user.role === 'Coach' ? 'Entraîneur / Coach' : 'Bénévole Buvette');
-
-            // Banner context display
-            const bannerTitle = document.getElementById('role-banner-title');
-            const bannerDesc = document.getElementById('role-banner-desc');
-            const bannerIcon = document.getElementById('role-banner-icon');
-
-            if (user.role === 'Bureau') {
-                bannerTitle.textContent = `Connecté : ${user.firstName} ${user.lastName} (Bureau Admin)`;
-                bannerDesc.textContent = "Droits complets : Gestion des membres, finances, ajouts de stock et de justaucorps.";
-                bannerIcon.className = "w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0 text-lg";
-                bannerIcon.innerHTML = `<i class="fa-solid fa-user-shield"></i>`;
-                
-                document.querySelectorAll('.perm-bureau').forEach(el => el.classList.remove('hidden'));
-            } else if (user.role === 'Coach') {
-                bannerTitle.textContent = `Connecté : ${user.firstName} ${user.lastName} (Coach)`;
-                bannerDesc.textContent = "Accès terrain : Saisie des sorties de justaucorps et enregistrement rapide de ventes buvette.";
-                bannerIcon.className = "w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-lg";
-                bannerIcon.innerHTML = `<i class="fa-solid fa-whistle"></i>`;
-                
-                document.querySelectorAll('.perm-bureau').forEach(el => el.classList.add('hidden'));
-            } else {
-                bannerTitle.textContent = `Connecté : ${user.firstName} ${user.lastName} (Bénévole Buvette)`;
-                bannerDesc.textContent = "Accès restreint : Enregistrement des ventes directes de boissons et friandises.";
-                bannerIcon.className = "w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-lg";
-                bannerIcon.innerHTML = `<i class="fa-solid fa-cookie-bite"></i>`;
-                
-                document.querySelectorAll('.perm-bureau').forEach(el => el.classList.add('hidden'));
+                updateBadgesAndStats();
+            } catch (err) {
+                showToast("Erreur de connexion au serveur MongoDB Atlas", "warning");
             }
-        }
-
-        function openSwitchUserModal() {
-            const list = document.getElementById('modal-users-list');
-            list.innerHTML = users.map(u => `
-                <div onclick="selectActiveUser('${u.id}')" class="p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-teal-500/50 cursor-pointer transition flex items-center justify-between ${u.id === activeUserId ? 'ring-2 ring-teal-500/50 bg-slate-800' : ''}">
-                    <div class="flex items-center gap-3">
-                        <img src="${u.avatar}" class="w-9 h-9 rounded-lg object-cover">
-                        <div>
-                            <p class="text-xs font-bold text-white">${u.firstName} ${u.lastName}</p>
-                            <p class="text-[10px] text-slate-400">${u.role} • ${u.teams || 'Général'}</p>
-                        </div>
-                    </div>
-                    ${u.id === activeUserId ? '<span class="text-xs font-bold text-teal-400"><i class="fa-solid fa-circle-check"></i> Actif</span>' : ''}
-                </div>
-            `).join('');
-            document.getElementById('modal-switch-user').classList.remove('hidden');
-        }
-
-        function closeSwitchUserModal() {
-            document.getElementById('modal-switch-user').classList.add('hidden');
-        }
-
-        function selectActiveUser(userId) {
-            activeUserId = userId;
-            saveAllState();
-            updateActiveUserUI();
-            closeSwitchUserModal();
-            showToast("Changement de profil effectué avec succès !", "success");
-            navigateTo(document.querySelector('.view-section:not(.hidden)').id.replace('view-', ''));
         }
 
         function navigateTo(viewId) {
@@ -755,301 +299,139 @@
             const targetView = document.getElementById(`view-${viewId}`);
             if (targetView) targetView.classList.remove('hidden');
 
-            document.querySelectorAll('#nav-links .nav-item').forEach(el => {
-                el.classList.remove('active', 'text-teal-300', 'bg-teal-500/10', 'border', 'border-teal-500/20');
-                el.classList.add('text-slate-400');
-            });
-
-            const activeNav = document.querySelector(`#nav-links a[href="#${viewId}"]`);
-            if (activeNav) {
-                activeNav.classList.add('active', 'text-teal-300', 'bg-teal-500/10', 'border', 'border-teal-500/20');
-                activeNav.classList.remove('text-slate-400');
-            }
-
             const title = document.getElementById('page-title');
-            const sub = document.getElementById('page-subtitle');
-
             switch(viewId) {
                 case 'dashboard':
                     title.innerHTML = `<i class="fa-solid fa-chart-pie text-teal-400"></i> Tableau de Bord`;
-                    sub.textContent = "Statistiques générales et alertes du club";
                     renderDashboardView();
                     break;
-                case 'users':
-                    title.innerHTML = `<i class="fa-solid fa-users-gear text-purple-400"></i> Profils & Utilisateurs`;
-                    sub.textContent = "Gestion des comptes du bureau, des coachs et bénévoles";
-                    renderUsersGrid();
-                    break;
                 case 'justaucorps':
-                    title.innerHTML = `<i class="fa-solid fa-shirt text-pink-400"></i> Parc Justaucorps & Cautions`;
-                    sub.textContent = "Gestion des tenues de compétition, tailles et cautions";
+                    title.innerHTML = `<i class="fa-solid fa-shirt text-pink-400"></i> Parc Justaucorps`;
                     renderLeotards();
                     break;
                 case 'buvette':
                     title.innerHTML = `<i class="fa-solid fa-cookie-bite text-amber-400"></i> Stock Buvette`;
-                    sub.textContent = "Inventaire des boissons et denrées de la salle";
                     renderStockTable();
                     break;
                 case 'adherents':
                     title.innerHTML = `<i class="fa-solid fa-user-ninja text-emerald-400"></i> Repertoire Gymnastes`;
-                    sub.textContent = "Liste des gymnastes et responsables légaux";
                     renderGymnasts();
-                    break;
-                case 'data-sync':
-                    title.innerHTML = `<i class="fa-solid fa-database text-slate-400"></i> Sauvegarde & Partage`;
-                    sub.textContent = "Export / Import du fichier JSON de la base de données";
                     break;
             }
         }
 
         function updateBadgesAndStats() {
-            document.getElementById('badge-users-count').textContent = users.length;
             const rentedCount = leotards.filter(l => l.status === 'Loué').length;
             document.getElementById('badge-rented-count').textContent = rentedCount;
-
-            const stockAlerts = stock.filter(s => s.quantity <= s.minThreshold);
-            const badgeStock = document.getElementById('badge-stock-alert');
-            if (stockAlerts.length > 0) badgeStock.classList.remove('hidden');
-            else badgeStock.classList.add('hidden');
-
-            document.getElementById('stat-users-count').textContent = users.length;
             document.getElementById('stat-rented-count').textContent = rentedCount;
-            document.getElementById('stat-rented-percent').textContent = `${Math.round((rentedCount / (leotards.length || 1)) * 100)}% du stock loué`;
 
-            const totalCaution = leotards.filter(l => l.status === 'Loué' && l.depositPaid).reduce((acc, curr) => acc + (curr.cautionAmount || 45), 0);
+            const totalCaution = leotards.filter(l => l.status === 'Loué').reduce((acc, curr) => acc + (curr.cautionAmount || 45), 0);
             document.getElementById('stat-cautions-total').textContent = `${totalCaution} €`;
-
-            const health = document.getElementById('stat-stock-health');
-            if (stockAlerts.length === 0) {
-                health.textContent = "OK";
-                health.className = "text-3xl font-bold text-emerald-400";
-            } else {
-                health.textContent = "ALERTE";
-                health.className = "text-3xl font-bold text-amber-400";
-            }
-            document.getElementById('stat-stock-alerts-count').textContent = `${stockAlerts.length} alerte(s) stock`;
         }
 
         function renderDashboardView() {
-            updateBadgesAndStats();
-
-            // Recent rentals
             const dashRentals = document.getElementById('dash-rentals-list');
             const rentedItems = leotards.filter(l => l.status === 'Loué');
 
             if (rentedItems.length === 0) {
-                dashRentals.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl">Aucune location en cours. Le parc est disponible.</div>`;
+                dashRentals.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl">Aucune location en cours.</div>`;
             } else {
                 dashRentals.innerHTML = rentedItems.map(item => `
                     <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-xs shrink-0">
-                                ${item.size}
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-100">${item.name} <span class="text-xs text-slate-500">(${item.id})</span></p>
-                                <p class="text-xs text-slate-400">Gymnaste: <strong class="text-pink-300">${item.gymnast}</strong></p>
-                            </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-100">${item.name}</p>
+                            <p class="text-xs text-slate-400">Gymnaste: <strong class="text-pink-300">${item.gymnast}</strong></p>
                         </div>
-                        <button onclick="returnLeotard('${item.id}')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition">Retourner</button>
-                    </div>
-                `).join('');
-            }
-
-            // Stock Alerts
-            const alertWidget = document.getElementById('dash-stock-alerts-widget');
-            const lowStockItems = stock.filter(s => s.quantity <= s.minThreshold);
-
-            if (lowStockItems.length === 0) {
-                alertWidget.innerHTML = `<div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs">Stock buvette à jour.</div>`;
-            } else {
-                alertWidget.innerHTML = lowStockItems.map(item => `
-                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between text-xs">
-                        <span class="font-medium text-amber-200">${item.name}</span>
-                        <span class="font-bold text-amber-400">${item.quantity} restants</span>
+                        <button onclick="returnLeotard('${item._id}')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition">Retourner</button>
                     </div>
                 `).join('');
             }
         }
 
-        function renderUsersGrid() {
-            const grid = document.getElementById('users-grid');
-            const search = document.getElementById('user-search').value.toLowerCase();
-            const roleFilter = document.getElementById('user-role-filter').value;
-
-            const filtered = users.filter(u => {
-                const matchSearch = u.firstName.toLowerCase().includes(search) || u.lastName.toLowerCase().includes(search) || u.email.toLowerCase().includes(search);
-                const matchRole = roleFilter === 'ALL' || u.role === roleFilter;
-                return matchSearch && matchRole;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500">Aucun utilisateur trouvé.</div>`;
+        function renderGymnasts() {
+            const grid = document.getElementById('gymnasts-grid');
+            if (gymnasts.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
                 return;
             }
-
-            const activeUser = getActiveUser();
-
-            grid.innerHTML = filtered.map(u => `
-                <div class="glass-card rounded-2xl p-5 space-y-4 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <img src="${u.avatar}" class="w-12 h-12 rounded-2xl object-cover ring-2 ring-slate-700">
-                            <div>
-                                <h4 class="font-bold text-base text-white">${u.firstName} ${u.lastName}</h4>
-                                <span class="text-xs px-2 py-0.5 rounded font-semibold ${u.role === 'Bureau' ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : (u.role === 'Coach' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30')}">${u.role}</span>
-                            </div>
-                        </div>
-
-                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs space-y-1.5 text-slate-300">
-                            <p class="truncate"><i class="fa-solid fa-envelope text-slate-500 mr-2"></i> ${u.email}</p>
-                            <p><i class="fa-solid fa-people-group text-slate-500 mr-2"></i> Équipes: <strong>${u.teams || 'Non spécifié'}</strong></p>
-                        </div>
-                    </div>
-
-                    ${activeUser.role === 'Bureau' ? `
-                        <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
-                            <button onclick="editUserProfile('${u.id}')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg font-medium transition">
-                                <i class="fa-solid fa-pen-to-square"></i> Modifier
-                            </button>
-                            ${u.id !== activeUser.id ? `
-                                <button onclick="deleteUserProfile('${u.id}')" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs rounded-lg font-medium transition">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                    ` : ''}
+            grid.innerHTML = gymnasts.map(g => `
+                <div class="glass-card rounded-2xl p-5 space-y-3">
+                    <h4 class="font-bold text-base text-white">${g.firstName} ${g.lastName}</h4>
+                    <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
                 </div>
             `).join('');
         }
 
-        function openCreateUserModal() {
-            document.getElementById('edit-user-id').value = '';
-            document.getElementById('modal-user-edit-title').innerHTML = `<i class="fa-solid fa-user-plus text-purple-400"></i> Créer un Profil Utilisateur`;
-            document.getElementById('form-user-edit').reset();
-            document.getElementById('modal-user-edit').classList.remove('hidden');
-        }
+        async function openAddGymnastModal() {
+            const firstName = prompt("Prénom du gymnaste :");
+            if (!firstName) return;
+            const lastName = prompt("Nom du gymnaste :");
+            if (!lastName) return;
+            const group = prompt("Groupe (ex: Poussines, GAM, GAF) :", "GAF Poussines");
 
-        function editUserProfile(userId) {
-            const u = users.find(x => x.id === userId);
-            if (!u) return;
-
-            document.getElementById('edit-user-id').value = u.id;
-            document.getElementById('modal-user-edit-title').innerHTML = `<i class="fa-solid fa-user-pen text-purple-400"></i> Modifier le Profil`;
-            document.getElementById('user-firstname').value = u.firstName;
-            document.getElementById('user-lastname').value = u.lastName;
-            document.getElementById('user-email').value = u.email;
-            document.getElementById('user-role').value = u.role;
-            document.getElementById('user-pin').value = u.pin || '';
-            document.getElementById('user-teams').value = u.teams || '';
-
-            document.getElementById('modal-user-edit').classList.remove('hidden');
-        }
-
-        function closeUserEditModal() {
-            document.getElementById('modal-user-edit').classList.add('hidden');
-        }
-
-        function handleUserFormSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-user-id').value;
-            const firstName = document.getElementById('user-firstname').value;
-            const lastName = document.getElementById('user-lastname').value;
-            const email = document.getElementById('user-email').value;
-            const role = document.getElementById('user-role').value;
-            const pin = document.getElementById('user-pin').value;
-            const teams = document.getElementById('user-teams').value;
-
-            if (id) {
-                const u = users.find(x => x.id === id);
-                if (u) {
-                    u.firstName = firstName;
-                    u.lastName = lastName;
-                    u.email = email;
-                    u.role = role;
-                    u.pin = pin;
-                    u.teams = teams;
-                }
-            } else {
-                const newId = "USR-" + Math.floor(10 + Math.random() * 90);
-                users.push({
-                    id: newId,
-                    firstName,
-                    lastName,
-                    email,
-                    role,
-                    pin,
-                    teams,
-                    avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80`
+            try {
+                const res = await fetch('/api/gymnasts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ firstName, lastName, group })
                 });
-            }
 
-            saveAllState();
-            renderUsersGrid();
-            closeUserEditModal();
-            showToast("Profil enregistré avec succès !", "success");
-        }
-
-        function deleteUserProfile(id) {
-            if (confirm("Voulez-vous supprimer ce profil utilisateur ?")) {
-                users = users.filter(u => u.id !== id);
-                saveAllState();
-                renderUsersGrid();
-                showToast("Profil supprimé.", "info");
+                if (res.ok) {
+                    showToast("Gymnaste sauvegardé dans MongoDB Atlas !", "success");
+                    await fetchAllData();
+                    renderGymnasts();
+                }
+            } catch (err) {
+                showToast("Erreur lors de l'enregistrement", "warning");
             }
         }
 
         function renderLeotards() {
             const grid = document.getElementById('leotards-grid');
-            const search = document.getElementById('leotard-search').value.toLowerCase();
-            const sizeFilter = document.getElementById('leotard-filter-size').value;
-            const catFilter = document.getElementById('leotard-filter-cat').value;
-            const statusFilter = document.getElementById('leotard-filter-status').value;
-
-            const filtered = leotards.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(search) || item.id.toLowerCase().includes(search) || item.gymnast.toLowerCase().includes(search);
-                const matchesSize = sizeFilter === 'ALL' || item.size === sizeFilter;
-                const matchesCat = catFilter === 'ALL' || item.category === catFilter;
-                const matchesStatus = statusFilter === 'ALL' || item.status === statusFilter;
-                return matchesSearch && matchesSize && matchesCat && matchesStatus;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
-                    <i class="fa-solid fa-shirt text-3xl mb-2 text-slate-600 block"></i>
-                    Aucun justaucorps enregistré dans l'inventaire.<br>Cliquez sur <strong>"Nouveau Justaucorps"</strong> pour en ajouter un.
-                </div>`;
+            if (leotards.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun juste-au-corps en inventaire.</div>`;
                 return;
             }
 
-            grid.innerHTML = filtered.map(item => `
+            grid.innerHTML = leotards.map(item => `
                 <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">${item.id}</span>
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Disponible' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : (item.status === 'Loué' ? 'bg-pink-500/10 text-pink-300 border border-pink-500/20' : 'bg-amber-500/10 text-amber-400')}">${item.status}</span>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-base text-white">${item.name}</h4>
-                            <p class="text-xs text-slate-400">Taille: <strong class="text-slate-200">${item.size}</strong> • ${item.category}</p>
-                        </div>
-                        ${item.status === 'Loué' ? `
-                            <div class="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300">
-                                <p class="truncate"><i class="fa-solid fa-user text-pink-400 mr-1"></i> ${item.gymnast}</p>
-                                <p class="text-[11px] text-slate-400">Caution: ${item.depositPaid ? `<span class="text-emerald-400 font-bold">${item.cautionAmount || 45}€ (Versée)</span>` : '<span class="text-rose-400 font-bold">Non versée</span>'}</p>
-                            </div>
-                        ` : ''}
+                    <div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Disponible' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-pink-500/10 text-pink-300'}">${item.status}</span>
+                        <h4 class="font-bold text-base text-white mt-2">${item.name}</h4>
+                        <p class="text-xs text-slate-400">Taille: ${item.size}</p>
+                        ${item.status === 'Loué' ? `<p class="text-xs text-pink-300 mt-1">Loué à: ${item.gymnast}</p>` : ''}
                     </div>
-
-                    <div class="pt-2 border-t border-slate-800/80">
+                    <div>
                         ${item.status === 'Disponible' ? `
-                            <button onclick="quickRentLeotard('${item.id}')" class="w-full py-2 bg-pink-500/10 hover:bg-pink-500/20 text-pink-300 border border-pink-500/30 font-semibold rounded-xl text-xs transition">Louer tenue</button>
+                            <button onclick="quickRentLeotard('${item._id}')" class="w-full py-2 bg-pink-500/10 hover:bg-pink-500/20 text-pink-300 border border-pink-500/30 font-semibold rounded-xl text-xs transition">Louer tenue</button>
                         ` : `
-                            <button onclick="returnLeotard('${item.id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition">Enregistrer Retour</button>
+                            <button onclick="returnLeotard('${item._id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition">Enregistrer Retour</button>
                         `}
                     </div>
                 </div>
             `).join('');
+        }
+
+        async function openAddLeotardModal() {
+            const name = prompt("Nom du nouveau justaucorps :");
+            if (!name) return;
+            const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
+
+            try {
+                const res = await fetch('/api/leotards', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, size, status: "Disponible", gymnast: "-" })
+                });
+
+                if (res.ok) {
+                    showToast("Justaucorps enregistré dans MongoDB Atlas !", "success");
+                    await fetchAllData();
+                    renderLeotards();
+                }
+            } catch (err) {
+                showToast("Erreur lors de l'enregistrement", "warning");
+            }
         }
 
         function openRentalModal() {
@@ -1058,16 +440,13 @@
 
             const avail = leotards.filter(l => l.status === 'Disponible');
             if (avail.length === 0) {
-                showToast("Aucun justaucorps disponible dans l'inventaire.", "warning");
+                showToast("Aucun justaucorps disponible.", "warning");
                 return;
             }
 
-            selectLeo.innerHTML = avail.map(l => `<option value="${l.id}">${l.name} (${l.size} - ${l.category})</option>`).join('');
-            selectGym.innerHTML = gymnasts.length > 0 
-                ? gymnasts.map(g => `<option value="${g.name}">${g.name} (${g.group})</option>`).join('')
-                : `<option value="Inconnu">Aucun adhérent enregistré</option>`;
+            selectLeo.innerHTML = avail.map(l => `<option value="${l._id}">${l.name} (${l.size})</option>`).join('');
+            selectGym.innerHTML = gymnasts.map(g => `<option value="${g.firstName} ${g.lastName}">${g.firstName} ${g.lastName}</option>`).join('');
 
-            document.getElementById('rent-date-start').value = new Date().toISOString().split('T')[0];
             document.getElementById('modal-rental').classList.remove('hidden');
         }
 
@@ -1080,337 +459,109 @@
             document.getElementById('modal-rental').classList.add('hidden');
         }
 
-        function handleRentalSubmit(e) {
+        async function handleRentalSubmit(e) {
             e.preventDefault();
             const leoId = document.getElementById('rent-select-leotard').value;
             const gymnastName = document.getElementById('rent-select-gymnast').value;
-            const dateStart = document.getElementById('rent-date-start').value;
-            const cautionPaid = document.getElementById('rent-caution-paid').checked;
             const amount = parseInt(document.getElementById('rent-caution-amount').value) || 45;
 
-            const item = leotards.find(l => l.id === leoId);
-            if (item) {
-                item.status = 'Loué';
-                item.gymnast = gymnastName;
-                item.dateOut = dateStart;
-                item.depositPaid = cautionPaid;
-                item.cautionAmount = amount;
-                saveAllState();
-                renderLeotards();
-                closeRentalModal();
-                showToast(`Justaucorps attribué à ${gymnastName} !`, "success");
+            try {
+                const res = await fetch(`/api/leotards/${leoId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: 'Loué',
+                        gymnast: gymnastName,
+                        cautionAmount: amount
+                    })
+                });
+
+                if (res.ok) {
+                    showToast(`Justaucorps attribué à ${gymnastName} !`, "success");
+                    closeRentalModal();
+                    await fetchAllData();
+                    renderLeotards();
+                }
+            } catch (err) {
+                showToast("Erreur lors de l'attribution", "warning");
             }
         }
 
-        function returnLeotard(id) {
-            const item = leotards.find(l => l.id === id);
-            if (item) {
-                item.status = 'Disponible';
-                item.gymnast = '-';
-                item.dateOut = '-';
-                item.depositPaid = false;
-                saveAllState();
-                if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
-                if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
-                showToast(`Tenue ${item.name} enregistrée comme retournée.`, "info");
+        async function returnLeotard(id) {
+            try {
+                const res = await fetch(`/api/leotards/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: 'Disponible',
+                        gymnast: '-'
+                    })
+                });
+
+                if (res.ok) {
+                    showToast("Justaucorps retourné et disponible !", "info");
+                    await fetchAllData();
+                    if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
+                    if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
+                }
+            } catch (err) {
+                showToast("Erreur lors du retour", "warning");
             }
-        }
-
-        function openAddLeotardModal() {
-            const name = prompt("Nom du nouveau justaucorps :");
-            if (!name) return;
-            const size = prompt("Taille (4A, 6A, 8A, 10A, 12A, XS, S, M, L, XL) :", "8A");
-            const cat = prompt("Catégorie (Compétition GAF, GAM, GR, TeamGym, Gala) :", "Compétition GAF");
-
-            leotards.push({
-                id: "JUST-" + Math.floor(100 + Math.random() * 900),
-                name,
-                category: cat || "Compétition GAF",
-                size: size || "8A",
-                status: "Disponible",
-                gymnast: "-",
-                dateOut: "-",
-                depositPaid: false,
-                cautionAmount: 45,
-                condition: "Neuf"
-            });
-            saveAllState();
-            renderLeotards();
-            showToast("Nouveau justaucorps ajouté à l'inventaire !", "success");
         }
 
         function renderStockTable() {
             const body = document.getElementById('stock-table-body');
-            const search = document.getElementById('stock-search').value.toLowerCase();
-            const catFilter = document.getElementById('stock-filter-cat').value;
-
-            const filtered = stock.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(search) || item.id.toLowerCase().includes(search);
-                const matchesCat = catFilter === 'ALL' || item.category === catFilter;
-                return matchesSearch && matchesCat;
-            });
-
-            if (filtered.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-500">Aucun produit en stock.<br>Cliquez sur le bouton <strong>"+"</strong> pour ajouter votre première denrée.</td></tr>`;
-                return;
-            }
-
-            body.innerHTML = filtered.map(item => {
-                const isLow = item.quantity <= item.minThreshold;
-                return `
-                    <tr class="hover:bg-slate-900/50 transition">
-                        <td class="py-3.5 px-4 font-bold text-white">${item.name}</td>
-                        <td class="py-3.5 px-4 text-xs text-slate-400">${item.category}</td>
-                        <td class="py-3.5 px-4 text-center font-bold ${isLow ? 'text-amber-400' : 'text-slate-100'}">${item.quantity}</td>
-                        <td class="py-3.5 px-4 text-right font-medium text-slate-300">${item.unitPrice.toFixed(2)} €</td>
-                        <td class="py-3.5 px-4 text-center">
-                            ${isLow ? '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">Réappro à prévoir</span>' : '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Optimal</span>'}
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button onclick="quickStockChange('${item.id}', -1)" title="Vendre 1" class="w-8 h-8 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-300 border border-pink-500/30 flex items-center justify-center transition"><i class="fa-solid fa-minus text-xs"></i></button>
-                                <button onclick="quickStockChange('${item.id}', 1)" title="Ajouter 1" class="perm-bureau w-8 h-8 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 flex items-center justify-center transition"><i class="fa-solid fa-plus text-xs"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            updateActiveUserUI();
-        }
-
-        function quickStockChange(id, delta) {
-            const item = stock.find(s => s.id === id);
-            if (item) {
-                if (item.quantity + delta < 0) {
-                    showToast("Stock insuffisant.", "warning");
-                    return;
-                }
-                item.quantity += delta;
-                saveAllState();
-                renderStockTable();
-                showToast(`Stock "${item.name}" : ${item.quantity} restants.`, "info");
-            }
-        }
-
-        function openStockModal(type) {
-            const selectItem = document.getElementById('stock-move-item');
             if (stock.length === 0) {
-                showToast("Ajoutez d'abord des articles au stock avant de saisir des mouvements.", "warning");
+                body.innerHTML = `<tr><td colspan="3" class="py-12 text-center text-slate-500">Aucun produit en stock.</td></tr>`;
                 return;
             }
 
-            selectItem.innerHTML = stock.map(s => `<option value="${s.id}">${s.name} (Stock: ${s.quantity})</option>`).join('');
-
-            const title = document.getElementById('modal-stock-title');
-            const submitBtn = document.getElementById('btn-stock-submit');
-            document.getElementById('stock-move-type').value = type;
-
-            if (type === 'out') {
-                title.innerHTML = `<i class="fa-solid fa-cart-shopping text-pink-400"></i> Saisir Vente Directe`;
-                submitBtn.textContent = "Valider Vente";
-                submitBtn.className = "px-5 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-pink-500/20";
-            } else {
-                title.innerHTML = `<i class="fa-solid fa-truck-ramp-box text-teal-400"></i> Réapprovisionner Stock`;
-                submitBtn.textContent = "Valider Entrée";
-                submitBtn.className = "px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs transition shadow-lg shadow-teal-500/20";
-            }
-
-            document.getElementById('modal-stock-movement').classList.remove('hidden');
-        }
-
-        function closeStockModal() {
-            document.getElementById('modal-stock-movement').classList.add('hidden');
-        }
-
-        function handleStockMovementSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('stock-move-item').value;
-            const qty = parseInt(document.getElementById('stock-move-qty').value) || 1;
-            const type = document.getElementById('stock-move-type').value;
-
-            const item = stock.find(s => s.id === id);
-            if (item) {
-                if (type === 'out') {
-                    if (item.quantity < qty) {
-                        showToast("Stock insuffisant.", "warning");
-                        return;
-                    }
-                    item.quantity -= qty;
-                    showToast(`Vente enregistrée !`, "success");
-                } else {
-                    item.quantity += qty;
-                    showToast(`Stock réapprovisionné !`, "success");
-                }
-                saveAllState();
-                if (!document.getElementById('view-buvette').classList.contains('hidden')) renderStockTable();
-                closeStockModal();
-            }
-        }
-
-        function openAddStockItemModal() {
-            const name = prompt("Nom du produit :");
-            if (!name) return;
-            const cat = prompt("Catégorie (Boissons, Snacks Sucrés, Snacks Salés, Produits Frais) :", "Boissons");
-            const price = parseFloat(prompt("Prix unitaire (€) :", "1.50")) || 1.50;
-
-            stock.push({
-                id: "STK-" + Math.floor(10 + Math.random() * 90),
-                name,
-                category: cat || "Boissons",
-                quantity: 10,
-                minThreshold: 5,
-                unitPrice: price
-            });
-            saveAllState();
-            renderStockTable();
-            showToast("Article ajouté au stock !", "success");
-        }
-
-        function renderGymnasts() {
-            const grid = document.getElementById('gymnasts-grid');
-            const search = document.getElementById('gymnast-search').value.toLowerCase();
-
-            const filtered = gymnasts.filter(g => g.name.toLowerCase().includes(search) || g.group.toLowerCase().includes(search));
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
-                    <i class="fa-solid fa-user-ninja text-3xl mb-2 text-slate-600 block"></i>
-                    Aucun gymnaste enregistré.<br>Cliquez sur <strong>"Nouvel Adhérent"</strong> pour ajouter le premier.
-                </div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(g => `
-                <div class="glass-card rounded-2xl p-5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h4 class="font-bold text-base text-white">${g.name}</h4>
-                            <span class="text-xs text-teal-400 font-medium">${g.group}</span>
-                        </div>
-                        <div class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 font-bold text-xs">
-                            ${g.name.split(' ').map(n=>n[0]).join('')}
-                        </div>
-                    </div>
-                    <p class="text-xs text-slate-400"><i class="fa-solid fa-phone text-slate-500 mr-2"></i> Parent: <strong class="text-slate-200">${g.parentContact}</strong></p>
-                </div>
+            body.innerHTML = stock.map(item => `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-3.5 px-4 font-bold text-white">${item.name}</td>
+                    <td class="py-3.5 px-4 text-center font-bold text-slate-100">${item.quantity}</td>
+                    <td class="py-3.5 px-4 text-right font-medium text-slate-300">${item.unitPrice || 0} €</td>
+                </tr>
             `).join('');
         }
 
-        function openAddGymnastModal() {
-            const name = prompt("Nom et prénom du gymnaste :");
+        async function openAddStockItemModal() {
+            const name = prompt("Nom du produit :");
             if (!name) return;
-            const group = prompt("Groupe (GAF Poussines, GAM Perf, Baby Gym, GR) :", "GAF Poussines");
-            const phone = prompt("Téléphone contact d'urgence :", "06 00 00 00 00");
+            const price = parseFloat(prompt("Prix unitaire (€) :", "1.50")) || 1.50;
 
-            gymnasts.push({
-                id: "GYM-" + Math.floor(10 + Math.random() * 90),
-                name,
-                group: group || "Loisir",
-                parentContact: phone || "06 00 00 00 00"
-            });
-            saveAllState();
-            renderGymnasts();
-            showToast("Adhérent ajouté avec succès !", "success");
-        }
+            try {
+                const res = await fetch('/api/stocks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, quantity: 10, unitPrice: price })
+                });
 
-        function exportDatabaseJSON() {
-            const dbData = {
-                users,
-                leotards,
-                stock,
-                gymnasts,
-                exportDate: new Date().toISOString()
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dbData, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `gymgestion_backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-
-            showToast("Fichier de sauvegarde JSON généré !", "success");
-        }
-
-        function handleDatabaseImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.users || importedData.leotards || importedData.stock) {
-                        users = importedData.users || DEFAULT_USERS;
-                        leotards = importedData.leotards || [];
-                        stock = importedData.stock || [];
-                        gymnasts = importedData.gymnasts || [];
-                        activeUserId = users[0].id;
-
-                        saveAllState();
-                        updateActiveUserUI();
-                        navigateTo('dashboard');
-                        showToast("Base de données restaurée avec succès !", "success");
-                    } else {
-                        showToast("Format de fichier JSON invalide.", "warning");
-                    }
-                } catch (err) {
-                    showToast("Erreur lors de la lecture du fichier JSON.", "warning");
+                if (res.ok) {
+                    showToast("Article ajouté au stock !", "success");
+                    await fetchAllData();
+                    renderStockTable();
                 }
-            };
-            reader.readAsText(file);
-        }
-
-        function resetDemoData() {
-            if (confirm("Voulez-vous réinitialiser et vider toutes les données ?")) {
-                users = DEFAULT_USERS;
-                activeUserId = users[0].id;
-                leotards = [];
-                stock = [];
-                gymnasts = [];
-                saveAllState();
-                updateActiveUserUI();
-                navigateTo('dashboard');
-                showToast("Toutes les données ont été vidées.", "info");
+            } catch (err) {
+                showToast("Erreur lors de l'ajout", "warning");
             }
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-
             let bgColor = 'bg-slate-900 border-slate-700 text-slate-200';
-            let icon = 'fa-circle-info text-teal-400';
+            if (type === 'success') bgColor = 'bg-slate-900 border-teal-500/40 text-teal-200';
+            if (type === 'warning') bgColor = 'bg-slate-900 border-amber-500/40 text-amber-200';
 
-            if (type === 'success') {
-                bgColor = 'bg-slate-900 border-teal-500/40 text-teal-200';
-                icon = 'fa-circle-check text-teal-400';
-            } else if (type === 'warning') {
-                bgColor = 'bg-slate-900 border-amber-500/40 text-amber-200';
-                icon = 'fa-triangle-exclamation text-amber-400';
-            }
-
-            toast.className = `p-4 rounded-xl border shadow-2xl backdrop-blur-md flex items-center gap-3 text-xs font-semibold pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 ${bgColor}`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${message}</span>`;
-
+            toast.className = `p-4 rounded-xl border shadow-2xl backdrop-blur-md flex items-center gap-3 text-xs font-semibold pointer-events-auto transition-all duration-300 ${bgColor}`;
+            toast.innerHTML = `<span>${message}</span>`;
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-[-10px]');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // Mobile Sidebar Toggle
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('hidden');
         });
     </script>
 </body>
