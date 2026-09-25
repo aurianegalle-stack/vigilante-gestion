@@ -9,7 +9,7 @@ const path = require('path');
 const User = require('./models/User');
 const Leotard = require('./models/Leotard');
 const Stock = require('./models/Stock');
-const Gymnast = require('./models/Gymnast'); // 👈 Ajout du modèle Gymnaste
+const Gymnast = require('./models/Gymnast');
 
 const app = express();
 
@@ -17,10 +17,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir les fichiers statiques du dossier /public
+// Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuration des variables d'environnement
+// Configuration
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'gym_secret_token_key_2026';
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:0603734703Seb11@cluster0.pae88yh.mongodb.net/gymgestion?retryWrites=true&w=majority";
@@ -98,6 +98,15 @@ app.post('/api/gymnasts', async (req, res) => {
   }
 });
 
+app.put('/api/gymnasts/:id', async (req, res) => {
+  try {
+    const updatedGymnast = await Gymnast.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedGymnast);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // --- ROUTES JUSTAUCORPS ---
 
 app.get('/api/leotards', async (req, res) => {
@@ -116,6 +125,26 @@ app.post('/api/leotards', async (req, res) => {
     res.status(201).json(savedLeotard);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+// 🔹 MISE À JOUR JUSTAUCORPS (Attribution, statut, location)
+app.put('/api/leotards/:id', async (req, res) => {
+  try {
+    const updatedLeotard = await Leotard.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedLeotard) return res.status(404).json({ message: 'Justaucorps non trouvé' });
+    res.json(updatedLeotard);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete('/api/leotards/:id', async (req, res) => {
+  try {
+    await Leotard.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Justaucorps supprimé' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -140,7 +169,16 @@ app.post('/api/stocks', async (req, res) => {
   }
 });
 
-// Route fallback : renvoie index.html pour les autres requêtes
+app.put('/api/stocks/:id', async (req, res) => {
+  try {
+    const updatedStock = await Stock.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedStock);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// ⚠️ TOUJOURS EN DERNIER : Route fallback vers index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
