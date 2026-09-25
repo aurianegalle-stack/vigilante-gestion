@@ -266,7 +266,12 @@
     </div>
 
     <script>
-        // State Management - Synchronisé avec MongoDB Atlas
+        // CONFIGURATION URL API (Bascule automatique Local vs Web)
+        const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? '' 
+            : 'https://gymgestion.onrender.com'; // 👈 Remplace si ton URL Render est différente
+
+        // State Management
         let leotards = [];
         let stock = [];
         let gymnasts = [];
@@ -279,9 +284,9 @@
         async function fetchAllData() {
             try {
                 const [resGym, resLeo, resStk] = await Promise.all([
-                    fetch('/api/gymnasts'),
-                    fetch('/api/leotards'),
-                    fetch('/api/stocks')
+                    fetch(`${API_URL}/api/gymnasts`),
+                    fetch(`${API_URL}/api/leotards`),
+                    fetch(`${API_URL}/api/stocks`)
                 ]);
 
                 if (resGym.ok) gymnasts = await resGym.json();
@@ -370,7 +375,7 @@
             const group = prompt("Groupe (ex: Poussines, GAM, GAF) :", "GAF Poussines");
 
             try {
-                const res = await fetch('/api/gymnasts', {
+                const res = await fetch(`${API_URL}/api/gymnasts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
@@ -387,7 +392,7 @@
                     renderGymnasts();
                 } else {
                     const err = await res.json();
-                    showToast("Erreur serveur : " + (err.message || "Echec de création"), "warning");
+                    showToast("Erreur serveur : " + (err.message || "Échec de création"), "warning");
                 }
             } catch (err) {
                 showToast("Erreur de connexion au serveur", "warning");
@@ -426,7 +431,7 @@
             const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
 
             try {
-                const res = await fetch('/api/leotards', {
+                const res = await fetch(`${API_URL}/api/leotards`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, size, status: "Disponible", gymnast: "-" })
@@ -477,7 +482,7 @@
             const amount = parseInt(document.getElementById('rent-caution-amount').value) || 45;
 
             try {
-                const res = await fetch(`/api/leotards/${leoId}`, {
+                const res = await fetch(`${API_URL}/api/leotards/${leoId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -500,7 +505,7 @@
 
         async function returnLeotard(id) {
             try {
-                const res = await fetch(`/api/leotards/${id}`, {
+                const res = await fetch(`${API_URL}/api/leotards/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -542,7 +547,7 @@
             const price = parseFloat(prompt("Prix unitaire (€) :", "1.50")) || 1.50;
 
             try {
-                const res = await fetch('/api/stocks', {
+                const res = await fetch(`${API_URL}/api/stocks`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, quantity: 10, unitPrice: price })
