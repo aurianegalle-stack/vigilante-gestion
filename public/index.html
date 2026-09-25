@@ -74,7 +74,7 @@
             </button>
         </div>
 
-        <!-- Active User & Profile Switcher Widget -->
+        <!-- Active User Widget -->
         <div class="p-3 mx-3 my-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 overflow-hidden">
                 <img id="sidebar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-teal-500/40 shrink-0">
@@ -340,7 +340,7 @@
                     <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-3">
                         <div>
                             <p class="text-sm font-bold text-slate-100">${item.name}</p>
-                            <p class="text-xs text-slate-400">Gymnaste: <strong class="text-pink-300">${item.gymnast}</strong></p>
+                            <p class="text-xs text-slate-400">Gymnaste: <strong class="text-pink-300">${item.gymnast || '-'}</strong></p>
                         </div>
                         <button onclick="returnLeotard('${item._id}')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition">Retourner</button>
                     </div>
@@ -349,18 +349,18 @@
         }
 
         function renderGymnasts() {
-    const grid = document.getElementById('gymnasts-grid');
-    if (!gymnasts || gymnasts.length === 0) {
-        grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
-        return;
-    }
-    grid.innerHTML = gymnasts.map(g => `
-        <div class="glass-card rounded-2xl p-5 space-y-3">
-            <h4 class="font-bold text-base text-white">${g.firstName || ''} ${g.lastName || ''}</h4>
-            <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
-        </div>
-    `).join('');
-}
+            const grid = document.getElementById('gymnasts-grid');
+            if (!gymnasts || gymnasts.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
+                return;
+            }
+            grid.innerHTML = gymnasts.map(g => `
+                <div class="glass-card rounded-2xl p-5 space-y-3">
+                    <h4 class="font-bold text-base text-white">${g.firstName || ''} ${g.lastName || ''}</h4>
+                    <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
+                </div>
+            `).join('');
+        }
 
         async function openAddGymnastModal() {
             const firstName = prompt("Prénom du gymnaste :");
@@ -373,16 +373,24 @@
                 const res = await fetch('/api/gymnasts', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ firstName, lastName, group })
+                    body: JSON.stringify({ 
+                        firstName: firstName.trim(), 
+                        lastName: lastName.trim(), 
+                        group: group ? group.trim() : 'Général',
+                        category: 'Général'
+                    })
                 });
 
                 if (res.ok) {
                     showToast("Gymnaste sauvegardé dans MongoDB Atlas !", "success");
                     await fetchAllData();
                     renderGymnasts();
+                } else {
+                    const err = await res.json();
+                    showToast("Erreur serveur : " + (err.message || "Echec de création"), "warning");
                 }
             } catch (err) {
-                showToast("Erreur lors de l'enregistrement", "warning");
+                showToast("Erreur de connexion au serveur", "warning");
             }
         }
 
@@ -445,7 +453,10 @@
             }
 
             selectLeo.innerHTML = avail.map(l => `<option value="${l._id}">${l.name} (${l.size})</option>`).join('');
-            selectGym.innerHTML = gymnasts.map(g => `<option value="${g.firstName} ${g.lastName}">${g.firstName} ${g.lastName}</option>`).join('');
+            
+            selectGym.innerHTML = gymnasts.length > 0
+                ? gymnasts.map(g => `<option value="${g.firstName} ${g.lastName}">${g.firstName} ${g.lastName} (${g.group || 'Général'})</option>`).join('')
+                : `<option value="-">Aucun adhérent enregistré</option>`;
 
             document.getElementById('modal-rental').classList.remove('hidden');
         }
