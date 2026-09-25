@@ -349,18 +349,18 @@
         }
 
         function renderGymnasts() {
-            const grid = document.getElementById('gymnasts-grid');
-            if (gymnasts.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
-                return;
-            }
-            grid.innerHTML = gymnasts.map(g => `
-                <div class="glass-card rounded-2xl p-5 space-y-3">
-                    <h4 class="font-bold text-base text-white">${g.firstName} ${g.lastName}</h4>
-                    <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
-                </div>
-            `).join('');
-        }
+    const grid = document.getElementById('gymnasts-grid');
+    if (!gymnasts || gymnasts.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
+        return;
+    }
+    grid.innerHTML = gymnasts.map(g => `
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+            <h4 class="font-bold text-base text-white">${g.firstName || ''} ${g.lastName || ''}</h4>
+            <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
+        </div>
+    `).join('');
+}
 
         async function openAddGymnastModal() {
             const firstName = prompt("Prénom du gymnaste :");
