@@ -80,10 +80,10 @@
         <!-- Active User & Profile Switcher Widget -->
         <div class="p-3 mx-3 my-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 overflow-hidden">
-                <img id="sidebar-user-avatar" src="" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-teal-500/40 shrink-0">
+                <img id="sidebar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-teal-500/40 shrink-0">
                 <div class="truncate">
-                    <p id="sidebar-user-name" class="text-xs font-bold text-white truncate">--</p>
-                    <p id="sidebar-user-role" class="text-[10px] text-teal-400 font-semibold truncate">--</p>
+                    <p id="sidebar-user-name" class="text-xs font-bold text-white truncate">Administrateur</p>
+                    <p id="sidebar-user-role" class="text-[10px] text-teal-400 font-semibold truncate">Membre du Bureau (Admin)</p>
                 </div>
             </div>
             <button onclick="openSwitchUserModal()" title="Changer d'utilisateur connecté" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition text-xs shrink-0">
@@ -131,8 +131,8 @@
         <!-- Footer System Info -->
         <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
             <span>GymGestion v2.4</span>
-            <button onclick="resetDemoData()" title="Réinitialiser les données" class="hover:text-rose-400 transition">
-                <i class="fa-solid fa-rotate-left"></i> Reset
+            <button onclick="resetDemoData()" title="Réinitialiser la base" class="hover:text-rose-400 transition">
+                <i class="fa-solid fa-rotate-left"></i> Vider
             </button>
         </div>
     </aside>
@@ -195,7 +195,7 @@
                     <div class="space-y-1">
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Justaucorps Loués</p>
                         <h3 id="stat-rented-count" class="text-3xl font-bold text-pink-400">0</h3>
-                        <p id="stat-rented-percent" class="text-xs text-slate-400">--</p>
+                        <p id="stat-rented-percent" class="text-xs text-slate-400">0% du stock loué</p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-shirt"></i>
@@ -630,18 +630,34 @@
     </div>
 
     <script>
-        /* DEFAULT DATASETS FOR PERSISTENCE */
-        const DEFAULT_USERS = [];
+        /* TABLEAUX 100% VIERGES PAR DÉFAUT */
+        const DEFAULT_USERS = [
+            {
+                id: "USR-01",
+                firstName: "Admin",
+                lastName: "Bureau",
+                email: "admin@club-gym.fr",
+                role: "Bureau",
+                pin: "1234",
+                teams: "Direction",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
+            }
+        ];
 
         const DEFAULT_LEOTARDS = [];
-
         const DEFAULT_STOCK = [];
-
         const DEFAULT_GYMNASTS = [];
+
+        // Forcer le nettoyage du cache si d'anciennes données de démo existent
+        if (localStorage.getItem('gym_v2_leotards') && JSON.parse(localStorage.getItem('gym_v2_leotards')).length > 0) {
+            localStorage.removeItem('gym_v2_leotards');
+            localStorage.removeItem('gym_v2_stock');
+            localStorage.removeItem('gym_v2_gymnasts');
+        }
 
         // State Management
         let users = JSON.parse(localStorage.getItem('gym_v2_users')) || DEFAULT_USERS;
-        let activeUserId = localStorage.getItem('gym_v2_active_user') || users[0].id;
+        let activeUserId = localStorage.getItem('gym_v2_active_user') || (users[0] ? users[0].id : "USR-01");
         let leotards = JSON.parse(localStorage.getItem('gym_v2_leotards')) || DEFAULT_LEOTARDS;
         let stock = JSON.parse(localStorage.getItem('gym_v2_stock')) || DEFAULT_STOCK;
         let gymnasts = JSON.parse(localStorage.getItem('gym_v2_gymnasts')) || DEFAULT_GYMNASTS;
@@ -663,11 +679,12 @@
         }
 
         function getActiveUser() {
-            return users.find(u => u.id === activeUserId) || users[0];
+            return users.find(u => u.id === activeUserId) || users[0] || DEFAULT_USERS[0];
         }
 
         function updateActiveUserUI() {
             const user = getActiveUser();
+            if (!user) return;
             
             // Sidebar display
             document.getElementById('sidebar-user-avatar').src = user.avatar;
@@ -685,7 +702,6 @@
                 bannerIcon.className = "w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0 text-lg";
                 bannerIcon.innerHTML = `<i class="fa-solid fa-user-shield"></i>`;
                 
-                // Show Bureau permissions
                 document.querySelectorAll('.perm-bureau').forEach(el => el.classList.remove('hidden'));
             } else if (user.role === 'Coach') {
                 bannerTitle.textContent = `Connecté : ${user.firstName} ${user.lastName} (Coach)`;
@@ -693,7 +709,6 @@
                 bannerIcon.className = "w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-lg";
                 bannerIcon.innerHTML = `<i class="fa-solid fa-whistle"></i>`;
                 
-                // Hide Bureau-only creation buttons
                 document.querySelectorAll('.perm-bureau').forEach(el => el.classList.add('hidden'));
             } else {
                 bannerTitle.textContent = `Connecté : ${user.firstName} ${user.lastName} (Bénévole Buvette)`;
@@ -705,7 +720,6 @@
             }
         }
 
-        // Switch User Modal Actions
         function openSwitchUserModal() {
             const list = document.getElementById('modal-users-list');
             list.innerHTML = users.map(u => `
@@ -714,7 +728,7 @@
                         <img src="${u.avatar}" class="w-9 h-9 rounded-lg object-cover">
                         <div>
                             <p class="text-xs font-bold text-white">${u.firstName} ${u.lastName}</p>
-                            <p class="text-[10px] text-slate-400">${u.role} • ${u.teams || 'General'}</p>
+                            <p class="text-[10px] text-slate-400">${u.role} • ${u.teams || 'Général'}</p>
                         </div>
                     </div>
                     ${u.id === activeUserId ? '<span class="text-xs font-bold text-teal-400"><i class="fa-solid fa-circle-check"></i> Actif</span>' : ''}
@@ -736,7 +750,6 @@
             navigateTo(document.querySelector('.view-section:not(.hidden)').id.replace('view-', ''));
         }
 
-        // Navigation Switcher
         function navigateTo(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             const targetView = document.getElementById(`view-${viewId}`);
@@ -825,7 +838,7 @@
             const rentedItems = leotards.filter(l => l.status === 'Loué');
 
             if (rentedItems.length === 0) {
-                dashRentals.innerHTML = `<div class="p-4 text-center text-slate-500 text-xs">Aucune location en cours.</div>`;
+                dashRentals.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl">Aucune location en cours. Le parc est disponible.</div>`;
             } else {
                 dashRentals.innerHTML = rentedItems.map(item => `
                     <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-3">
@@ -948,7 +961,6 @@
             const teams = document.getElementById('user-teams').value;
 
             if (id) {
-                // Edit
                 const u = users.find(x => x.id === id);
                 if (u) {
                     u.firstName = firstName;
@@ -959,7 +971,6 @@
                     u.teams = teams;
                 }
             } else {
-                // Create
                 const newId = "USR-" + Math.floor(10 + Math.random() * 90);
                 users.push({
                     id: newId,
@@ -969,7 +980,7 @@
                     role,
                     pin,
                     teams,
-                    avatar: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random()*100000)}?w=120&auto=format&fit=crop&q=80`
+                    avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80`
                 });
             }
 
@@ -1004,7 +1015,10 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500">Aucun justaucorps trouvé.</div>`;
+                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
+                    <i class="fa-solid fa-shirt text-3xl mb-2 text-slate-600 block"></i>
+                    Aucun justaucorps enregistré dans l'inventaire.<br>Cliquez sur <strong>"Nouveau Justaucorps"</strong> pour en ajouter un.
+                </div>`;
                 return;
             }
 
@@ -1044,12 +1058,14 @@
 
             const avail = leotards.filter(l => l.status === 'Disponible');
             if (avail.length === 0) {
-                showToast("Aucun justaucorps disponible.", "warning");
+                showToast("Aucun justaucorps disponible dans l'inventaire.", "warning");
                 return;
             }
 
             selectLeo.innerHTML = avail.map(l => `<option value="${l.id}">${l.name} (${l.size} - ${l.category})</option>`).join('');
-            selectGym.innerHTML = gymnasts.map(g => `<option value="${g.name}">${g.name} (${g.group})</option>`).join('');
+            selectGym.innerHTML = gymnasts.length > 0 
+                ? gymnasts.map(g => `<option value="${g.name}">${g.name} (${g.group})</option>`).join('')
+                : `<option value="Inconnu">Aucun adhérent enregistré</option>`;
 
             document.getElementById('rent-date-start').value = new Date().toISOString().split('T')[0];
             document.getElementById('modal-rental').classList.remove('hidden');
@@ -1135,7 +1151,7 @@
             });
 
             if (filtered.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">Aucun produit trouvé.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-500">Aucun produit en stock.<br>Cliquez sur le bouton <strong>"+"</strong> pour ajouter votre première denrée.</td></tr>`;
                 return;
             }
 
@@ -1179,6 +1195,11 @@
 
         function openStockModal(type) {
             const selectItem = document.getElementById('stock-move-item');
+            if (stock.length === 0) {
+                showToast("Ajoutez d'abord des articles au stock avant de saisir des mouvements.", "warning");
+                return;
+            }
+
             selectItem.innerHTML = stock.map(s => `<option value="${s.id}">${s.name} (Stock: ${s.quantity})</option>`).join('');
 
             const title = document.getElementById('modal-stock-title');
@@ -1237,7 +1258,7 @@
                 id: "STK-" + Math.floor(10 + Math.random() * 90),
                 name,
                 category: cat || "Boissons",
-                quantity: 12,
+                quantity: 10,
                 minThreshold: 5,
                 unitPrice: price
             });
@@ -1253,7 +1274,10 @@
             const filtered = gymnasts.filter(g => g.name.toLowerCase().includes(search) || g.group.toLowerCase().includes(search));
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500">Aucun gymnaste trouvé.</div>`;
+                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
+                    <i class="fa-solid fa-user-ninja text-3xl mb-2 text-slate-600 block"></i>
+                    Aucun gymnaste enregistré.<br>Cliquez sur <strong>"Nouvel Adhérent"</strong> pour ajouter le premier.
+                </div>`;
                 return;
             }
 
@@ -1318,10 +1342,10 @@
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    if (importedData.users && importedData.leotards && importedData.stock) {
-                        users = importedData.users;
-                        leotards = importedData.leotards;
-                        stock = importedData.stock;
+                    if (importedData.users || importedData.leotards || importedData.stock) {
+                        users = importedData.users || DEFAULT_USERS;
+                        leotards = importedData.leotards || [];
+                        stock = importedData.stock || [];
                         gymnasts = importedData.gymnasts || [];
                         activeUserId = users[0].id;
 
@@ -1340,16 +1364,16 @@
         }
 
         function resetDemoData() {
-            if (confirm("Réinitialiser les données aux valeurs par défaut ?")) {
+            if (confirm("Voulez-vous réinitialiser et vider toutes les données ?")) {
                 users = DEFAULT_USERS;
                 activeUserId = users[0].id;
-                leotards = DEFAULT_LEOTARDS;
-                stock = DEFAULT_STOCK;
-                gymnasts = DEFAULT_GYMNASTS;
+                leotards = [];
+                stock = [];
+                gymnasts = [];
                 saveAllState();
                 updateActiveUserUI();
                 navigateTo('dashboard');
-                showToast("Données réinitialisées.", "info");
+                showToast("Toutes les données ont été vidées.", "info");
             }
         }
 
