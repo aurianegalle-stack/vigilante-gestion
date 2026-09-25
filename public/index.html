@@ -631,35 +631,13 @@
 
     <script>
         /* DEFAULT DATASETS FOR PERSISTENCE */
-        const DEFAULT_USERS = [
-            { id: "USR-01", firstName: "Sophie", lastName: "Martin", email: "president@gymclub.fr", role: "Bureau", pin: "1234", teams: "Gestion Globale", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" },
-            { id: "USR-02", firstName: "Alexandre", lastName: "Dubois", email: "alex.coach@gymclub.fr", role: "Coach", pin: "0000", teams: "GAF Poussines, GAM Perf", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80" },
-            { id: "USR-03", firstName: "Marie", lastName: "Lefebvre", email: "buvette@gymclub.fr", role: "Bénévole", pin: "1111", teams: "Événements & Buvette", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80" }
-        ];
+        const DEFAULT_USERS = [];
 
-        const DEFAULT_LEOTARDS = [
-            { id: "JUST-101", name: "Spangle Pink Gala", category: "Gala", size: "8A", status: "Loué", gymnast: "Léa Bernard", dateOut: "2026-09-10", depositPaid: true, cautionAmount: 45, condition: "Excellent" },
-            { id: "JUST-102", name: "Ocean Breeze GAF", category: "Compétition GAF", size: "10A", status: "Disponible", gymnast: "-", dateOut: "-", depositPaid: false, cautionAmount: 45, condition: "Neuf" },
-            { id: "JUST-103", name: "Rubis Glitter Elite", category: "Compétition GAF", size: "12A", status: "Loué", gymnast: "Camille Petit", dateOut: "2026-09-14", depositPaid: true, cautionAmount: 50, condition: "Bon état" },
-            { id: "JUST-104", name: "Violette Strass GR", category: "GR", size: "XS", status: "Disponible", gymnast: "-", dateOut: "-", depositPaid: false, cautionAmount: 45, condition: "Neuf" },
-            { id: "JUST-105", name: "TeamGym Black & Gold", category: "TeamGym", size: "S", status: "Disponible", gymnast: "-", dateOut: "-", depositPaid: false, cautionAmount: 50, condition: "Trés bon état" }
-        ];
+        const DEFAULT_LEOTARDS = [];
 
-        const DEFAULT_STOCK = [
-            { id: "STK-01", name: "Eau Cristaline 50cl", category: "Boissons", quantity: 32, minThreshold: 10, unitPrice: 1.00 },
-            { id: "STK-02", name: "Jus d'Orange Bio 25cl", category: "Boissons", quantity: 4, minThreshold: 8, unitPrice: 1.50 },
-            { id: "STK-03", name: "Barres Céréales Choco", category: "Snacks Sucrés", quantity: 18, minThreshold: 10, unitPrice: 1.20 },
-            { id: "STK-04", name: "Compotes Gourde Pomme", category: "Snacks Sucrés", quantity: 3, minThreshold: 10, unitPrice: 1.00 },
-            { id: "STK-05", name: "Chips Nature 30g", category: "Snacks Salés", quantity: 24, minThreshold: 12, unitPrice: 1.00 },
-            { id: "STK-06", name: "Sandwichs Poulet / Maiïs", category: "Produits Frais", quantity: 2, minThreshold: 5, unitPrice: 3.50 }
-        ];
+        const DEFAULT_STOCK = [];
 
-        const DEFAULT_GYMNASTS = [
-            { id: "GYM-01", name: "Léa Bernard", group: "GAF Poussines", parentContact: "06 12 34 56 78" },
-            { id: "GYM-02", name: "Camille Petit", group: "GAM Performance", parentContact: "06 98 76 54 32" },
-            { id: "GYM-03", name: "Emma Moreau", group: "Baby Gym", parentContact: "07 11 22 33 44" },
-            { id: "GYM-04", name: "Jade Fontaine", group: "GR Ensemble", parentContact: "06 55 44 33 22" }
-        ];
+        const DEFAULT_GYMNASTS = [];
 
         // State Management
         let users = JSON.parse(localStorage.getItem('gym_v2_users')) || DEFAULT_USERS;
