@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 
-// Importation des modèles Mongoose
+// Modèles Mongoose
 const User = require('./models/User');
 const Leotard = require('./models/Leotard');
 const Stock = require('./models/Stock');
@@ -13,46 +13,33 @@ const Gymnast = require('./models/Gymnast');
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
-
-// Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuration
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'gym_secret_token_key_2026';
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:0603734703Seb11@cluster0.pae88yh.mongodb.net/gymgestion?retryWrites=true&w=majority";
 
-// Connexion à MongoDB Atlas
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connecté à MongoDB Atlas avec succès'))
   .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));
 
-// --- ROUTES D'AUTHENTIFICATION ---
-
+// --- ROUTES AUTHENTIFICATION ---
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'Tous les champs sont requis.' });
-    }
+    if (!username || !email || !password) return res.status(400).json({ message: 'Champs requis manquants.' });
+    
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Nom d\'utilisateur ou e-mail déjà utilisé.' });
-    }
+    if (existingUser) return res.status(400).json({ message: 'Utilisateur déjà existant.' });
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-      role: role || 'Coach / Entraîneur'
-    });
+    const newUser = new User({ username, email, password: hashedPassword, role: role || 'Coach' });
     await newUser.save();
-    res.status(201).json({ message: 'Utilisateur créé avec succès !' });
+    res.status(201).json({ message: 'Utilisateur créé !' });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de l\'inscription', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -65,20 +52,14 @@ app.post('/api/auth/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Identifiants invalides.' });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role, username: user.username },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-
+    const token = jwt.sign({ id: user._id, role: user.role, username: user.username }, JWT_SECRET, { expiresIn: '24h' });
     res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la connexion', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
 // --- ROUTES GYMNASTES ---
-
 app.get('/api/gymnasts', async (req, res) => {
   try {
     const gymnasts = await Gymnast.find();
@@ -100,15 +81,23 @@ app.post('/api/gymnasts', async (req, res) => {
 
 app.put('/api/gymnasts/:id', async (req, res) => {
   try {
-    const updatedGymnast = await Gymnast.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedGymnast);
+    const updated = await Gymnast.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
-// --- ROUTES JUSTAUCORPS ---
+app.delete('/api/gymnasts/:id', async (req, res) => {
+  try {
+    await Gymnast.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Gymnaste supprimé' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
+// --- ROUTES JUSTAUCORPS ---
 app.get('/api/leotards', async (req, res) => {
   try {
     const leotards = await Leotard.find();
@@ -128,11 +117,9 @@ app.post('/api/leotards', async (req, res) => {
   }
 });
 
-// 🔹 MISE À JOUR JUSTAUCORPS (Attribution, statut, location)
 app.put('/api/leotards/:id', async (req, res) => {
   try {
     const updatedLeotard = await Leotard.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedLeotard) return res.status(404).json({ message: 'Justaucorps non trouvé' });
     res.json(updatedLeotard);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -149,7 +136,6 @@ app.delete('/api/leotards/:id', async (req, res) => {
 });
 
 // --- ROUTES STOCKS ---
-
 app.get('/api/stocks', async (req, res) => {
   try {
     const stocks = await Stock.find();
@@ -178,12 +164,11 @@ app.put('/api/stocks/:id', async (req, res) => {
   }
 });
 
-// ⚠️ TOUJOURS EN DERNIER : Route fallback vers index.html
+// Route Fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Démarrage du serveur
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+  console.log(`🚀 Serveur actif sur http://localhost:${PORT}`);
 });
