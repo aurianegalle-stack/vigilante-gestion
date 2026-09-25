@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'gym_secret_token_key_2026';
 
 // ⚠️ REMPLACE LA CHAÎNE CI-DESSOUS PAR TON URL MONGODB ATLAS REAL (AVEC TON MOT DE PASSE)
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:2XqPVl5ClI3WajL0@cluster0.xxxxx.mongodb.net/gymgestion?retryWrites=true&w=majority";
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:0603734703Seb11@cluster0.pae88yh.mongodb.net/gymgestion?retryWrites=true&w=majority";
 
 // Connexion à MongoDB Atlas
 mongoose.connect(MONGO_URI)
