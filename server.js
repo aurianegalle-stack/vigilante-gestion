@@ -97,21 +97,26 @@ app.get('/api/leotards', async (req, res) => {
 
 app.post('/api/leotards', async (req, res) => {
   try {
-    const { name, size, status, gymnast, cautionAmount } = req.body;
-    if (!name) {
+    const { name, size, status, gymnast, code } = req.body;
+    if (!name || !name.trim()) {
       return res.status(400).json({ message: "Le nom du justaucorps est obligatoire." });
     }
+
+    // Génération d'un code par défaut unique si vide
+    const generatedCode = code && code.trim() ? code.trim() : `JST-${Date.now()}`;
+
     const newLeotard = new Leotard({
       name: name.trim(),
+      code: generatedCode,
       size: size ? size.trim() : '8A',
       status: status || 'Disponible',
-      gymnast: gymnast || '-',
-      cautionAmount: cautionAmount || 45
+      gymnast: gymnast || '-'
     });
+
     const saved = await newLeotard.save();
     res.status(201).json(saved);
   } catch (err) {
-    res.status(400).json({ message: "Erreur création justaucorps", error: err.message });
+    res.status(400).json({ message: "Erreur sauvegarde : " + err.message });
   }
 });
 
