@@ -5,19 +5,25 @@ const path = require('path');
 
 const app = express();
 
-// 1. Middlewares essentiels
-app.use(cors()); // Désactive les blocages CORS
+// Middlewares
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 2. Connexion MongoDB Atlas
-const MONGO_URI = process.env.MONGO_URI || 'TA_CONNEXION_MONGODB_ATLAS_ICI';
+// Connexion MongoDB Atlas
+const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Connecté à MongoDB Atlas'))
-  .catch(err => console.error('❌ Erreur de connexion MongoDB :', err));
+if (!MONGO_URI || (!MONGO_URI.startsWith('mongodb://') && !MONGO_URI.startsWith('mongodb+srv://'))) {
+  console.error('❌ ERREUR : MONGO_URI manquant ou mal configuré.');
+} else {
+  mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ Connecté avec succès à MongoDB Atlas'))
+    .catch(err => console.error('❌ Erreur de connexion MongoDB :', err.message));
+}
 
-// 3. Schéma et Modèle Gymnaste
+// --- SCHÉMAS MONGOOSE ---
+
+// Gymnastes
 const gymnastSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -27,7 +33,30 @@ const gymnastSchema = new mongoose.Schema({
 
 const Gymnast = mongoose.models.Gymnast || mongoose.model('Gymnast', gymnastSchema);
 
-// 4. Routes API Gymnastes
+// Justaucorps (Flexibilité des champs pour éviter les rejets)
+const leotardSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  size: { type: String, default: '8A' },
+  status: { type: String, default: 'Disponible' },
+  gymnast: { type: String, default: '-' },
+  cautionAmount: { type: Number, default: 45 }
+}, { timestamps: true });
+
+const Leotard = mongoose.models.Leotard || mongoose.model('Leotard', leotardSchema);
+
+// Stock Buvette
+const stockSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  quantity: { type: Number, default: 0 },
+  unitPrice: { type: Number, default: 0 }
+}, { timestamps: true });
+
+const Stock = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
+
+
+// --- ROUTES API ---
+
+// Gymnastes
 app.get('/api/gymnasts', async (req, res) => {
   try {
     const list = await Gymnast.find().sort({ createdAt: -1 });
@@ -52,17 +81,77 @@ app.post('/api/gymnasts', async (req, res) => {
     await newGymnast.save();
     res.status(201).json(newGymnast);
   } catch (err) {
-    res.status(500).json({ message: "Erreur sauvegarde gymnaste", error: err.message });
+    res.status(400).json({ message: "Erreur sauvegarde gymnaste", error: err.message });
   }
 });
 
-// 5. Fallback pour afficher index.html sur toutes les autres routes
+// Justaucorps
+app.get('/api/leotards', async (req, res) => {
+  try {
+    const list = await Leotard.find().sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lecture justaucorps", error: err.message });
+  }
+});
+
+app.post('/api/leotards', async (req, res) => {
+  try {
+    const { name, size, status, gymnast, cautionAmount } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: "Le nom du justaucorps est obligatoire." });
+    }
+    const newLeotard = new Leotard({
+      name: name.trim(),
+      size: size ? size.trim() : '8A',
+      status: status || 'Disponible',
+      gymnast: gymnast || '-',
+      cautionAmount: cautionAmount || 45
+    });
+    const saved = await newLeotard.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur création justaucorps", error: err.message });
+  }
+});
+
+app.put('/api/leotards/:id', async (req, res) => {
+  try {
+    const updated = await Leotard.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur modification juste-au-corps", error: err.message });
+  }
+});
+
+// Stocks
+app.get('/api/stocks', async (req, res) => {
+  try {
+    const list = await Stock.find().sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lecture stock", error: err.message });
+  }
+});
+
+app.post('/api/stocks', async (req, res) => {
+  try {
+    const { name, quantity, unitPrice } = req.body;
+    if (!name) return res.status(400).json({ message: "Le nom est obligatoire." });
+    const newStock = new Stock({ name, quantity, unitPrice });
+    await newStock.save();
+    res.status(201).json(newStock);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur sauvegarde stock", error: err.message });
+  }
+});
+
+// Fallback HTML
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 6. Démarrage Serveur
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
+  console.log(`🚀 Serveur actif sur le port ${PORT}`);
 });

@@ -433,34 +433,35 @@
         }
 
         async function openAddLeotardModal() {
-            const name = prompt("Nom du nouveau justaucorps :");
-            if (!name || !name.trim()) return;
-            const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
+    const name = prompt("Nom du nouveau justaucorps :");
+    if (!name || !name.trim()) return;
+    const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
 
-            try {
-                const res = await fetch(`${API_URL}/api/leotards`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        name: name.trim(), 
-                        size: size ? size.trim() : '8A', 
-                        status: "Disponible", 
-                        gymnast: "-" 
-                    })
-                });
+    try {
+        const res = await fetch(`${API_URL}/api/leotards`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name: name.trim(), 
+                size: size ? size.trim() : '8A', 
+                status: "Disponible", 
+                gymnast: "-" 
+            })
+        });
 
-                if (res.ok) {
-                    showToast("Justaucorps enregistré !", "success");
-                    await fetchAllData();
-                    renderLeotards();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    showToast("Erreur serveur : " + (errData.message || "Échec d'enregistrement"), "warning");
-                }
-            } catch (err) {
-                showToast("Erreur de connexion au serveur", "warning");
-            }
+        const data = await res.json();
+
+        if (res.ok) {
+            showToast("Justaucorps enregistré !", "success");
+            await fetchAllData();
+            renderLeotards();
+        } else {
+            alert("❌ Rejet MongoDB / Serveur : " + (data.message || JSON.stringify(data)));
         }
+    } catch (err) {
+        alert("❌ Erreur de connexion réseau au serveur Render.");
+    }
+}
 
         function openRentalModal() {
             const selectLeo = document.getElementById('rent-select-leotard');
