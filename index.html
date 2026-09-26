@@ -266,16 +266,14 @@
     </div>
 
     <script>
-        // 🔹 CONFIGURATION URL API (Auto-détection réseau)
+        // Auto-détection de l'URL du serveur
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const isServedByRender = window.location.origin.includes('onrender.com');
         
-        // Si servi directement par Render ou en local, API_URL = '' (chemin relatif). Sinon URL distante nettoyée sans slash final.
         const API_URL = (isLocal || isServedByRender) 
             ? '' 
             : 'https://lavigilantegym-gestion.onrender.com';
 
-        // State Management
         let leotards = [];
         let stock = [];
         let gymnasts = [];
@@ -299,7 +297,6 @@
 
                 updateBadgesAndStats();
 
-                // Rafraîchissement automatique de la vue courante
                 if (!document.getElementById('view-adherents').classList.contains('hidden')) renderGymnasts();
                 if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
                 if (!document.getElementById('view-buvette').classList.contains('hidden')) renderStockTable();
@@ -378,40 +375,40 @@
         }
 
         async function openAddGymnastModal() {
-    const firstName = prompt("Prénom du gymnaste :");
-    if (!firstName || !firstName.trim()) return;
-    const lastName = prompt("Nom du gymnaste :");
-    if (!lastName || !lastName.trim()) return;
-    const group = prompt("Groupe (ex: Poussines, GAM, GAF) :", "GAF Poussines");
+            const firstName = prompt("Prénom du gymnaste :");
+            if (!firstName || !firstName.trim()) return;
+            const lastName = prompt("Nom du gymnaste :");
+            if (!lastName || !lastName.trim()) return;
+            const group = prompt("Groupe (ex: Poussines, GAM, GAF) :", "GAF Poussines");
 
-    try {
-        const res = await fetch(`${API_URL}/api/gymnasts`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                firstName: firstName.trim(), 
-                lastName: lastName.trim(), 
-                group: group ? group.trim() : 'Général',
-                category: 'Général'
-            })
-        });
+            try {
+                const res = await fetch(`${API_URL}/api/gymnasts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        firstName: firstName.trim(), 
+                        lastName: lastName.trim(), 
+                        group: group ? group.trim() : 'Général',
+                        category: 'Général'
+                    })
+                });
 
-        if (res.ok) {
-            showToast("Gymnaste sauvegardé !", "success");
-            await fetchAllData();
-            renderGymnasts();
-        } else {
-            const errData = await res.json().catch(() => ({}));
-            alert("Erreur de sauvegarde : " + (errData.message || res.statusText));
+                if (res.ok) {
+                    showToast("Gymnaste sauvegardé !", "success");
+                    await fetchAllData();
+                    renderGymnasts();
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    showToast("Erreur serveur : " + (err.message || "Échec de création"), "warning");
+                }
+            } catch (err) {
+                showToast("Erreur de connexion au serveur", "warning");
+            }
         }
-    } catch (err) {
-        alert("Erreur réseau : le serveur ne répond pas.");
-    }
-}
 
         function renderLeotards() {
             const grid = document.getElementById('leotards-grid');
-            if (leotards.length === 0) {
+            if (!leotards || leotards.length === 0) {
                 grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun juste-au-corps en inventaire.</div>`;
                 return;
             }
@@ -437,23 +434,31 @@
 
         async function openAddLeotardModal() {
             const name = prompt("Nom du nouveau justaucorps :");
-            if (!name) return;
+            if (!name || !name.trim()) return;
             const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
 
             try {
                 const res = await fetch(`${API_URL}/api/leotards`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, size, status: "Disponible", gymnast: "-" })
+                    body: JSON.stringify({ 
+                        name: name.trim(), 
+                        size: size ? size.trim() : '8A', 
+                        status: "Disponible", 
+                        gymnast: "-" 
+                    })
                 });
 
                 if (res.ok) {
-                    showToast("Justaucorps enregistré dans MongoDB Atlas !", "success");
+                    showToast("Justaucorps enregistré !", "success");
                     await fetchAllData();
                     renderLeotards();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    showToast("Erreur serveur : " + (errData.message || "Échec d'enregistrement"), "warning");
                 }
             } catch (err) {
-                showToast("Erreur lors de l'enregistrement", "warning");
+                showToast("Erreur de connexion au serveur", "warning");
             }
         }
 
@@ -507,9 +512,11 @@
                     closeRentalModal();
                     await fetchAllData();
                     renderLeotards();
+                } else {
+                    showToast("Erreur lors de l'attribution", "warning");
                 }
             } catch (err) {
-                showToast("Erreur lors de l'attribution", "warning");
+                showToast("Erreur de connexion au serveur", "warning");
             }
         }
 
@@ -529,15 +536,17 @@
                     await fetchAllData();
                     if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
                     if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
+                } else {
+                    showToast("Erreur lors du retour", "warning");
                 }
             } catch (err) {
-                showToast("Erreur lors du retour", "warning");
+                showToast("Erreur de connexion au serveur", "warning");
             }
         }
 
         function renderStockTable() {
             const body = document.getElementById('stock-table-body');
-            if (stock.length === 0) {
+            if (!stock || stock.length === 0) {
                 body.innerHTML = `<tr><td colspan="3" class="py-12 text-center text-slate-500">Aucun produit en stock.</td></tr>`;
                 return;
             }
@@ -553,23 +562,25 @@
 
         async function openAddStockItemModal() {
             const name = prompt("Nom du produit :");
-            if (!name) return;
+            if (!name || !name.trim()) return;
             const price = parseFloat(prompt("Prix unitaire (€) :", "1.50")) || 1.50;
 
             try {
                 const res = await fetch(`${API_URL}/api/stocks`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, quantity: 10, unitPrice: price })
+                    body: JSON.stringify({ name: name.trim(), quantity: 10, unitPrice: price })
                 });
 
                 if (res.ok) {
                     showToast("Article ajouté au stock !", "success");
                     await fetchAllData();
                     renderStockTable();
+                } else {
+                    showToast("Erreur lors de l'ajout", "warning");
                 }
             } catch (err) {
-                showToast("Erreur lors de l'ajout", "warning");
+                showToast("Erreur de connexion au serveur", "warning");
             }
         }
 
