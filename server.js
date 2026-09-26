@@ -13,7 +13,13 @@ const Gymnast = require('./models/Gymnast');
 
 const app = express();
 
-app.use(cors());
+// 🔹 CORRECTION CRITIQUE : Configuration CORS pour autoriser l'accès depuis le Web
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -24,6 +30,11 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:0
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connecté à MongoDB Atlas avec succès'))
   .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));
+
+// Route de test d'état du serveur
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Serveur actif' });
+});
 
 // --- ROUTES AUTHENTIFICATION ---
 app.post('/api/auth/register', async (req, res) => {
