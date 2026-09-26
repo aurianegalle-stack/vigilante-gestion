@@ -266,10 +266,15 @@
     </div>
 
     <script>
-        // CONFIGURATION URL API (Bascule automatique Local vs Web)
-        const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        // 🔹 CONFIGURATION URL API (Auto-détection réseau)
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isServedByRender = window.location.origin.includes('onrender.com');
+        
+        // Si servi directement par Render ou en local, API_URL = '' (chemin relatif). Sinon URL distante nettoyée sans slash final.
+        const API_URL = (isLocal || isServedByRender) 
             ? '' 
-            : 'https://lavigilantegym-gestion.onrender.com/'
+            : 'https://lavigilantegym-gestion.onrender.com';
+
         // State Management
         let leotards = [];
         let stock = [];
@@ -293,6 +298,12 @@
                 if (resStk.ok) stock = await resStk.json();
 
                 updateBadgesAndStats();
+
+                // Rafraîchissement automatique de la vue courante
+                if (!document.getElementById('view-adherents').classList.contains('hidden')) renderGymnasts();
+                if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
+                if (!document.getElementById('view-buvette').classList.contains('hidden')) renderStockTable();
+                if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
             } catch (err) {
                 showToast("Erreur de connexion au serveur MongoDB Atlas", "warning");
             }
@@ -318,7 +329,7 @@
                     renderStockTable();
                     break;
                 case 'adherents':
-                    title.innerHTML = `<i class="fa-solid fa-user-ninja text-emerald-400"></i> Repertoire Gymnastes`;
+                    title.innerHTML = `<i class="fa-solid fa-user-ninja text-emerald-400"></i> Répertoire Gymnastes`;
                     renderGymnasts();
                     break;
             }
