@@ -97,26 +97,30 @@ app.get('/api/leotards', async (req, res) => {
 
 app.post('/api/leotards', async (req, res) => {
   try {
-    const { name, size, status, gymnast, code } = req.body;
+    const { name, size, status, gymnast, code, category } = req.body;
+    
     if (!name || !name.trim()) {
-      return res.status(400).json({ message: "Le nom du justaucorps est obligatoire." });
+      return res.status(400).json({ message: "Le nom est obligatoire." });
     }
 
-    // Génération d'un code par défaut unique si vide
-    const generatedCode = code && code.trim() ? code.trim() : `JST-${Date.now()}`;
+    // Génère un code unique garanti basé sur l'horodatage si non fourni
+    const uniqueCode = code && code.trim() ? code.trim() : `JST-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const newLeotard = new Leotard({
       name: name.trim(),
-      code: generatedCode,
+      code: uniqueCode,
+      category: category || 'Général',
       size: size ? size.trim() : '8A',
       status: status || 'Disponible',
+      assignedTo: gymnast || '',
       gymnast: gymnast || '-'
     });
 
     const saved = await newLeotard.save();
     res.status(201).json(saved);
   } catch (err) {
-    res.status(400).json({ message: "Erreur sauvegarde : " + err.message });
+    console.error("Erreur création leotard :", err);
+    res.status(400).json({ message: "Erreur enregistrement : " + err.message });
   }
 });
 
