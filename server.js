@@ -1,185 +1,68 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const path = require('path');
-
-// Modèles Mongoose
-const User = require('./models/User');
-const Leotard = require('./models/Leotard');
-const Stock = require('./models/Stock');
-const Gymnast = require('./models/Gymnast');
 
 const app = express();
 
-// 🔹 CORRECTION CRITIQUE : Configuration CORS pour autoriser l'accès depuis le Web
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+// 1. Middlewares essentiels
+app.use(cors()); // Désactive les blocages CORS
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'gym_secret_token_key_2026';
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://aurianegalle_db_user:0603734703Seb11@cluster0.pae88yh.mongodb.net/gymgestion?retryWrites=true&w=majority";
+// 2. Connexion MongoDB Atlas
+const MONGO_URI = process.env.MONGO_URI || 'TA_CONNEXION_MONGODB_ATLAS_ICI';
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Connecté à MongoDB Atlas avec succès'))
-  .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));
+  .then(() => console.log('✅ Connecté à MongoDB Atlas'))
+  .catch(err => console.error('❌ Erreur de connexion MongoDB :', err));
 
-// Route de test d'état du serveur
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'Serveur actif' });
-});
+// 3. Schéma et Modèle Gymnaste
+const gymnastSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  group: { type: String, default: 'Général' },
+  category: { type: String, default: 'Général' }
+}, { timestamps: true });
 
-// --- ROUTES AUTHENTIFICATION ---
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    const { username, email, password, role } = req.body;
-    if (!username || !email || !password) return res.status(400).json({ message: 'Champs requis manquants.' });
-    
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) return res.status(400).json({ message: 'Utilisateur déjà existant.' });
+const Gymnast = mongoose.models.Gymnast || mongoose.model('Gymnast', gymnastSchema);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword, role: role || 'Coach' });
-    await newUser.save();
-    res.status(201).json({ message: 'Utilisateur créé !' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Identifiants invalides.' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Identifiants invalides.' });
-
-    const token = jwt.sign({ id: user._id, role: user.role, username: user.username }, JWT_SECRET, { expiresIn: '24h' });
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// --- ROUTES GYMNASTES ---
+// 4. Routes API Gymnastes
 app.get('/api/gymnasts', async (req, res) => {
   try {
-    const gymnasts = await Gymnast.find();
-    res.json(gymnasts);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const list = await Gymnast.find().sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lecture gymnastes", error: err.message });
   }
 });
 
 app.post('/api/gymnasts', async (req, res) => {
   try {
-    const newGymnast = new Gymnast(req.body);
-    const savedGymnast = await newGymnast.save();
-    res.status(201).json(savedGymnast);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const { firstName, lastName, group, category } = req.body;
+    if (!firstName || !lastName) {
+      return res.status(400).json({ message: "Prénom et Nom sont obligatoires." });
+    }
+    const newGymnast = new Gymnast({
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      group: group ? group.trim() : 'Général',
+      category: category ? category.trim() : 'Général'
+    });
+    await newGymnast.save();
+    res.status(201).json(newGymnast);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur sauvegarde gymnaste", error: err.message });
   }
 });
 
-app.put('/api/gymnasts/:id', async (req, res) => {
-  try {
-    const updated = await Gymnast.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.delete('/api/gymnasts/:id', async (req, res) => {
-  try {
-    await Gymnast.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Gymnaste supprimé' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// --- ROUTES JUSTAUCORPS ---
-app.get('/api/leotards', async (req, res) => {
-  try {
-    const leotards = await Leotard.find();
-    res.json(leotards);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post('/api/leotards', async (req, res) => {
-  try {
-    const newLeotard = new Leotard(req.body);
-    const savedLeotard = await newLeotard.save();
-    res.status(201).json(savedLeotard);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.put('/api/leotards/:id', async (req, res) => {
-  try {
-    const updatedLeotard = await Leotard.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedLeotard);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.delete('/api/leotards/:id', async (req, res) => {
-  try {
-    await Leotard.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Justaucorps supprimé' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// --- ROUTES STOCKS ---
-app.get('/api/stocks', async (req, res) => {
-  try {
-    const stocks = await Stock.find();
-    res.json(stocks);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post('/api/stocks', async (req, res) => {
-  try {
-    const newStock = new Stock(req.body);
-    const savedStock = await newStock.save();
-    res.status(201).json(savedStock);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.put('/api/stocks/:id', async (req, res) => {
-  try {
-    const updatedStock = await Stock.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedStock);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Route Fallback
+// 5. Fallback pour afficher index.html sur toutes les autres routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// 6. Démarrage Serveur
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur actif sur http://localhost:${PORT}`);
+  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
 });

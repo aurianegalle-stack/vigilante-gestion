@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const gymnastSchema = new mongoose.Schema({
-  lastName: { type: String, required: true },
   firstName: { type: String, required: true },
-  category: { type: String },
-  group: { type: String },
+  lastName: { type: String, required: true },
+  group: { type: String, default: 'Général' },
+  category: { type: String, default: 'Général' },
   active: { type: Boolean, default: true }
 }, { timestamps: true });
 
