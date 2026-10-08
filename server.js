@@ -32,7 +32,7 @@ if (!MONGO_URI || (!MONGO_URI.startsWith('mongodb://') && !MONGO_URI.startsWith(
 
 // --- SCHÉMAS MONGOOSE ---
 
-// Gymnastes : Mise à jour avec tous les nouveaux champs du formulaire
+// Gymnastes
 const gymnastSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -184,6 +184,19 @@ app.put('/api/leotards/:id', async (req, res) => {
     res.json(updated);
   } catch (err) {
     res.status(400).json({ message: "Erreur modification juste-au-corps", error: err.message });
+  }
+});
+
+// AJOUT : Supprimer un justaucorps
+app.delete('/api/leotards/:id', async (req, res) => {
+  try {
+    const deleted = await Leotard.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Justaucorps introuvable." });
+    }
+    res.json({ message: "Justaucorps supprimé avec succès." });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lors de la suppression du justaucorps", error: err.message });
   }
 });
 
