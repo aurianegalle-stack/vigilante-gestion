@@ -384,29 +384,29 @@
         }
 
         async function fetchGymnasts() {
-            try {
-                const res = await fetch(`${API_URL}/gymnastes`);
-                const data = await res.json();
-                const container = document.getElementById('gymnasts-grid');
-                if (!container) return;
+    try {
+        const res = await fetch(`${API_URL}/gymnastes`);
+        const data = await res.json();
+        const container = document.getElementById('gymnasts-grid');
+        if (!container) return;
 
-                if (!data || data.length === 0) {
-                    container.innerHTML = `<p class="text-slate-400 text-sm">Aucun adhérent enregistré pour le moment.</p>`;
-                    return;
-                }
-
-                container.innerHTML = data.map(g => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-white">${g.nom} ${g.prenom}</h4>
-                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">${g.categorie || 'Adhérent'}</span>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.error('Erreur chargement gymnastes:', err);
-            }
+        if (!data || data.length === 0) {
+            container.innerHTML = `<p class="text-slate-400 text-sm">Aucun adhérent enregistré pour le moment.</p>`;
+            return;
         }
+
+        container.innerHTML = data.map(g => `
+            <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
+                    <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">${g.category || g.group || 'Général'}</span>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error('Erreur chargement gymnastes:', err);
+    }
+}
 
         async function fetchLeotards() {
             try {
@@ -471,32 +471,36 @@
         }
 
         async function handleAddGymnastSubmit(event) {
-            event.preventDefault();
+    event.preventDefault();
 
-            const newGymnast = {
-                nom: document.getElementById('gym-add-nom').value.trim(),
-                prenom: document.getElementById('gym-add-prenom').value.trim(),
-                categorie: document.getElementById('gym-add-categorie').value || 'Adhérent'
-            };
+    const selectedCategory = document.getElementById('gym-add-categorie').value || 'Général';
 
-            try {
-                const res = await fetch(`${API_URL}/gymnastes`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newGymnast)
-                });
+    const newGymnast = {
+        lastName: document.getElementById('gym-add-nom').value.trim(),
+        firstName: document.getElementById('gym-add-prenom').value.trim(),
+        category: selectedCategory,
+        group: selectedCategory
+    };
 
-                if (res.ok) {
-                    closeAddGymnastModal();
-                    fetchGymnasts();
-                } else {
-                    alert("Erreur lors de l'enregistrement de l'adhérent.");
-                }
-            } catch (err) {
-                console.error("Erreur serveur :", err);
-                alert("Impossible de contacter le serveur.");
-            }
+    try {
+        const res = await fetch(`${API_URL}/gymnastes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newGymnast)
+        });
+
+        if (res.ok) {
+            closeAddGymnastModal();
+            fetchGymnasts();
+        } else {
+            const errData = await res.json().catch(() => ({}));
+            alert(`Erreur : ${errData.error || errData.message || "Impossible d'enregistrer l'adhérent."}`);
         }
+    } catch (err) {
+        console.error("Erreur serveur :", err);
+        alert("Impossible de contacter le serveur.");
+    }
+}
 
         function openAddStockItemModal() { alert("Modal ajout d'article à implémenter"); }
 
