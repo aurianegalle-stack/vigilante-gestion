@@ -103,6 +103,19 @@ app.post('/api/gymnasts', async (req, res) => {
   }
 });
 
+// Supprimer un gymnaste
+app.delete('/api/gymnasts/:id', async (req, res) => {
+  try {
+    const deleted = await Gymnast.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Gymnaste introuvable." });
+    }
+    res.json({ message: "Gymnaste supprimé avec succès." });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lors de la suppression", error: err.message });
+  }
+});
+
 // Justaucorps
 app.get('/api/leotards', async (req, res) => {
   try {

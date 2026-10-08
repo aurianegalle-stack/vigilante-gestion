@@ -384,29 +384,54 @@
         }
 
         async function fetchGymnasts() {
-            try {
-                const res = await fetch(`${API_URL}/gymnasts`);
-                const data = await res.json();
-                const container = document.getElementById('gymnasts-grid');
-                if (!container) return;
+    try {
+        const res = await fetch(`${API_URL}/gymnasts`);
+        const data = await res.json();
+        const container = document.getElementById('gymnasts-grid');
+        if (!container) return;
 
-                if (!data || data.length === 0) {
-                    container.innerHTML = `<p class="text-slate-400 text-sm">Aucun adhérent enregistré pour le moment.</p>`;
-                    return;
-                }
-
-                container.innerHTML = data.map(g => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
-                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">${g.category || g.group || 'Général'}</span>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.error('Erreur chargement gymnastes:', err);
-            }
+        if (!data || data.length === 0) {
+            container.innerHTML = `<p class="text-slate-400 text-sm">Aucun adhérent enregistré pour le moment.</p>`;
+            return;
         }
+
+        container.innerHTML = data.map(g => `
+            <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
+                    <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${g.category || g.group || 'Général'}</span>
+                </div>
+                <button onclick="deleteGymnast('${g._id}', '${g.firstName}', '${g.lastName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error('Erreur chargement gymnastes:', err);
+    }
+}
+
+async function deleteGymnast(id, firstName, lastName) {
+    if (!confirm(`Voulez-vous vraiment supprimer ${firstName} ${lastName} ?`)) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/gymnasts/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            fetchGymnasts();
+        } else {
+            const errData = await res.json().catch(() => ({}));
+            alert(`Erreur : ${errData.message || "Impossible de supprimer l'adhérent."}`);
+        }
+    } catch (err) {
+        console.error("Erreur suppression :", err);
+        alert("Impossible de contacter le serveur.");
+    }
+}
 
         async function fetchLeotards() {
             try {
