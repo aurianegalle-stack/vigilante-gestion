@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GymGestion - La Vigilante Gymnastique</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>GymGestion - La Vigilante Gymnastiqueeee</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -89,7 +92,7 @@
         <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto" id="nav-links">
             <a href="#dashboard" onclick="navigateTo('dashboard')" class="nav-item active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-teal-300 bg-teal-500/10 border border-teal-500/20 transition">
                 <i class="fa-solid fa-chart-pie text-lg w-5 text-center"></i>
-                <span>Tableau de Bord</span>
+                <span>Tableau de Bordddd</span>
             </a>
             <a href="#justaucorps" onclick="navigateTo('justaucorps')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
                 <i class="fa-solid fa-shirt text-lg w-5 text-center"></i>
@@ -112,7 +115,7 @@
         </nav>
 
         <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-            <span>GymGestion v2.4</span>
+            <span>GymGestion v3.0</span>
         </div>
     </aside>
 
@@ -171,7 +174,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Center Widgets -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
                     <h3 class="font-bold text-lg text-white">Dernières Locations & Retours Attendus</h3>
@@ -220,7 +222,7 @@
         <!-- VIEW 5: GYMNASTS DIRECTORY -->
         <section id="view-adherents" class="view-section hidden space-y-6">
             <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
-                <button onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
+                <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
             </div>
@@ -265,330 +267,22 @@
         </div>
     </div>
 
-    <script>
-        // 🔹 CONFIGURATION URL API (Auto-détection réseau)
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const isServedByRender = window.location.origin.includes('onrender.com');
-        
-        // Si servi directement par Render ou en local, API_URL = '' (chemin relatif). Sinon URL distante nettoyée sans slash final.
-        const API_URL = (isLocal || isServedByRender) 
-            ? '' 
-            : 'https://lavigilantegym-gestion.onrender.com';
+    <!-- MODAL: ADD LEOTARD -->
+    <div id="modal-add-leotard" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shirt text-teal-400"></i> Ajouter un Justaucorps
+                </h3>
+                <button onclick="closeAddLeotardModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
 
-        // State Management
-        let leotards = [];
-        let stock = [];
-        let gymnasts = [];
-
-        window.onload = async function() {
-            await fetchAllData();
-            navigateTo('dashboard');
-        };
-
-        async function fetchAllData() {
-            try {
-                const [resGym, resLeo, resStk] = await Promise.all([
-                    fetch(`${API_URL}/api/gymnasts`),
-                    fetch(`${API_URL}/api/leotards`),
-                    fetch(`${API_URL}/api/stocks`)
-                ]);
-
-                if (resGym.ok) gymnasts = await resGym.json();
-                if (resLeo.ok) leotards = await resLeo.json();
-                if (resStk.ok) stock = await resStk.json();
-
-                updateBadgesAndStats();
-
-                // Rafraîchissement automatique de la vue courante
-                if (!document.getElementById('view-adherents').classList.contains('hidden')) renderGymnasts();
-                if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
-                if (!document.getElementById('view-buvette').classList.contains('hidden')) renderStockTable();
-                if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
-            } catch (err) {
-                showToast("Erreur de connexion au serveur MongoDB Atlas", "warning");
-            }
-        }
-
-        function navigateTo(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            const targetView = document.getElementById(`view-${viewId}`);
-            if (targetView) targetView.classList.remove('hidden');
-
-            const title = document.getElementById('page-title');
-            switch(viewId) {
-                case 'dashboard':
-                    title.innerHTML = `<i class="fa-solid fa-chart-pie text-teal-400"></i> Tableau de Bord`;
-                    renderDashboardView();
-                    break;
-                case 'justaucorps':
-                    title.innerHTML = `<i class="fa-solid fa-shirt text-pink-400"></i> Parc Justaucorps`;
-                    renderLeotards();
-                    break;
-                case 'buvette':
-                    title.innerHTML = `<i class="fa-solid fa-cookie-bite text-amber-400"></i> Stock Buvette`;
-                    renderStockTable();
-                    break;
-                case 'adherents':
-                    title.innerHTML = `<i class="fa-solid fa-user-ninja text-emerald-400"></i> Répertoire Gymnastes`;
-                    renderGymnasts();
-                    break;
-            }
-        }
-
-        function updateBadgesAndStats() {
-            const rentedCount = leotards.filter(l => l.status === 'Loué').length;
-            document.getElementById('badge-rented-count').textContent = rentedCount;
-            document.getElementById('stat-rented-count').textContent = rentedCount;
-
-            const totalCaution = leotards.filter(l => l.status === 'Loué').reduce((acc, curr) => acc + (curr.cautionAmount || 45), 0);
-            document.getElementById('stat-cautions-total').textContent = `${totalCaution} €`;
-        }
-
-        function renderDashboardView() {
-            const dashRentals = document.getElementById('dash-rentals-list');
-            const rentedItems = leotards.filter(l => l.status === 'Loué');
-
-            if (rentedItems.length === 0) {
-                dashRentals.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl">Aucune location en cours.</div>`;
-            } else {
-                dashRentals.innerHTML = rentedItems.map(item => `
-                    <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-3">
-                        <div>
-                            <p class="text-sm font-bold text-slate-100">${item.name}</p>
-                            <p class="text-xs text-slate-400">Gymnaste: <strong class="text-pink-300">${item.gymnast || '-'}</strong></p>
-                        </div>
-                        <button onclick="returnLeotard('${item._id}')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition">Retourner</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function renderGymnasts() {
-            const grid = document.getElementById('gymnasts-grid');
-            if (!gymnasts || gymnasts.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun gymnaste enregistré.</div>`;
-                return;
-            }
-            grid.innerHTML = gymnasts.map(g => `
-                <div class="glass-card rounded-2xl p-5 space-y-3">
-                    <h4 class="font-bold text-base text-white">${g.firstName || ''} ${g.lastName || ''}</h4>
-                    <span class="text-xs text-teal-400 font-medium">${g.group || 'Général'}</span>
+            <form id="form-add-leotard" onsubmit="handleAddLeotardSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom / Identifiant du Justaucorps *</label>
+                    <input type="text" id="leo-add-name" required placeholder="Ex: Pink Star #02" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
                 </div>
-            `).join('');
-        }
 
-        async function openAddGymnastModal() {
-    const firstName = prompt("Prénom du gymnaste :");
-    if (!firstName || !firstName.trim()) return;
-    const lastName = prompt("Nom du gymnaste :");
-    if (!lastName || !lastName.trim()) return;
-    const group = prompt("Groupe (ex: Poussines, GAM, GAF) :", "GAF Poussines");
-
-    try {
-        const res = await fetch(`${API_URL}/api/gymnasts`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                firstName: firstName.trim(), 
-                lastName: lastName.trim(), 
-                group: group ? group.trim() : 'Général',
-                category: 'Général'
-            })
-        });
-
-        if (res.ok) {
-            showToast("Gymnaste sauvegardé !", "success");
-            await fetchAllData();
-            renderGymnasts();
-        } else {
-            const errData = await res.json().catch(() => ({}));
-            alert("Erreur de sauvegarde : " + (errData.message || res.statusText));
-        }
-    } catch (err) {
-        alert("Erreur réseau : le serveur ne répond pas.");
-    }
-}
-
-        function renderLeotards() {
-            const grid = document.getElementById('leotards-grid');
-            if (leotards.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">Aucun juste-au-corps en inventaire.</div>`;
-                return;
-            }
-
-            grid.innerHTML = leotards.map(item => `
-                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
-                    <div>
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Disponible' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-pink-500/10 text-pink-300'}">${item.status}</span>
-                        <h4 class="font-bold text-base text-white mt-2">${item.name}</h4>
-                        <p class="text-xs text-slate-400">Taille: ${item.size}</p>
-                        ${item.status === 'Loué' ? `<p class="text-xs text-pink-300 mt-1">Loué à: ${item.gymnast}</p>` : ''}
-                    </div>
-                    <div>
-                        ${item.status === 'Disponible' ? `
-                            <button onclick="quickRentLeotard('${item._id}')" class="w-full py-2 bg-pink-500/10 hover:bg-pink-500/20 text-pink-300 border border-pink-500/30 font-semibold rounded-xl text-xs transition">Louer tenue</button>
-                        ` : `
-                            <button onclick="returnLeotard('${item._id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition">Enregistrer Retour</button>
-                        `}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function openAddLeotardModal() {
-            const name = prompt("Nom du nouveau justaucorps :");
-            if (!name) return;
-            const size = prompt("Taille (4A, 6A, 8A, XS, S, M, L) :", "8A");
-
-            try {
-                const res = await fetch(`${API_URL}/api/leotards`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, size, status: "Disponible", gymnast: "-" })
-                });
-
-                if (res.ok) {
-                    showToast("Justaucorps enregistré dans MongoDB Atlas !", "success");
-                    await fetchAllData();
-                    renderLeotards();
-                }
-            } catch (err) {
-                showToast("Erreur lors de l'enregistrement", "warning");
-            }
-        }
-
-        function openRentalModal() {
-            const selectLeo = document.getElementById('rent-select-leotard');
-            const selectGym = document.getElementById('rent-select-gymnast');
-
-            const avail = leotards.filter(l => l.status === 'Disponible');
-            if (avail.length === 0) {
-                showToast("Aucun justaucorps disponible.", "warning");
-                return;
-            }
-
-            selectLeo.innerHTML = avail.map(l => `<option value="${l._id}">${l.name} (${l.size})</option>`).join('');
-            
-            selectGym.innerHTML = gymnasts.length > 0
-                ? gymnasts.map(g => `<option value="${g.firstName} ${g.lastName}">${g.firstName} ${g.lastName} (${g.group || 'Général'})</option>`).join('')
-                : `<option value="-">Aucun adhérent enregistré</option>`;
-
-            document.getElementById('modal-rental').classList.remove('hidden');
-        }
-
-        function quickRentLeotard(id) {
-            openRentalModal();
-            document.getElementById('rent-select-leotard').value = id;
-        }
-
-        function closeRentalModal() {
-            document.getElementById('modal-rental').classList.add('hidden');
-        }
-
-        async function handleRentalSubmit(e) {
-            e.preventDefault();
-            const leoId = document.getElementById('rent-select-leotard').value;
-            const gymnastName = document.getElementById('rent-select-gymnast').value;
-            const amount = parseInt(document.getElementById('rent-caution-amount').value) || 45;
-
-            try {
-                const res = await fetch(`${API_URL}/api/leotards/${leoId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        status: 'Loué',
-                        gymnast: gymnastName,
-                        cautionAmount: amount
-                    })
-                });
-
-                if (res.ok) {
-                    showToast(`Justaucorps attribué à ${gymnastName} !`, "success");
-                    closeRentalModal();
-                    await fetchAllData();
-                    renderLeotards();
-                }
-            } catch (err) {
-                showToast("Erreur lors de l'attribution", "warning");
-            }
-        }
-
-        async function returnLeotard(id) {
-            try {
-                const res = await fetch(`${API_URL}/api/leotards/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        status: 'Disponible',
-                        gymnast: '-'
-                    })
-                });
-
-                if (res.ok) {
-                    showToast("Justaucorps retourné et disponible !", "info");
-                    await fetchAllData();
-                    if (!document.getElementById('view-justaucorps').classList.contains('hidden')) renderLeotards();
-                    if (!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboardView();
-                }
-            } catch (err) {
-                showToast("Erreur lors du retour", "warning");
-            }
-        }
-
-        function renderStockTable() {
-            const body = document.getElementById('stock-table-body');
-            if (stock.length === 0) {
-                body.innerHTML = `<tr><td colspan="3" class="py-12 text-center text-slate-500">Aucun produit en stock.</td></tr>`;
-                return;
-            }
-
-            body.innerHTML = stock.map(item => `
-                <tr class="hover:bg-slate-900/50 transition">
-                    <td class="py-3.5 px-4 font-bold text-white">${item.name}</td>
-                    <td class="py-3.5 px-4 text-center font-bold text-slate-100">${item.quantity}</td>
-                    <td class="py-3.5 px-4 text-right font-medium text-slate-300">${item.unitPrice || 0} €</td>
-                </tr>
-            `).join('');
-        }
-
-        async function openAddStockItemModal() {
-            const name = prompt("Nom du produit :");
-            if (!name) return;
-            const price = parseFloat(prompt("Prix unitaire (€) :", "1.50")) || 1.50;
-
-            try {
-                const res = await fetch(`${API_URL}/api/stocks`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, quantity: 10, unitPrice: price })
-                });
-
-                if (res.ok) {
-                    showToast("Article ajouté au stock !", "success");
-                    await fetchAllData();
-                    renderStockTable();
-                }
-            } catch (err) {
-                showToast("Erreur lors de l'ajout", "warning");
-            }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            let bgColor = 'bg-slate-900 border-slate-700 text-slate-200';
-            if (type === 'success') bgColor = 'bg-slate-900 border-teal-500/40 text-teal-200';
-            if (type === 'warning') bgColor = 'bg-slate-900 border-amber-500/40 text-amber-200';
-
-            toast.className = `p-4 rounded-xl border shadow-2xl backdrop-blur-md flex items-center gap-3 text-xs font-semibold pointer-events-auto transition-all duration-300 ${bgColor}`;
-            toast.innerHTML = `<span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('hidden');
-        });
-    </script>
-</body>
-</html>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
+                    <select id="leo-add-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
