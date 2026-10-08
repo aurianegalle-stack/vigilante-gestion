@@ -550,8 +550,93 @@
             // Logique optionnelle pour charger les statistiques
         }
 
-        function openRentalModal() { document.getElementById('modal-rental')?.classList.remove('hidden'); }
-        function closeRentalModal() { document.getElementById('modal-rental')?.classList.add('hidden'); }
+        async function openRentalModal() {
+            const modal = document.getElementById('modal-rental');
+            const selectLeotard = document.getElementById('rent-select-leotard');
+            const selectGymnast = document.getElementById('rent-select-gymnast');
+
+            if (!modal || !selectLeotard || !selectGymnast) return;
+
+            // Indiquer le chargement
+            selectLeotard.innerHTML = '<option value="">Chargement des justaucorps...</option>';
+            selectGymnast.innerHTML = '<option value="">Chargement des gymnastes...</option>';
+
+            modal.classList.remove('hidden');
+
+            try {
+                const [resLeotards, resGymnasts] = await Promise.all([
+                    fetch(`${API_URL}/leotards`),
+                    fetch(`${API_URL}/gymnasts`)
+                ]);
+
+                const leotards = await resLeotards.json();
+                const gymnasts = await resGymnasts.json();
+
+                // Remplir les justaucorps
+                if (leotards && leotards.length > 0) {
+                    selectLeotard.innerHTML = '<option value="">-- Sélectionner un justaucorps --</option>' + 
+                        leotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('');
+                } else {
+                    selectLeotard.innerHTML = '<option value="">Aucun justaucorps disponible</option>';
+                }
+
+                // Remplir les gymnastes
+                if (gymnasts && gymnasts.length > 0) {
+                    selectGymnast.innerHTML = '<option value="">-- Sélectionner un gymnaste --</option>' + 
+                        gymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || g.group || 'Général'})</option>`).join('');
+                } else {
+                    selectGymnast.innerHTML = '<option value="">Aucun gymnaste enregistré</option>';
+                }
+
+            } catch (err) {
+                console.error("Erreur lors du chargement des options de location :", err);
+                selectLeotard.innerHTML = '<option value="">Erreur de chargement</option>';
+                selectGymnast.innerHTML = '<option value="">Erreur de chargement</option>';
+            }
+        }
+
+        function closeRentalModal() { 
+            document.getElementById('modal-rental')?.classList.add('hidden'); 
+            document.getElementById('form-rental')?.reset();
+        }
+
+        async function handleRentalSubmit(event) {
+            event.preventDefault();
+
+            const leotardId = document.getElementById('rent-select-leotard').value;
+            const gymnastId = document.getElementById('rent-select-gymnast').value;
+            const depositAmount = document.getElementById('rent-caution-amount').value;
+
+            if (!leotardId || !gymnastId) {
+                alert("Veuillez sélectionner un justaucorps et un gymnaste.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/rentals`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        leotardId,
+                        gymnastId,
+                        depositAmount: Number(depositAmount) || 0
+                    })
+                });
+
+                if (res.ok) {
+                    closeRentalModal();
+                    if (typeof fetchDashboardData === 'function') fetchDashboardData();
+                    alert("Location enregistrée avec succès !");
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible de valider la location."}`);
+                }
+            } catch (err) {
+                console.error("Erreur validation location :", err);
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
         function openAddLeotardModal() { document.getElementById('modal-add-leotard')?.classList.remove('hidden'); }
         function closeAddLeotardModal() { document.getElementById('modal-add-leotard')?.classList.add('hidden'); }
         
