@@ -218,10 +218,29 @@
 
         <!-- VIEW 4: GYMNASTS DIRECTORY -->
         <section id="view-adherents" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
-                <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
+            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
+
+                <!-- Filtre par catégorie -->
+                <div class="flex items-center gap-2">
+                    <label for="gym-filter-category" class="text-xs font-semibold text-slate-400 whitespace-nowrap">
+                        <i class="fa-solid fa-filter text-teal-400 mr-1"></i> Filtrer :
+                    </label>
+                    <select id="gym-filter-category" onchange="filterGymnasts()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500 transition">
+                        <option value="ALL">Toutes les catégories</option>
+                        <option value="Baby Gym">Baby Gym</option>
+                        <option value="GAM">GAM</option>
+                        <option value="Perf">Perf</option>
+                        <option value="Perf Poussines">Perf Poussines</option>
+                        <option value="Cadettes">Cadettes</option>
+                        <option value="Juniors">Juniors</option>
+                        <option value="Séniors">Séniors</option>
+                        <option value="Loisir">Loisir</option>
+                        <option value="Adulte">Adulte</option>
+                    </select>
+                </div>
             </div>
             <div id="gymnasts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
@@ -407,6 +426,9 @@
             adherents: 'Gymnastes & Équipes'
         };
 
+        // Variable globale pour conserver la liste complète des gymnastes
+        let allGymnasts = [];
+
         function navigateTo(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             const targetView = document.getElementById(`view-${viewId}`);
@@ -434,33 +456,49 @@
         async function fetchGymnasts() {
             try {
                 const res = await fetch(`${API_URL}/gymnasts`);
-                const data = await res.json();
-                const container = document.getElementById('gymnasts-grid');
-                if (!container) return;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = `<p class="text-slate-400 text-sm">Aucun adhérent enregistré pour le moment.</p>`;
-                    return;
-                }
-
-                container.innerHTML = data.map(g => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
-                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${g.category || g.group || 'Général'}</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button onclick="openEditGymnastModal('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}', '${g.category || g.group || ''}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteGymnast('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
+                allGymnasts = await res.json();
+                filterGymnasts(); // Applique le filtre courant (ou affiche tout par défaut)
             } catch (err) {
                 console.error('Erreur chargement gymnastes:', err);
+            }
+        }
+
+        function renderGymnasts(data) {
+            const container = document.getElementById('gymnasts-grid');
+            if (!container) return;
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucun adhérent trouvé.</p>`;
+                return;
+            }
+
+            container.innerHTML = data.map(g => `
+                <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
+                        <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${g.category || g.group || 'Général'}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="openEditGymnastModal('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}', '${g.category || g.group || ''}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteGymnast('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGymnasts() {
+            const select = document.getElementById('gym-filter-category');
+            const selectedCategory = select ? select.value : 'ALL';
+
+            if (selectedCategory === 'ALL') {
+                renderGymnasts(allGymnasts);
+            } else {
+                const filtered = allGymnasts.filter(g => (g.category || g.group) === selectedCategory);
+                renderGymnasts(filtered);
             }
         }
 
