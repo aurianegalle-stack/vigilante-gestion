@@ -103,6 +103,30 @@ app.post('/api/gymnasts', async (req, res) => {
   }
 });
 
+// Modifier un gymnaste
+app.put('/api/gymnasts/:id', async (req, res) => {
+  try {
+    const { firstName, lastName, category, group } = req.body;
+    const updated = await Gymnast.findByIdAndUpdate(
+      req.params.id,
+      { 
+        firstName: firstName ? firstName.trim() : undefined,
+        lastName: lastName ? lastName.trim() : undefined,
+        category: category ? category.trim() : 'Général',
+        group: group ? group.trim() : (category ? category.trim() : 'Général')
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Gymnaste introuvable." });
+    }
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur lors de la modification", error: err.message });
+  }
+});
+
 // Supprimer un gymnaste
 app.delete('/api/gymnasts/:id', async (req, res) => {
   try {
