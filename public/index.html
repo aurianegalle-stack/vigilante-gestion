@@ -426,7 +426,6 @@
             adherents: 'Gymnastes & Équipes'
         };
 
-        // Variable globale pour conserver la liste complète des gymnastes
         let allGymnasts = [];
 
         function navigateTo(viewId) {
@@ -457,7 +456,7 @@
             try {
                 const res = await fetch(`${API_URL}/gymnasts`);
                 allGymnasts = await res.json();
-                filterGymnasts(); // Applique le filtre courant (ou affiche tout par défaut)
+                filterGymnasts();
             } catch (err) {
                 console.error('Erreur chargement gymnastes:', err);
             }
@@ -510,20 +509,45 @@
                 if (!container) return;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = `<p class="text-slate-400 text-sm">Aucun justaucorps en stock.</p>`;
+                    container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucun justaucorps en stock.</p>`;
                     return;
                 }
 
                 container.innerHTML = data.map(l => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between">
+                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
+                        <div>
                             <h4 class="font-bold text-white">${l.name}</h4>
-                            <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full">${l.size}</span>
+                            <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full inline-block mt-1">Taille: ${l.size}</span>
                         </div>
+                        <button onclick="deleteLeotard('${l._id}', '${l.name.replace(/'/g, "\\'")}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                 `).join('');
             } catch (err) {
                 console.error('Erreur chargement justaucorps:', err);
+            }
+        }
+
+        async function deleteLeotard(id, name) {
+            if (!confirm(`Voulez-vous vraiment supprimer le justaucorps "${name}" ?`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/leotards/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    fetchLeotards();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible de supprimer le justaucorps."}`);
+                }
+            } catch (err) {
+                console.error("Erreur suppression justaucorps :", err);
+                alert("Impossible de contacter le serveur.");
             }
         }
 
@@ -557,7 +581,6 @@
 
             if (!modal || !selectLeotard || !selectGymnast) return;
 
-            // Indiquer le chargement
             selectLeotard.innerHTML = '<option value="">Chargement des justaucorps...</option>';
             selectGymnast.innerHTML = '<option value="">Chargement des gymnastes...</option>';
 
@@ -572,7 +595,6 @@
                 const leotards = await resLeotards.json();
                 const gymnasts = await resGymnasts.json();
 
-                // Remplir les justaucorps
                 if (leotards && leotards.length > 0) {
                     selectLeotard.innerHTML = '<option value="">-- Sélectionner un justaucorps --</option>' + 
                         leotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('');
@@ -580,7 +602,6 @@
                     selectLeotard.innerHTML = '<option value="">Aucun justaucorps disponible</option>';
                 }
 
-                // Remplir les gymnastes
                 if (gymnasts && gymnasts.length > 0) {
                     selectGymnast.innerHTML = '<option value="">-- Sélectionner un gymnaste --</option>' + 
                         gymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || g.group || 'Général'})</option>`).join('');
@@ -638,8 +659,39 @@
         }
 
         function openAddLeotardModal() { document.getElementById('modal-add-leotard')?.classList.remove('hidden'); }
-        function closeAddLeotardModal() { document.getElementById('modal-add-leotard')?.classList.add('hidden'); }
-        
+        function closeAddLeotardModal() { 
+            document.getElementById('modal-add-leotard')?.classList.add('hidden'); 
+            document.getElementById('form-add-leotard')?.reset();
+        }
+
+        async function handleAddLeotardSubmit(event) {
+            event.preventDefault();
+
+            const newLeotard = {
+                name: document.getElementById('leo-add-name').value.trim(),
+                size: document.getElementById('leo-add-size').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/leotards`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newLeotard)
+                });
+
+                if (res.ok) {
+                    closeAddLeotardModal();
+                    fetchLeotards();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible d'enregistrer le justaucorps."}`);
+                }
+            } catch (err) {
+                console.error("Erreur serveur :", err);
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
         function openAddGymnastModal() { 
             document.getElementById('modal-add-gymnast')?.classList.remove('hidden'); 
         }
