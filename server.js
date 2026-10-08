@@ -5,9 +5,18 @@ const path = require('path');
 
 const app = express();
 
-// Middlewares
+// 1. Middlewares & Désactivation du cache HTTP pour forcer le nouveau HTML
 app.use(cors());
 app.use(express.json());
+
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
+// Service des fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Connexion MongoDB Atlas
@@ -23,21 +32,27 @@ if (!MONGO_URI || (!MONGO_URI.startsWith('mongodb://') && !MONGO_URI.startsWith(
 
 // --- SCHÉMAS MONGOOSE ---
 
-// Gymnastes
+// Gymnastes : Mise à jour avec tous les nouveaux champs du formulaire
 const gymnastSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   group: { type: String, default: 'Général' },
-  category: { type: String, default: 'Général' }
+  category: { type: String, default: 'Général' },
+  birthDate: { type: String, default: '' },
+  phone: { type: String, default: '' },
+  email: { type: String, default: '' }
 }, { timestamps: true });
 
 const Gymnast = mongoose.models.Gymnast || mongoose.model('Gymnast', gymnastSchema);
 
-// Justaucorps (Flexibilité des champs pour éviter les rejets)
+// Justaucorps
 const leotardSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  code: { type: String },
+  category: { type: String, default: 'Général' },
   size: { type: String, default: '8A' },
   status: { type: String, default: 'Disponible' },
+  assignedTo: { type: String, default: '' },
   gymnast: { type: String, default: '-' },
   cautionAmount: { type: Number, default: 45 }
 }, { timestamps: true });
@@ -68,7 +83,7 @@ app.get('/api/gymnasts', async (req, res) => {
 
 app.post('/api/gymnasts', async (req, res) => {
   try {
-    const { firstName, lastName, group, category } = req.body;
+    const { firstName, lastName, group, category, birthDate, phone, email } = req.body;
     if (!firstName || !lastName) {
       return res.status(400).json({ message: "Prénom et Nom sont obligatoires." });
     }
@@ -76,7 +91,10 @@ app.post('/api/gymnasts', async (req, res) => {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       group: group ? group.trim() : 'Général',
-      category: category ? category.trim() : 'Général'
+      category: category ? category.trim() : 'Général',
+      birthDate: birthDate ? birthDate.trim() : '',
+      phone: phone ? phone.trim() : '',
+      email: email ? email.trim() : ''
     });
     await newGymnast.save();
     res.status(201).json(newGymnast);
@@ -103,7 +121,6 @@ app.post('/api/leotards', async (req, res) => {
       return res.status(400).json({ message: "Le nom est obligatoire." });
     }
 
-    // Génère un code unique garanti basé sur l'horodatage si non fourni
     const uniqueCode = code && code.trim() ? code.trim() : `JST-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const newLeotard = new Leotard({
@@ -155,7 +172,7 @@ app.post('/api/stocks', async (req, res) => {
   }
 });
 
-// Fallback HTML
+// Fallback HTML (Redirection propre vers index.html)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
