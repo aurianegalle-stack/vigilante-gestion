@@ -116,6 +116,13 @@
                     <span id="badge-gymnasts-count" class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
+            <a href="#competitions" onclick="navigateTo('competitions')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+                <i class="fa-solid fa-trophy text-lg w-5 text-center"></i>
+                <div class="flex-1 flex justify-between items-center">
+                    <span>Compétitions</span>
+                    <span id="badge-competitions-count" class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+            </a>
         </nav>
 
         <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
@@ -253,6 +260,16 @@
                 </div>
             </div>
             <div id="gymnasts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- VIEW 5: COMPETITIONS -->
+        <section id="view-competitions" class="view-section hidden space-y-6">
+            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+                <button onclick="openAddCompetitionModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Nouvelle Compétition
+                </button>
+            </div>
+            <div id="competitions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
     </main>
@@ -439,7 +456,8 @@
             dashboard: 'Tableau de Bord',
             justaucorps: 'Gestion des Justaucorps',
             buvette: 'Stocks & Buvette',
-            adherents: 'Gymnastes & Équipes'
+            adherents: 'Gymnastes & Équipes',
+            competitions: 'Gestion des Compétitions'
         };
 
         let allGymnasts = [];
@@ -473,6 +491,7 @@
 
             if (viewId === 'justaucorps') fetchLeotards();
             if (viewId === 'buvette') fetchStock();
+            if (viewId === 'competitions') fetchCompetitions();
             if (viewId === 'dashboard') fetchDashboardData();
         }
 
@@ -500,6 +519,37 @@
                 filterGymnasts();
             } catch (err) {
                 console.error('Erreur chargement gymnastes:', err);
+            }
+        }
+
+        async function fetchCompetitions() {
+            try {
+                const res = await fetch(`${API_URL}/competitions`);
+                const data = res.ok ? await res.json() : [];
+
+                // Mettre à jour le compteur dans la sidebar
+                const badgeCompetitions = document.getElementById('badge-competitions-count');
+                if (badgeCompetitions) badgeCompetitions.innerText = data.length;
+
+                const container = document.getElementById('competitions-grid');
+                if (!container) return;
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucune compétition enregistrée.</p>`;
+                    return;
+                }
+
+                container.innerHTML = data.map(c => `
+                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white">${c.name || 'Compétition'}</h4>
+                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">${c.date || ''}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">${c.location || 'Lieu non spécifié'}</p>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Erreur chargement compétitions:', err);
             }
         }
 
@@ -934,11 +984,13 @@
         }
 
         function openAddStockItemModal() { alert("Modal ajout d'article à implémenter"); }
+        function openAddCompetitionModal() { alert("Modal ajout de compétition à implémenter"); }
 
         document.addEventListener('DOMContentLoaded', () => {
             // Charger les données de la sidebar dès le démarrage du site
             fetchLeotards();
             fetchGymnasts();
+            fetchCompetitions();
             
             navigateTo('dashboard');
         });
