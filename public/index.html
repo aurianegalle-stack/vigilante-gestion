@@ -233,13 +233,15 @@
                         <option value="ALL">Toutes les catégories</option>
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
-                        <option value="Poussines / Poussinets">Poussines / Poussinets</option>
+                        <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
+                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
+                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
+                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
+                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
+                        <option value="Débutants 6/9">Débutants 6/9</option>
+                        <option value="Débutants 10/13">Débutants 10/13</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
-                        <option value="Cadettes">Cadettes</option>
-                        <option value="Juniors">Juniors</option>
-                        <option value="Séniors">Séniors</option>
-                        <option value="Loisir">Loisir</option>
                         <option value="Adulte">Adulte</option>
                     </select>
                 </div>
@@ -352,12 +354,12 @@
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
                         <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
-						<option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
-						<option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
-						<option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
-						<option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
-						<option value="Débutants 6/9">Débutants 6/9</option>
-						<option value="Débutants 10/13">Débutants 10/13</option>
+                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
+                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
+                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
+                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
+                        <option value="Débutants 6/9">Débutants 6/9</option>
+                        <option value="Débutants 10/13">Débutants 10/13</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
                         <option value="Adulte">Adulte</option>
@@ -403,12 +405,12 @@
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
                         <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
-						<option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
-						<option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
-						<option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
-						<option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
-						<option value="Débutants 6/9">Débutants 6/9</option>
-						<option value="Débutants 10/13">Débutants 10/13</option>
+                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
+                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
+                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
+                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
+                        <option value="Débutants 6/9">Débutants 6/9</option>
+                        <option value="Débutants 10/13">Débutants 10/13</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
                         <option value="Adulte">Adulte</option>
@@ -435,6 +437,7 @@
         };
 
         let allGymnasts = [];
+        let activeRentals = [];
 
         function navigateTo(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
@@ -460,8 +463,20 @@
             if (viewId === 'dashboard') fetchDashboardData();
         }
 
+        async function fetchRentals() {
+            try {
+                const res = await fetch(`${API_URL}/rentals`);
+                if (res.ok) {
+                    activeRentals = await res.json();
+                }
+            } catch (err) {
+                console.error('Erreur chargement des locations:', err);
+            }
+        }
+
         async function fetchGymnasts() {
             try {
+                await fetchRentals();
                 const res = await fetch(`${API_URL}/gymnasts`);
                 allGymnasts = await res.json();
                 filterGymnasts();
@@ -485,11 +500,19 @@
                 const categoryName = g.category || g.group || 'Général';
                 const safeCategory = categoryName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
+                // Recherche de la location active du gymnaste
+                const rental = activeRentals.find(r => (r.gymnast?._id || r.gymnast) === g._id);
+                const leotardBadge = rental && rental.leotard ? 
+                    `<span class="text-xs text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
+
                 return `
                     <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
                         <div>
                             <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
-                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${categoryName}</span>
+                            <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                                <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block">${categoryName}</span>
+                                ${leotardBadge}
+                            </div>
                         </div>
                         <div class="flex items-center gap-1">
                             <button onclick="openEditGymnastModal('${g._id}', '${safeFirstName}', '${safeLastName}', '${safeCategory}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
@@ -518,6 +541,7 @@
 
         async function fetchLeotards() {
             try {
+                await fetchRentals();
                 const res = await fetch(`${API_URL}/leotards`);
                 const data = await res.json();
                 const container = document.getElementById('leotards-grid');
@@ -528,17 +552,43 @@
                     return;
                 }
 
+                // Mettre à jour le compteur en haut de la sidebar
+                const rentedCount = data.filter(l => l.status === 'Loué').length;
+                const badgeRented = document.getElementById('badge-rented-count');
+                if (badgeRented) badgeRented.innerText = rentedCount;
+
                 container.innerHTML = data.map(l => {
                     const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    
+                    // Trouver l'affectation active via les locations
+                    const rental = activeRentals.find(r => (r.leotard?._id || r.leotard) === l._id);
+                    const isRented = l.status === 'Loué' || rental;
+                    
+                    let gymnastName = 'Attribué';
+                    if (rental && rental.gymnast) {
+                        gymnastName = rental.gymnast.lastName ? `${rental.gymnast.firstName} ${rental.gymnast.lastName}` : l.gymnast;
+                    } else if (l.gymnast && l.gymnast !== '-') {
+                        gymnastName = l.gymnast;
+                    }
+
+                    const statusBadge = isRented 
+                        ? `<span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/30 px-2 py-0.5 rounded-full font-semibold">Loué : ${gymnastName}</span>`
+                        : `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Disponible</span>`;
+
                     return `
-                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-white">${l.name}</h4>
-                                <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full inline-block mt-1">Taille: ${l.size}</span>
+                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h4 class="font-bold text-white truncate">${l.name}</h4>
+                                    <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition" title="Supprimer">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full">Taille: ${l.size}</span>
+                                    ${statusBadge}
+                                </div>
                             </div>
-                            <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
                         </div>
                     `;
                 }).join('');
@@ -589,7 +639,42 @@
         }
 
         async function fetchDashboardData() {
-            // Logique optionnelle pour charger les statistiques
+            try {
+                await fetchRentals();
+                const statRented = document.getElementById('stat-rented-count');
+                const statCautions = document.getElementById('stat-cautions-total');
+                const dashList = document.getElementById('dash-rentals-list');
+
+                if (statRented) statRented.innerText = activeRentals.length;
+
+                const totalCautions = activeRentals.reduce((sum, r) => sum + (r.depositAmount || 45), 0);
+                if (statCautions) statCautions.innerText = `${totalCautions} €`;
+
+                if (dashList) {
+                    if (activeRentals.length === 0) {
+                        dashList.innerHTML = `<p class="text-slate-400 text-sm">Aucune location en cours.</p>`;
+                    } else {
+                        dashList.innerHTML = activeRentals.map(r => {
+                            const leoName = r.leotard?.name || 'Justaucorps';
+                            const gymName = r.gymnast?.lastName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
+                            return `
+                                <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 flex items-center justify-between text-sm">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-shirt text-pink-400"></i>
+                                        <div>
+                                            <p class="font-semibold text-white">${leoName}</p>
+                                            <p class="text-xs text-slate-400">Loué par : ${gymName}</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 font-medium">Caution: ${r.depositAmount || 45} €</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur tableau de bord :", err);
+            }
         }
 
         async function openRentalModal() {
@@ -614,8 +699,9 @@
                 const gymnasts = await resGymnasts.json();
 
                 if (leotards && leotards.length > 0) {
+                    const availableLeotards = leotards.filter(l => l.status !== 'Loué');
                     selectLeotard.innerHTML = '<option value="">-- Sélectionner un justaucorps --</option>' + 
-                        leotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('');
+                        (availableLeotards.length > 0 ? availableLeotards : leotards).map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size}) ${l.status === 'Loué' ? '[Déjà Loué]' : ''}</option>`).join('');
                 } else {
                     selectLeotard.innerHTML = '<option value="">Aucun justaucorps disponible</option>';
                 }
@@ -664,7 +750,9 @@
 
                 if (res.ok) {
                     closeRentalModal();
-                    if (typeof fetchDashboardData === 'function') fetchDashboardData();
+                    fetchLeotards();
+                    fetchGymnasts();
+                    fetchDashboardData();
                     alert("Location enregistrée avec succès !");
                 } else {
                     const errData = await res.json().catch(() => ({}));
