@@ -57,12 +57,8 @@
 </head>
 <body class="h-full font-sans antialiased bg-slate-950 text-slate-100 flex flex-col md:flex-row overflow-x-hidden">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
-
     <!-- Sidebar Navigation -->
     <aside id="sidebar" class="w-full md:w-64 glass-nav border-r border-slate-800/80 flex flex-col shrink-0 transition-all duration-300 z-30">
-        <!-- Logo & Brand Header -->
         <div class="p-5 flex items-center justify-between border-b border-slate-800/80">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-pink-500/20 font-bold text-xl">
@@ -73,12 +69,8 @@
                     <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase">La Vigilante Gymnastique</span>
                 </div>
             </div>
-            <button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-white p-2">
-                <i class="fa-solid fa-bars text-xl"></i>
-            </button>
         </div>
 
-        <!-- Active User Widget -->
         <div class="p-3 mx-3 my-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 overflow-hidden">
                 <img id="sidebar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-teal-500/40 shrink-0">
@@ -89,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Main Navigation Links -->
         <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto" id="nav-links">
             <a href="#dashboard" onclick="navigateTo('dashboard')" class="nav-item active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-teal-300 bg-teal-500/10 border border-teal-500/20 transition">
                 <i class="fa-solid fa-chart-pie text-lg w-5 text-center"></i>
@@ -106,7 +97,6 @@
                 <i class="fa-solid fa-cookie-bite text-lg w-5 text-center"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Stocks & Buvette</span>
-                    <span id="badge-stock-alert" class="hidden text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-triangle-exclamation"></i></span>
                 </div>
             </a>
             <a href="#adherents" onclick="navigateTo('adherents')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
@@ -119,21 +109,16 @@
             <a href="#competitions" onclick="navigateTo('competitions')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
                 <i class="fa-solid fa-trophy text-lg w-5 text-center"></i>
                 <div class="flex-1 flex justify-between items-center">
-                    <span>Compétitions</span>
+                    <span>Compétitions & Palmarès</span>
                     <span id="badge-competitions-count" class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
         </nav>
-
-        <div class="p-4 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-            <span>GymGestion v3.0</span>
-        </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto bg-slate-950 p-4 md:p-8">
 
-        <!-- Top Header Controls -->
         <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800/60">
             <div>
                 <div class="flex items-center gap-3">
@@ -193,7 +178,7 @@
             </div>
         </section>
 
-        <!-- VIEW 2: LEOTARDS MANAGEMENT -->
+        <!-- VIEW 2: LEOTARDS -->
         <section id="view-justaucorps" class="view-section hidden space-y-6">
             <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
@@ -205,7 +190,6 @@
                     </button>
                 </div>
             </div>
-
             <div id="leotards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
 
@@ -230,14 +214,13 @@
             </div>
         </section>
 
-        <!-- VIEW 4: GYMNASTS DIRECTORY -->
+        <!-- VIEW 4: GYMNASTS -->
         <section id="view-adherents" class="view-section hidden space-y-6">
             <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
 
-                <!-- Filtre par catégorie -->
                 <div class="flex items-center gap-2">
                     <label for="gym-filter-category" class="text-xs font-semibold text-slate-400 whitespace-nowrap">
                         <i class="fa-solid fa-filter text-teal-400 mr-1"></i> Filtrer :
@@ -273,180 +256,6 @@
         </section>
 
     </main>
-
-    <!-- MODAL: RENT LEOTARD -->
-    <div id="modal-rental" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shirt text-pink-400"></i> Nouvelle Location de Justaucorps
-                </h3>
-                <button onclick="closeRentalModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <form id="form-rental" onsubmit="handleRentalSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Choisir le Justaucorps *</label>
-                    <select id="rent-select-leotard" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500"></select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Gymnaste Bénéficiaire *</label>
-                    <select id="rent-select-gymnast" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500"></select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Caution (€)</label>
-                        <input type="number" id="rent-caution-amount" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-200">
-                    </div>
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeRentalModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-pink-500/20">Valider la Location</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD LEOTARD -->
-    <div id="modal-add-leotard" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shirt text-teal-400"></i> Ajouter un Justaucorps
-                </h3>
-                <button onclick="closeAddLeotardModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <form id="form-add-leotard" onsubmit="handleAddLeotardSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom / Identifiant du Justaucorps *</label>
-                    <input type="text" id="leo-add-name" required placeholder="Ex: Pink Star #02" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
-                    <select id="leo-add-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                        <option value="6 ans">6 ans</option>
-                        <option value="8 ans">8 ans</option>
-                        <option value="10 ans">10 ans</option>
-                        <option value="12 ans">12 ans</option>
-                        <option value="36">36</option>
-                        <option value="38">38</option>
-                        <option value="40">40</option>
-                    </select>
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeAddLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs transition">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD GYMNAST -->
-    <div id="modal-add-gymnast" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-teal-400"></i> Ajouter un Adhérent
-                </h3>
-                <button type="button" onclick="closeAddGymnastModal()" class="text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <form id="form-add-gymnast" onsubmit="handleAddGymnastSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
-                    <input type="text" id="gym-add-nom" required placeholder="Ex: Dupont" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
-                    <input type="text" id="gym-add-prenom" required placeholder="Ex: Marie" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Catégorie *</label>
-                    <select id="gym-add-categorie" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
-                        <option value="">-- Sélectionner une catégorie --</option>
-                        <option value="Baby Gym">Baby Gym</option>
-                        <option value="GAM">GAM</option>
-                        <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
-                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
-                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
-                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
-                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
-                        <option value="Débutants 6/9">Débutants 6/9</option>
-                        <option value="Débutants 10/13">Débutants 10/13</option>
-                        <option value="Perf">Perf</option>
-                        <option value="Perf Poussines">Perf Poussines</option>
-                        <option value="Adulte">Adulte</option>
-                    </select>
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeAddGymnastModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs transition">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: EDIT GYMNAST -->
-    <div id="modal-edit-gymnast" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                    <i class="fa-solid fa-user-pen text-amber-400"></i> Modifier l'Adhérent
-                </h3>
-                <button type="button" onclick="closeEditGymnastModal()" class="text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <form id="form-edit-gymnast" onsubmit="handleEditGymnastSubmit(event)" class="space-y-4">
-                <input type="hidden" id="gym-edit-id">
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
-                    <input type="text" id="gym-edit-nom" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
-                    <input type="text" id="gym-edit-prenom" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Catégorie *</label>
-                    <select id="gym-edit-categorie" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                        <option value="Baby Gym">Baby Gym</option>
-                        <option value="GAM">GAM</option>
-                        <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
-                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
-                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
-                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
-                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
-                        <option value="Débutants 6/9">Débutants 6/9</option>
-                        <option value="Débutants 10/13">Débutants 10/13</option>
-                        <option value="Perf">Perf</option>
-                        <option value="Perf Poussines">Perf Poussines</option>
-                        <option value="Adulte">Adulte</option>
-                    </select>
-                </div>
-
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeEditGymnastModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs transition">Mettre à jour</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- MODAL: ADD COMPETITION -->
     <div id="modal-add-competition" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -490,6 +299,150 @@
         </div>
     </div>
 
+    <!-- MODAL: ADD / EDIT COMPETITION RESULTS & REWARDS -->
+    <div id="modal-comp-results" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-xl w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-award text-amber-400"></i> Palmarès & Récompenses : <span id="modal-comp-name-title" class="text-teal-400"></span>
+                </h3>
+                <button type="button" onclick="closeResultsModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="results-comp-id">
+
+            <!-- Formulaire d'ajout de résultat -->
+            <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-3">
+                <p class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-plus text-teal-400 mr-1"></i> Attribuer une récompense</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Gymnaste *</label>
+                        <select id="res-add-gymnast" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Récompense *</label>
+                        <select id="res-add-reward" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                            <option value="Médaille d'or">🥇 Médaille d'or</option>
+                            <option value="Médaille d'argent">🥈 Médaille d'argent</option>
+                            <option value="Médaille de bronze">🥉 Médaille de bronze</option>
+                            <option value="Coupe 1ère place">🏆 Coupe 1ère place</option>
+                            <option value="Coupe 2ème place">🏆 Coupe 2ème place</option>
+                            <option value="Coupe 3ème place">🏆 Coupe 3ème place</option>
+                            <option value="Participation">🎗️ Participation</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Classement (ex: 1er / 12)</label>
+                        <input type="text" id="res-add-rank" placeholder="Ex: 1ère" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Note / Remarque</label>
+                        <input type="text" id="res-add-notes" placeholder="Ex: Categorie Perf" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+                    </div>
+                </div>
+                <button type="button" onclick="addResultToTempList()" class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-lg text-xs transition flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-check"></i> Ajouter au palmarès
+                </button>
+            </div>
+
+            <!-- Liste des récompenses déjà attribuées -->
+            <div class="flex-1 overflow-y-auto space-y-2 pr-1">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tableau d'honneur (<span id="results-count">0</span>)</p>
+                <div id="modal-results-list" class="space-y-2"></div>
+            </div>
+
+            <div class="pt-3 flex justify-end gap-3 border-t border-slate-800 shrink-0">
+                <button type="button" onclick="closeResultsModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
+                <button type="button" onclick="saveCompetitionResults()" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs transition">Enregistrer le Palmarès</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTRES MODALES RESTANTES (Location, Justaucorps, Adhérents) -->
+    <div id="modal-rental" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-pink-400"></i> Nouvelle Location</h3>
+                <button onclick="closeRentalModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-rental" onsubmit="handleRentalSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Choisir le Justaucorps *</label>
+                    <select id="rent-select-leotard" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Gymnaste Bénéficiaire *</label>
+                    <select id="rent-select-gymnast" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Caution (€)</label>
+                    <input type="number" id="rent-caution-amount" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-sm text-slate-200">
+                </div>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
+                    <button type="button" onclick="closeRentalModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-lg shadow-pink-500/20">Valider la Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-add-leotard" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-shirt text-teal-400"></i> Ajouter un Justaucorps</h3>
+                <button onclick="closeAddLeotardModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-add-leotard" onsubmit="handleAddLeotardSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom du Justaucorps *</label>
+                    <input type="text" id="leo-add-name" required placeholder="Ex: Pink Star #02" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
+                    <select id="leo-add-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+                        <option value="6 ans">6 ans</option><option value="8 ans">8 ans</option><option value="10 ans">10 ans</option><option value="12 ans">12 ans</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>
+                    </select>
+                </div>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
+                    <button type="button" onclick="closeAddLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-add-gymnast" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700/80 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-user-plus text-teal-400"></i> Ajouter un Adhérent</h3>
+                <button type="button" onclick="closeAddGymnastModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-add-gymnast" onsubmit="handleAddGymnastSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
+                    <input type="text" id="gym-add-nom" required placeholder="Ex: Dupont" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
+                    <input type="text" id="gym-add-prenom" required placeholder="Ex: Marie" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Catégorie *</label>
+                    <select id="gym-add-categorie" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+                        <option value="">-- Sélectionner une catégorie --</option>
+                        <option value="Baby Gym">Baby Gym</option><option value="GAM">GAM</option><option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option><option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option><option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option><option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option><option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option><option value="Débutants 6/9">Débutants 6/9</option><option value="Débutants 10/13">Débutants 10/13</option><option value="Perf">Perf</option><option value="Perf Poussines">Perf Poussines</option><option value="Adulte">Adulte</option>
+                    </select>
+                </div>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
+                    <button type="button" onclick="closeAddGymnastModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold rounded-xl text-xs">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
         const API_URL = '/api';
@@ -499,11 +452,13 @@
             justaucorps: 'Gestion des Justaucorps',
             buvette: 'Stocks & Buvette',
             adherents: 'Gymnastes & Équipes',
-            competitions: 'Gestion des Compétitions'
+            competitions: 'Gestion des Compétitions & Palmarès'
         };
 
         let allGymnasts = [];
         let activeRentals = [];
+        let allCompetitions = [];
+        let currentTempResults = [];
 
         function navigateTo(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
@@ -540,11 +495,9 @@
         async function fetchRentals() {
             try {
                 const res = await fetch(`${API_URL}/rentals`);
-                if (res.ok) {
-                    activeRentals = await res.json();
-                }
+                if (res.ok) activeRentals = await res.json();
             } catch (err) {
-                console.error('Erreur chargement des locations:', err);
+                console.error('Erreur chargement locations:', err);
             }
         }
 
@@ -563,6 +516,14 @@
             }
         }
 
+        function getRewardIcon(reward) {
+            if (reward === "Médaille d'or") return "🥇";
+            if (reward === "Médaille d'argent") return "🥈";
+            if (reward === "Médaille de bronze") return "🥉";
+            if (reward.includes("Coupe")) return "🏆";
+            return "🎗️";
+        }
+
         function formatDateDisplay(startDate, endDate, legacyDate) {
             const start = startDate || legacyDate || '';
             if (!start) return '';
@@ -573,28 +534,47 @@
         async function fetchCompetitions() {
             try {
                 const res = await fetch(`${API_URL}/competitions`);
-                const data = res.ok ? await res.json() : [];
+                allCompetitions = res.ok ? await res.json() : [];
 
                 const badgeCompetitions = document.getElementById('badge-competitions-count');
-                if (badgeCompetitions) badgeCompetitions.innerText = data.length;
+                if (badgeCompetitions) badgeCompetitions.innerText = allCompetitions.length;
 
                 const container = document.getElementById('competitions-grid');
                 if (!container) return;
 
-                if (!data || data.length === 0) {
+                if (!allCompetitions || allCompetitions.length === 0) {
                     container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucune compétition enregistrée.</p>`;
                     return;
                 }
 
-                container.innerHTML = data.map(c => {
+                container.innerHTML = allCompetitions.map(c => {
                     const safeName = (c.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const dateDisplay = formatDateDisplay(c.startDate, c.endDate, c.date);
+                    const resultsCount = c.results ? c.results.length : 0;
+
+                    let resultsPreviewHTML = '';
+                    if (c.results && c.results.length > 0) {
+                        resultsPreviewHTML = `
+                            <div class="mt-2 pt-2 border-t border-slate-800/80 space-y-1">
+                                <p class="text-[11px] font-bold text-amber-400 uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Palmarès (${resultsCount}) :</p>
+                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                    ${c.results.map(r => {
+                                        const gName = r.gymnast ? `${r.gymnast.firstName}${r.gymnast.lastName}` : 'Gymnaste';
+                                        return `<div class="text-xs text-slate-300 flex items-center justify-between bg-slate-900/50 px-2 py-1 rounded">
+                                            <span>${getRewardIcon(r.reward)} <strong>${gName}</strong> (${r.reward})</span>
+                                            <span class="text-[10px] text-teal-400 font-medium">${r.rank || ''}</span>
+                                        </div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
 
                     return `
-                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-between">
+                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
                             <div class="space-y-2">
                                 <div class="flex items-start justify-between gap-2">
-                                    <h4 class="font-bold text-white">${c.name || 'Compétition'}</h4>
+                                    <h4 class="font-bold text-white text-base">${c.name || 'Compétition'}</h4>
                                     <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition shrink-0" title="Supprimer la compétition">
                                         <i class="fa-solid fa-trash-can text-xs"></i>
                                     </button>
@@ -602,10 +582,16 @@
                                 <span class="text-xs text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-full inline-block font-medium">
                                     <i class="fa-regular fa-calendar-days mr-1"></i> ${dateDisplay}
                                 </span>
+                                <p class="text-xs text-slate-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-slate-500"></i> ${c.location || 'Lieu non spécifié'}
+                                </p>
+                                ${resultsPreviewHTML}
                             </div>
-                            <p class="text-xs text-slate-400 pt-1 border-t border-slate-800/60 flex items-center gap-1">
-                                <i class="fa-solid fa-location-dot text-slate-500"></i> ${c.location || 'Lieu non spécifié'}
-                            </p>
+                            
+                            <button onclick="openResultsModal('${c._id}')" class="w-full mt-2 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-trophy text-amber-400"></i>
+                                <span>Gérer Palmarès / Médailles</span>
+                            </button>
                         </div>
                     `;
                 }).join('');
@@ -614,18 +600,139 @@
             }
         }
 
-        function openAddCompetitionModal() {
-            document.getElementById('modal-add-competition')?.classList.remove('hidden');
+        async function openResultsModal(compId) {
+            const comp = allCompetitions.find(c => c._id === compId);
+            if (!comp) return;
+
+            document.getElementById('results-comp-id').value = compId;
+            document.getElementById('modal-comp-name-title').innerText = comp.name;
+
+            // Remplir le menu déroulant des gymnastes
+            if (allGymnasts.length === 0) await fetchGymnasts();
+            const selectGym = document.getElementById('res-add-gymnast');
+            if (selectGym) {
+                selectGym.innerHTML = allGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('');
+            }
+
+            // Charger les résultats existants
+            currentTempResults = (comp.results || []).map(r => ({
+                gymnast: r.gymnast?._id || r.gymnast,
+                gymnastName: r.gymnast?.firstName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste',
+                reward: r.reward || "Médaille d'or",
+                rank: r.rank || '',
+                notes: r.notes || ''
+            }));
+
+            renderTempResultsList();
+            document.getElementById('modal-comp-results')?.classList.remove('hidden');
         }
 
-        function closeAddCompetitionModal() {
-            document.getElementById('modal-add-competition')?.classList.add('hidden');
+        function closeResultsModal() {
+            document.getElementById('modal-comp-results')?.classList.add('hidden');
+        }
+
+        function addResultToTempList() {
+            const gymnastId = document.getElementById('res-add-gymnast').value;
+            const reward = document.getElementById('res-add-reward').value;
+            const rank = document.getElementById('res-add-rank').value.trim();
+            const notes = document.getElementById('res-add-notes').value.trim();
+
+            if (!gymnastId) {
+                alert("Veuillez sélectionner une gymnaste.");
+                return;
+            }
+
+            const gym = allGymnasts.find(g => g._id === gymnastId);
+            const gymnastName = gym ? `${gym.firstName} ${gym.lastName}` : 'Gymnaste';
+
+            currentTempResults.push({
+                gymnast: gymnastId,
+                gymnastName,
+                reward,
+                rank,
+                notes
+            });
+
+            document.getElementById('res-add-rank').value = '';
+            document.getElementById('res-add-notes').value = '';
+
+            renderTempResultsList();
+        }
+
+        function removeTempResult(index) {
+            currentTempResults.splice(index, 1);
+            renderTempResultsList();
+        }
+
+        function renderTempResultsList() {
+            const container = document.getElementById('modal-results-list');
+            document.getElementById('results-count').innerText = currentTempResults.length;
+
+            if (!container) return;
+            if (currentTempResults.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic">Aucune récompense attribuée pour le moment.</p>`;
+                return;
+            }
+
+            container.innerHTML = currentTempResults.map((r, i) => `
+                <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <span class="text-lg">${getRewardIcon(r.reward)}</span>
+                        <div class="truncate">
+                            <p class="text-xs font-bold text-white truncate">${r.gymnastName}</p>
+                            <p class="text-[10px] text-teal-400">${r.reward} ${r.rank ? '• Rang: ' + r.rank : ''} ${r.notes ? '• ' + r.notes : ''}</p>
+                        </div>
+                    </div>
+                    <button onclick="removeTempResult(${i})" class="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function saveCompetitionResults() {
+            const compId = document.getElementById('results-comp-id').value;
+            if (!compId) return;
+
+            const payload = {
+                results: currentTempResults.map(r => ({
+                    gymnast: r.gymnast,
+                    reward: r.reward,
+                    rank: r.rank,
+                    notes: r.notes
+                }))
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/competitions/${compId}/results`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    closeResultsModal();
+                    fetchCompetitions();
+                    fetchGymnasts();
+                    alert("Palmarès mis à jour avec succès !");
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible d'enregistrer les résultats."}`);
+                }
+            } catch (err) {
+                console.error("Erreur enregistrement résultats :", err);
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
+        function openAddCompetitionModal() { document.getElementById('modal-add-competition')?.classList.remove('hidden'); }
+        function closeAddCompetitionModal() { 
+            document.getElementById('modal-add-competition')?.classList.add('hidden'); 
             document.getElementById('form-add-competition')?.reset();
         }
 
         async function handleAddCompetitionSubmit(event) {
             event.preventDefault();
-
             const startDate = document.getElementById('comp-add-start-date').value;
             const endDate = document.getElementById('comp-add-end-date').value;
 
@@ -651,29 +758,16 @@
                     alert(`Erreur : ${errData.message || "Impossible d'enregistrer la compétition."}`);
                 }
             } catch (err) {
-                console.error("Erreur serveur :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
 
         async function deleteCompetition(id, name) {
-            if (!confirm(`Voulez-vous vraiment supprimer la compétition "${name}" ?`)) {
-                return;
-            }
-
+            if (!confirm(`Voulez-vous vraiment supprimer la compétition "${name}" ?`)) return;
             try {
-                const res = await fetch(`${API_URL}/competitions/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    fetchCompetitions();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de supprimer la compétition."}`);
-                }
+                const res = await fetch(`${API_URL}/competitions/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchCompetitions();
             } catch (err) {
-                console.error("Erreur suppression compétition :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
@@ -691,25 +785,41 @@
                 const safeFirstName = (g.firstName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 const safeLastName = (g.lastName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 const categoryName = g.category || g.group || 'Général';
-                const safeCategory = categoryName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                 const rental = activeRentals.find(r => (r.gymnast?._id || r.gymnast) === g._id);
                 const leotardBadge = rental && rental.leotard ? 
                     `<span class="text-xs text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
 
+                // Calculer les médailles gagnées par ce gymnaste
+                let userRewards = [];
+                allCompetitions.forEach(c => {
+                    if (c.results) {
+                        c.results.forEach(r => {
+                            if ((r.gymnast?._id || r.gymnast) === g._id) {
+                                userRewards.push({ compName: c.name, reward: r.reward, rank: r.rank });
+                            }
+                        });
+                    }
+                });
+
+                let rewardsHTML = '';
+                if (userRewards.length > 0) {
+                    rewardsHTML = `<div class="flex items-center gap-1 flex-wrap mt-1">
+                        ${userRewards.map(rw => `<span class="text-[10px] bg-amber-500/10 text-amber-300 border border-amber-500/20 px-1.5 py-0.5 rounded" title="${rw.compName}">${getRewardIcon(rw.reward)}${rw.reward}</span>`).join('')}
+                    </div>`;
+                }
+
                 return `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
-                        <div>
+                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-start">
+                        <div class="space-y-1">
                             <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
-                            <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block">${categoryName}</span>
                                 ${leotardBadge}
                             </div>
+                            ${rewardsHTML}
                         </div>
                         <div class="flex items-center gap-1">
-                            <button onclick="openEditGymnastModal('${g._id}', '${safeFirstName}', '${safeLastName}', '${safeCategory}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
                             <button onclick="deleteGymnast('${g._id}', '${safeFirstName}', '${safeLastName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
@@ -729,9 +839,7 @@
             }
 
             const headerBadge = document.getElementById('header-gymnasts-count');
-            if (headerBadge) {
-                headerBadge.innerText = `${filtered.length} adhérent${filtered.length > 1 ? 's' : ''}`;
-            }
+            if (headerBadge) headerBadge.innerText = `${filtered.length} adhérent${filtered.length > 1 ? 's' : ''}`;
 
             renderGymnasts(filtered);
         }
@@ -756,15 +864,12 @@
 
                 container.innerHTML = data.map(l => {
                     const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                    
                     const rental = activeRentals.find(r => (r.leotard?._id || r.leotard) === l._id);
                     const isRented = l.status === 'Loué' || rental;
-                    
+
                     let gymnastName = 'Attribué';
                     if (rental && rental.gymnast) {
                         gymnastName = rental.gymnast.lastName ? `${rental.gymnast.firstName} ${rental.gymnast.lastName}` : l.gymnast;
-                    } else if (l.gymnast && l.gymnast !== '-') {
-                        gymnastName = l.gymnast;
                     }
 
                     const statusBadge = isRented 
@@ -776,9 +881,7 @@
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between gap-2">
                                     <h4 class="font-bold text-white truncate">${l.name}</h4>
-                                    <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition" title="Supprimer">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
-                                    </button>
+                                    <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full">Taille: ${l.size}</span>
@@ -794,23 +897,11 @@
         }
 
         async function deleteLeotard(id, name) {
-            if (!confirm(`Voulez-vous vraiment supprimer le justaucorps "${name}" ?`)) {
-                return;
-            }
-
+            if (!confirm(`Voulez-vous vraiment supprimer le justaucorps "${name}" ?`)) return;
             try {
-                const res = await fetch(`${API_URL}/leotards/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    fetchLeotards();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de supprimer le justaucorps."}`);
-                }
+                const res = await fetch(`${API_URL}/leotards/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchLeotards();
             } catch (err) {
-                console.error("Erreur suppression justaucorps :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
@@ -880,8 +971,8 @@
 
             if (!modal || !selectLeotard || !selectGymnast) return;
 
-            selectLeotard.innerHTML = '<option value="">Chargement des justaucorps...</option>';
-            selectGymnast.innerHTML = '<option value="">Chargement des gymnastes...</option>';
+            selectLeotard.innerHTML = '<option value="">Chargement...</option>';
+            selectGymnast.innerHTML = '<option value="">Chargement...</option>';
 
             modal.classList.remove('hidden');
 
@@ -902,24 +993,16 @@
                     return !isRentedByStatus && !isRentedByRental;
                 });
 
-                if (availableLeotards.length > 0) {
-                    selectLeotard.innerHTML = '<option value="">-- Sélectionner un justaucorps --</option>' + 
-                        availableLeotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('');
-                } else {
-                    selectLeotard.innerHTML = '<option value="">Aucun justaucorps disponible à la location</option>';
-                }
+                selectLeotard.innerHTML = availableLeotards.length > 0 
+                    ? '<option value="">-- Sélectionner un justaucorps --</option>' + availableLeotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('')
+                    : '<option value="">Aucun justaucorps disponible</option>';
 
-                if (gymnasts && gymnasts.length > 0) {
-                    selectGymnast.innerHTML = '<option value="">-- Sélectionner un gymnaste --</option>' + 
-                        gymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || g.group || 'Général'})</option>`).join('');
-                } else {
-                    selectGymnast.innerHTML = '<option value="">Aucun gymnaste enregistré</option>';
-                }
+                selectGymnast.innerHTML = gymnasts && gymnasts.length > 0 
+                    ? '<option value="">-- Sélectionner un gymnaste --</option>' + gymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('')
+                    : '<option value="">Aucun gymnaste enregistré</option>';
 
             } catch (err) {
-                console.error("Erreur lors du chargement des options de location :", err);
-                selectLeotard.innerHTML = '<option value="">Erreur de chargement</option>';
-                selectGymnast.innerHTML = '<option value="">Erreur de chargement</option>';
+                console.error("Erreur modal location :", err);
             }
         }
 
@@ -930,31 +1013,15 @@
 
         async function handleRentalSubmit(event) {
             event.preventDefault();
-
             const leotardId = document.getElementById('rent-select-leotard').value;
             const gymnastId = document.getElementById('rent-select-gymnast').value;
             const depositAmount = document.getElementById('rent-caution-amount').value;
-
-            if (!leotardId || !gymnastId) {
-                alert("Veuillez sélectionner un justaucorps et un gymnaste.");
-                return;
-            }
-
-            const alreadyRented = activeRentals.some(r => (r.leotard?._id || r.leotard) === leotardId);
-            if (alreadyRented) {
-                alert("Ce justaucorps est déjà loué par un autre gymnaste !");
-                return;
-            }
 
             try {
                 const res = await fetch(`${API_URL}/rentals`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        leotardId,
-                        gymnastId,
-                        depositAmount: Number(depositAmount) || 0
-                    })
+                    body: JSON.stringify({ leotardId, gymnastId, depositAmount: Number(depositAmount) || 0 })
                 });
 
                 if (res.ok) {
@@ -962,13 +1029,9 @@
                     fetchLeotards();
                     fetchGymnasts();
                     fetchDashboardData();
-                    alert("Location enregistrée avec succès !");
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de valider la location."}`);
+                    alert("Location enregistrée !");
                 }
             } catch (err) {
-                console.error("Erreur validation location :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
@@ -981,7 +1044,6 @@
 
         async function handleAddLeotardSubmit(event) {
             event.preventDefault();
-
             const newLeotard = {
                 name: document.getElementById('leo-add-name').value.trim(),
                 size: document.getElementById('leo-add-size').value
@@ -997,44 +1059,21 @@
                 if (res.ok) {
                     closeAddLeotardModal();
                     fetchLeotards();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible d'enregistrer le justaucorps."}`);
                 }
             } catch (err) {
-                console.error("Erreur serveur :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
 
-        function openAddGymnastModal() { 
-            document.getElementById('modal-add-gymnast')?.classList.remove('hidden'); 
-        }
-
+        function openAddGymnastModal() { document.getElementById('modal-add-gymnast')?.classList.remove('hidden'); }
         function closeAddGymnastModal() { 
             document.getElementById('modal-add-gymnast')?.classList.add('hidden'); 
             document.getElementById('form-add-gymnast')?.reset();
         }
 
-        function openEditGymnastModal(id, firstName, lastName, category) {
-            document.getElementById('gym-edit-id').value = id;
-            document.getElementById('gym-edit-nom').value = lastName;
-            document.getElementById('gym-edit-prenom').value = firstName;
-            document.getElementById('gym-edit-categorie').value = category || 'Général';
-            
-            document.getElementById('modal-edit-gymnast')?.classList.remove('hidden');
-        }
-
-        function closeEditGymnastModal() {
-            document.getElementById('modal-edit-gymnast')?.classList.add('hidden');
-            document.getElementById('form-edit-gymnast')?.reset();
-        }
-
         async function handleAddGymnastSubmit(event) {
             event.preventDefault();
-
             const selectedCategory = document.getElementById('gym-add-categorie').value || 'Général';
-
             const newGymnast = {
                 lastName: document.getElementById('gym-add-nom').value.trim(),
                 firstName: document.getElementById('gym-add-prenom').value.trim(),
@@ -1052,67 +1091,18 @@
                 if (res.ok) {
                     closeAddGymnastModal();
                     fetchGymnasts();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible d'enregistrer l'adhérent."}`);
                 }
             } catch (err) {
-                console.error("Erreur serveur :", err);
-                alert("Impossible de contacter le serveur.");
-            }
-        }
-
-        async function handleEditGymnastSubmit(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('gym-edit-id').value;
-            const selectedCategory = document.getElementById('gym-edit-categorie').value;
-
-            const updatedData = {
-                lastName: document.getElementById('gym-edit-nom').value.trim(),
-                firstName: document.getElementById('gym-edit-prenom').value.trim(),
-                category: selectedCategory,
-                group: selectedCategory
-            };
-
-            try {
-                const res = await fetch(`${API_URL}/gymnasts/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedData)
-                });
-
-                if (res.ok) {
-                    closeEditGymnastModal();
-                    fetchGymnasts();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de modifier l'adhérent."}`);
-                }
-            } catch (err) {
-                console.error("Erreur modification :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
 
         async function deleteGymnast(id, firstName, lastName) {
-            if (!confirm(`Voulez-vous vraiment supprimer ${firstName} ${lastName} ?`)) {
-                return;
-            }
-
+            if (!confirm(`Voulez-vous vraiment supprimer ${firstName} ${lastName} ?`)) return;
             try {
-                const res = await fetch(`${API_URL}/gymnasts/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    fetchGymnasts();
-                } else {
-                    const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de supprimer l'adhérent."}`);
-                }
+                const res = await fetch(`${API_URL}/gymnasts/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchGymnasts();
             } catch (err) {
-                console.error("Erreur suppression :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
@@ -1123,7 +1113,6 @@
             fetchLeotards();
             fetchGymnasts();
             fetchCompetitions();
-            
             navigateTo('dashboard');
         });
     </script>

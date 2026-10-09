@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 
-// 1. Middlewares & Désactivation du cache HTTP pour forcer le nouveau HTML
+// 1. Middlewares & Désactivation du cache HTTP
 app.use(cors());
 app.use(express.json());
 
@@ -59,7 +59,7 @@ const leotardSchema = new mongoose.Schema({
 
 const Leotard = mongoose.models.Leotard || mongoose.model('Leotard', leotardSchema);
 
-// Locations de Justaucorps
+// Locations
 const rentalSchema = new mongoose.Schema({
   leotard: { type: mongoose.Schema.Types.ObjectId, ref: 'Leotard', required: true },
   gymnast: { type: mongoose.Schema.Types.ObjectId, ref: 'Gymnast', required: true },
@@ -78,12 +78,18 @@ const stockSchema = new mongoose.Schema({
 
 const Stock = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
 
-// Compétitions (mis à jour avec startDate & endDate)
+// Compétitions avec résultats & récompenses
 const competitionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   startDate: { type: String, required: true },
   endDate: { type: String, default: '' },
-  location: { type: String, default: 'Lieu non spécifié' }
+  location: { type: String, default: 'Lieu non spécifié' },
+  results: [{
+    gymnast: { type: mongoose.Schema.Types.ObjectId, ref: 'Gymnast', required: true },
+    rank: { type: String, default: '' },
+    reward: { type: String, enum: ['Médaille d\'or', 'Médaille d\'argent', 'Médaille de bronze', 'Coupe 1ère place', 'Coupe 2ème place', 'Coupe 3ème place', 'Participation', 'Autre'], default: 'Participation' },
+    notes: { type: String, default: '' }
+  }]
 }, { timestamps: true });
 
 const Competition = mongoose.models.Competition || mongoose.model('Competition', competitionSchema);
@@ -137,9 +143,7 @@ app.put('/api/gymnasts/:id', async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!updated) {
-      return res.status(404).json({ message: "Gymnaste introuvable." });
-    }
+    if (!updated) return res.status(404).json({ message: "Gymnaste introuvable." });
     res.json(updated);
   } catch (err) {
     res.status(400).json({ message: "Erreur lors de la modification", error: err.message });
@@ -149,9 +153,7 @@ app.put('/api/gymnasts/:id', async (req, res) => {
 app.delete('/api/gymnasts/:id', async (req, res) => {
   try {
     const deleted = await Gymnast.findByIdAndDelete(req.params.id);
-    if (!deleted) {
-      return res.status(404).json({ message: "Gymnaste introuvable." });
-    }
+    if (!deleted) return res.status(404).json({ message: "Gymnaste introuvable." });
     res.json({ message: "Gymnaste supprimé avec succès." });
   } catch (err) {
     res.status(500).json({ message: "Erreur lors de la suppression", error: err.message });
@@ -171,10 +173,7 @@ app.get('/api/leotards', async (req, res) => {
 app.post('/api/leotards', async (req, res) => {
   try {
     const { name, size, status, gymnast, code, category } = req.body;
-    
-    if (!name || !name.trim()) {
-      return res.status(400).json({ message: "Le nom est obligatoire." });
-    }
+    if (!name || !name.trim()) return res.status(400).json({ message: "Le nom est obligatoire." });
 
     const uniqueCode = code && code.trim() ? code.trim() : `JST-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -191,39 +190,24 @@ app.post('/api/leotards', async (req, res) => {
     const saved = await newLeotard.save();
     res.status(201).json(saved);
   } catch (err) {
-    console.error("Erreur création leotard :", err);
     res.status(400).json({ message: "Erreur enregistrement : " + err.message });
-  }
-});
-
-app.put('/api/leotards/:id', async (req, res) => {
-  try {
-    const updated = await Leotard.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ message: "Erreur modification juste-au-corps", error: err.message });
   }
 });
 
 app.delete('/api/leotards/:id', async (req, res) => {
   try {
     const deleted = await Leotard.findByIdAndDelete(req.params.id);
-    if (!deleted) {
-      return res.status(404).json({ message: "Justaucorps introuvable." });
-    }
+    if (!deleted) return res.status(404).json({ message: "Justaucorps introuvable." });
     res.json({ message: "Justaucorps supprimé avec succès." });
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la suppression du justaucorps", error: err.message });
+    res.status(500).json({ message: "Erreur suppression justaucorps", error: err.message });
   }
 });
 
 // Locations
 app.get('/api/rentals', async (req, res) => {
   try {
-    const list = await Rental.find()
-      .populate('leotard')
-      .populate('gymnast')
-      .sort({ createdAt: -1 });
+    const list = await Rental.find().populate('leotard').populate('gymnast').sort({ createdAt: -1 });
     res.json(list);
   } catch (err) {
     res.status(500).json({ message: "Erreur lecture locations", error: err.message });
@@ -233,15 +217,10 @@ app.get('/api/rentals', async (req, res) => {
 app.post('/api/rentals', async (req, res) => {
   try {
     const { leotardId, gymnastId, depositAmount } = req.body;
-
-    if (!leotardId || !gymnastId) {
-      return res.status(400).json({ message: "Justaucorps et gymnaste requis." });
-    }
+    if (!leotardId || !gymnastId) return res.status(400).json({ message: "Justaucorps et gymnaste requis." });
 
     const gymnastObj = await Gymnast.findById(gymnastId);
-    if (!gymnastObj) {
-      return res.status(404).json({ message: "Gymnaste introuvable." });
-    }
+    if (!gymnastObj) return res.status(404).json({ message: "Gymnaste introuvable." });
 
     const newRental = new Rental({
       leotard: leotardId,
@@ -260,7 +239,6 @@ app.post('/api/rentals', async (req, res) => {
 
     res.status(201).json(newRental);
   } catch (err) {
-    console.error("Erreur création location :", err);
     res.status(400).json({ message: "Erreur validation location : " + err.message });
   }
 });
@@ -287,10 +265,10 @@ app.post('/api/stocks', async (req, res) => {
   }
 });
 
-// Compétitions
+// Compétitions & Résultats
 app.get('/api/competitions', async (req, res) => {
   try {
-    const list = await Competition.find().sort({ startDate: 1 });
+    const list = await Competition.find().populate('results.gymnast').sort({ startDate: 1 });
     res.json(list);
   } catch (err) {
     res.status(500).json({ message: "Erreur lecture compétitions", error: err.message });
@@ -302,15 +280,14 @@ app.post('/api/competitions', async (req, res) => {
     const { name, startDate, endDate, date, location } = req.body;
     const sDate = startDate || date;
 
-    if (!name || !sDate) {
-      return res.status(400).json({ message: "Le nom et la date de début sont obligatoires." });
-    }
+    if (!name || !sDate) return res.status(400).json({ message: "Le nom et la date de début sont obligatoires." });
 
     const newCompetition = new Competition({
       name: name.trim(),
       startDate: sDate.trim(),
       endDate: endDate ? endDate.trim() : '',
-      location: location ? location.trim() : 'Lieu non spécifié'
+      location: location ? location.trim() : 'Lieu non spécifié',
+      results: []
     });
     await newCompetition.save();
     res.status(201).json(newCompetition);
@@ -319,19 +296,34 @@ app.post('/api/competitions', async (req, res) => {
   }
 });
 
-app.delete('/api/competitions/:id', async (req, res) => {
+// Ajouter / Modifier les résultats d'une compétition
+app.put('/api/competitions/:id/results', async (req, res) => {
   try {
-    const deleted = await Competition.findByIdAndDelete(req.params.id);
-    if (!deleted) {
-      return res.status(404).json({ message: "Compétition introuvable." });
-    }
-    res.json({ message: "Compétition supprimée avec succès." });
+    const { results } = req.body; // Tableau d'objets { gymnast, rank, reward, notes }
+    const updatedComp = await Competition.findByIdAndUpdate(
+      req.params.id,
+      { results },
+      { new: true, runValidators: true }
+    ).populate('results.gymnast');
+
+    if (!updatedComp) return res.status(404).json({ message: "Compétition introuvable." });
+    res.json(updatedComp);
   } catch (err) {
-    res.status(500).json({ message: "Erreur lors de la suppression de la compétition", error: err.message });
+    res.status(400).json({ message: "Erreur mise à jour résultats", error: err.message });
   }
 });
 
-// Fallback HTML (Redirection propre vers index.html)
+app.delete('/api/competitions/:id', async (req, res) => {
+  try {
+    const deleted = await Competition.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Compétition introuvable." });
+    res.json({ message: "Compétition supprimée avec succès." });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur suppression compétition", error: err.message });
+  }
+});
+
+// Fallback HTML
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
