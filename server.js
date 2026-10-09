@@ -78,6 +78,15 @@ const stockSchema = new mongoose.Schema({
 
 const Stock = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
 
+// Compétitions
+const competitionSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  date: { type: String, required: true },
+  location: { type: String, default: 'Lieu non spécifié' }
+}, { timestamps: true });
+
+const Competition = mongoose.models.Competition || mongoose.model('Competition', competitionSchema);
+
 
 // --- ROUTES API ---
 
@@ -278,6 +287,34 @@ app.post('/api/stocks', async (req, res) => {
     res.status(201).json(newStock);
   } catch (err) {
     res.status(400).json({ message: "Erreur sauvegarde stock", error: err.message });
+  }
+});
+
+// Compétitions
+app.get('/api/competitions', async (req, res) => {
+  try {
+    const list = await Competition.find().sort({ date: 1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lecture compétitions", error: err.message });
+  }
+});
+
+app.post('/api/competitions', async (req, res) => {
+  try {
+    const { name, date, location } = req.body;
+    if (!name || !date) {
+      return res.status(400).json({ message: "Le nom et la date sont obligatoires." });
+    }
+    const newCompetition = new Competition({
+      name: name.trim(),
+      date: date.trim(),
+      location: location ? location.trim() : 'Lieu non spécifié'
+    });
+    await newCompetition.save();
+    res.status(201).json(newCompetition);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur sauvegarde compétition", error: err.message });
   }
 });
 
