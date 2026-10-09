@@ -560,6 +560,12 @@
                 await fetchRentals();
                 const res = await fetch(`${API_URL}/leotards`);
                 const data = await res.json();
+
+                // Mettre à jour le compteur dans la sidebar
+                const rentedCount = data.filter(l => l.status === 'Loué').length;
+                const badgeRented = document.getElementById('badge-rented-count');
+                if (badgeRented) badgeRented.innerText = rentedCount;
+
                 const container = document.getElementById('leotards-grid');
                 if (!container) return;
 
@@ -567,11 +573,6 @@
                     container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucun justaucorps en stock.</p>`;
                     return;
                 }
-
-                // Mettre à jour le compteur dans la sidebar
-                const rentedCount = data.filter(l => l.status === 'Loué').length;
-                const badgeRented = document.getElementById('badge-rented-count');
-                if (badgeRented) badgeRented.innerText = rentedCount;
 
                 container.innerHTML = data.map(l => {
                     const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -927,6 +928,10 @@
         function openAddStockItemModal() { alert("Modal ajout d'article à implémenter"); }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Charger les données de la sidebar dès le démarrage du site
+            fetchLeotards();
+            fetchGymnasts();
+            
             navigateTo('dashboard');
         });
     </script>
