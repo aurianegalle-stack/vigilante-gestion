@@ -111,7 +111,10 @@
             </a>
             <a href="#adherents" onclick="navigateTo('adherents')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
                 <i class="fa-solid fa-user-ninja text-lg w-5 text-center"></i>
-                <span>Gymnastes & Équipes</span>
+                <div class="flex-1 flex justify-between items-center">
+                    <span>Gymnastes & Équipes</span>
+                    <span id="badge-gymnasts-count" class="text-[10px] bg-teal-500/20 text-teal-300 border border-teal-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
             </a>
         </nav>
 
@@ -531,12 +534,18 @@
             const select = document.getElementById('gym-filter-category');
             const selectedCategory = select ? select.value : 'ALL';
 
-            if (selectedCategory === 'ALL') {
-                renderGymnasts(allGymnasts);
-            } else {
-                const filtered = allGymnasts.filter(g => (g.category || g.group) === selectedCategory);
-                renderGymnasts(filtered);
+            let filtered = allGymnasts;
+            if (selectedCategory !== 'ALL') {
+                filtered = allGymnasts.filter(g => (g.category || g.group) === selectedCategory);
             }
+
+            // Mise à jour du nombre dans le badge de la sidebar
+            const badgeCount = document.getElementById('badge-gymnasts-count');
+            if (badgeCount) {
+                badgeCount.innerText = filtered.length;
+            }
+
+            renderGymnasts(filtered);
         }
 
         async function fetchLeotards() {
