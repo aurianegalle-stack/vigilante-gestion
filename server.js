@@ -78,10 +78,11 @@ const stockSchema = new mongoose.Schema({
 
 const Stock = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
 
-// Compétitions
+// Compétitions (mis à jour avec startDate & endDate)
 const competitionSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  date: { type: String, required: true },
+  startDate: { type: String, required: true },
+  endDate: { type: String, default: '' },
   location: { type: String, default: 'Lieu non spécifié' }
 }, { timestamps: true });
 
@@ -122,7 +123,6 @@ app.post('/api/gymnasts', async (req, res) => {
   }
 });
 
-// Modifier un gymnaste
 app.put('/api/gymnasts/:id', async (req, res) => {
   try {
     const { firstName, lastName, category, group } = req.body;
@@ -146,7 +146,6 @@ app.put('/api/gymnasts/:id', async (req, res) => {
   }
 });
 
-// Supprimer un gymnaste
 app.delete('/api/gymnasts/:id', async (req, res) => {
   try {
     const deleted = await Gymnast.findByIdAndDelete(req.params.id);
@@ -244,7 +243,6 @@ app.post('/api/rentals', async (req, res) => {
       return res.status(404).json({ message: "Gymnaste introuvable." });
     }
 
-    // Créer la location
     const newRental = new Rental({
       leotard: leotardId,
       gymnast: gymnastId,
@@ -252,7 +250,6 @@ app.post('/api/rentals', async (req, res) => {
     });
     await newRental.save();
 
-    // Mettre à jour l'état du justaucorps
     const gymnastFullName = `${gymnastObj.firstName} ${gymnastObj.lastName}`;
     await Leotard.findByIdAndUpdate(leotardId, {
       status: 'Loué',
@@ -293,7 +290,7 @@ app.post('/api/stocks', async (req, res) => {
 // Compétitions
 app.get('/api/competitions', async (req, res) => {
   try {
-    const list = await Competition.find().sort({ date: 1 });
+    const list = await Competition.find().sort({ startDate: 1 });
     res.json(list);
   } catch (err) {
     res.status(500).json({ message: "Erreur lecture compétitions", error: err.message });
@@ -302,19 +299,35 @@ app.get('/api/competitions', async (req, res) => {
 
 app.post('/api/competitions', async (req, res) => {
   try {
-    const { name, date, location } = req.body;
-    if (!name || !date) {
-      return res.status(400).json({ message: "Le nom et la date sont obligatoires." });
+    const { name, startDate, endDate, date, location } = req.body;
+    const sDate = startDate || date;
+
+    if (!name || !sDate) {
+      return res.status(400).json({ message: "Le nom et la date de début sont obligatoires." });
     }
+
     const newCompetition = new Competition({
       name: name.trim(),
-      date: date.trim(),
+      startDate: sDate.trim(),
+      endDate: endDate ? endDate.trim() : '',
       location: location ? location.trim() : 'Lieu non spécifié'
     });
     await newCompetition.save();
     res.status(201).json(newCompetition);
   } catch (err) {
     res.status(400).json({ message: "Erreur sauvegarde compétition", error: err.message });
+  }
+});
+
+app.delete('/api/competitions/:id', async (req, res) => {
+  try {
+    const deleted = await Competition.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Compétition introuvable." });
+    }
+    res.json({ message: "Compétition supprimée avec succès." });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lors de la suppression de la compétition", error: err.message });
   }
 });
 

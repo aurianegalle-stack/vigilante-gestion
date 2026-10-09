@@ -466,9 +466,15 @@
                     <input type="text" id="comp-add-name" required placeholder="Ex: Championnat Régional" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Date *</label>
-                    <input type="date" id="comp-add-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de début *</label>
+                        <input type="date" id="comp-add-start-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de fin (optionnel)</label>
+                        <input type="date" id="comp-add-end-date" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500">
+                    </div>
                 </div>
 
                 <div>
@@ -548,7 +554,6 @@
                 const res = await fetch(`${API_URL}/gymnasts`);
                 allGymnasts = await res.json();
 
-                // Mettre à jour le compteur dans la sidebar
                 const badgeGymnasts = document.getElementById('badge-gymnasts-count');
                 if (badgeGymnasts) badgeGymnasts.innerText = allGymnasts.length;
 
@@ -558,12 +563,18 @@
             }
         }
 
+        function formatDateDisplay(startDate, endDate, legacyDate) {
+            const start = startDate || legacyDate || '';
+            if (!start) return '';
+            if (!endDate || endDate === start) return start;
+            return `Du ${start} au ${endDate}`;
+        }
+
         async function fetchCompetitions() {
             try {
                 const res = await fetch(`${API_URL}/competitions`);
                 const data = res.ok ? await res.json() : [];
 
-                // Mettre à jour le compteur dans la sidebar
                 const badgeCompetitions = document.getElementById('badge-competitions-count');
                 if (badgeCompetitions) badgeCompetitions.innerText = data.length;
 
@@ -575,15 +586,29 @@
                     return;
                 }
 
-                container.innerHTML = data.map(c => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-white">${c.name || 'Compétition'}</h4>
-                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">${c.date || ''}</span>
+                container.innerHTML = data.map(c => {
+                    const safeName = (c.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const dateDisplay = formatDateDisplay(c.startDate, c.endDate, c.date);
+
+                    return `
+                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <div class="flex items-start justify-between gap-2">
+                                    <h4 class="font-bold text-white">${c.name || 'Compétition'}</h4>
+                                    <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition shrink-0" title="Supprimer la compétition">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </div>
+                                <span class="text-xs text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-full inline-block font-medium">
+                                    <i class="fa-regular fa-calendar-days mr-1"></i> ${dateDisplay}
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400 pt-1 border-t border-slate-800/60 flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot text-slate-500"></i> ${c.location || 'Lieu non spécifié'}
+                            </p>
                         </div>
-                        <p class="text-xs text-slate-400">${c.location || 'Lieu non spécifié'}</p>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } catch (err) {
                 console.error('Erreur chargement compétitions:', err);
             }
@@ -601,9 +626,13 @@
         async function handleAddCompetitionSubmit(event) {
             event.preventDefault();
 
+            const startDate = document.getElementById('comp-add-start-date').value;
+            const endDate = document.getElementById('comp-add-end-date').value;
+
             const newCompetition = {
                 name: document.getElementById('comp-add-name').value.trim(),
-                date: document.getElementById('comp-add-date').value,
+                startDate: startDate,
+                endDate: endDate || startDate,
                 location: document.getElementById('comp-add-location').value.trim()
             };
 
@@ -627,6 +656,28 @@
             }
         }
 
+        async function deleteCompetition(id, name) {
+            if (!confirm(`Voulez-vous vraiment supprimer la compétition "${name}" ?`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/competitions/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    fetchCompetitions();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible de supprimer la compétition."}`);
+                }
+            } catch (err) {
+                console.error("Erreur suppression compétition :", err);
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
         function renderGymnasts(data) {
             const container = document.getElementById('gymnasts-grid');
             if (!container) return;
@@ -642,7 +693,6 @@
                 const categoryName = g.category || g.group || 'Général';
                 const safeCategory = categoryName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
-                // Recherche de la location active du gymnaste
                 const rental = activeRentals.find(r => (r.gymnast?._id || r.gymnast) === g._id);
                 const leotardBadge = rental && rental.leotard ? 
                     `<span class="text-xs text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
@@ -678,7 +728,6 @@
                 filtered = allGymnasts.filter(g => (g.category || g.group) === selectedCategory);
             }
 
-            // Mise à jour du nombre dans le badge d'en-tête (à côté du titre)
             const headerBadge = document.getElementById('header-gymnasts-count');
             if (headerBadge) {
                 headerBadge.innerText = `${filtered.length} adhérent${filtered.length > 1 ? 's' : ''}`;
@@ -693,7 +742,6 @@
                 const res = await fetch(`${API_URL}/leotards`);
                 const data = await res.json();
 
-                // Mettre à jour le compteur dans la sidebar
                 const rentedCount = data.filter(l => l.status === 'Loué').length;
                 const badgeRented = document.getElementById('badge-rented-count');
                 if (badgeRented) badgeRented.innerText = rentedCount;
@@ -709,7 +757,6 @@
                 container.innerHTML = data.map(l => {
                     const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     
-                    // Trouver l'affectation active via les locations
                     const rental = activeRentals.find(r => (r.leotard?._id || r.leotard) === l._id);
                     const isRented = l.status === 'Loué' || rental;
                     
@@ -839,7 +886,6 @@
             modal.classList.remove('hidden');
 
             try {
-                // Rafraîchir la liste des locations actives
                 await fetchRentals();
 
                 const [resLeotards, resGymnasts] = await Promise.all([
@@ -850,7 +896,6 @@
                 const leotards = await resLeotards.json();
                 const gymnasts = await resGymnasts.json();
 
-                // Exclure les justaucorps marqués "Loué" OU présents dans activeRentals
                 const availableLeotards = (leotards || []).filter(l => {
                     const isRentedByStatus = l.status === 'Loué';
                     const isRentedByRental = activeRentals.some(r => (r.leotard?._id || r.leotard) === l._id);
@@ -895,7 +940,6 @@
                 return;
             }
 
-            // Sécurité supplémentaire : vérifier si le justaucorps n'est pas déjà dans activeRentals
             const alreadyRented = activeRentals.some(r => (r.leotard?._id || r.leotard) === leotardId);
             if (alreadyRented) {
                 alert("Ce justaucorps est déjà loué par un autre gymnaste !");
@@ -1076,7 +1120,6 @@
         function openAddStockItemModal() { alert("Modal ajout d'article à implémenter"); }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Charger les données de la sidebar dès le démarrage du site
             fetchLeotards();
             fetchGymnasts();
             fetchCompetitions();
