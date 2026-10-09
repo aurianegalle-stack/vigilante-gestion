@@ -59,6 +59,16 @@ const leotardSchema = new mongoose.Schema({
 
 const Leotard = mongoose.models.Leotard || mongoose.model('Leotard', leotardSchema);
 
+// Locations de Justaucorps
+const rentalSchema = new mongoose.Schema({
+  leotard: { type: mongoose.Schema.Types.ObjectId, ref: 'Leotard', required: true },
+  gymnast: { type: mongoose.Schema.Types.ObjectId, ref: 'Gymnast', required: true },
+  depositAmount: { type: Number, default: 45 },
+  status: { type: String, default: 'En cours' }
+}, { timestamps: true });
+
+const Rental = mongoose.models.Rental || mongoose.model('Rental', rentalSchema);
+
 // Stock Buvette
 const stockSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -187,7 +197,6 @@ app.put('/api/leotards/:id', async (req, res) => {
   }
 });
 
-// AJOUT : Supprimer un justaucorps
 app.delete('/api/leotards/:id', async (req, res) => {
   try {
     const deleted = await Leotard.findByIdAndDelete(req.params.id);
@@ -197,6 +206,56 @@ app.delete('/api/leotards/:id', async (req, res) => {
     res.json({ message: "Justaucorps supprimé avec succès." });
   } catch (err) {
     res.status(500).json({ message: "Erreur lors de la suppression du justaucorps", error: err.message });
+  }
+});
+
+// Locations
+app.get('/api/rentals', async (req, res) => {
+  try {
+    const list = await Rental.find()
+      .populate('leotard')
+      .populate('gymnast')
+      .sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lecture locations", error: err.message });
+  }
+});
+
+app.post('/api/rentals', async (req, res) => {
+  try {
+    const { leotardId, gymnastId, depositAmount } = req.body;
+
+    if (!leotardId || !gymnastId) {
+      return res.status(400).json({ message: "Justaucorps et gymnaste requis." });
+    }
+
+    const gymnastObj = await Gymnast.findById(gymnastId);
+    if (!gymnastObj) {
+      return res.status(404).json({ message: "Gymnaste introuvable." });
+    }
+
+    // Créer la location
+    const newRental = new Rental({
+      leotard: leotardId,
+      gymnast: gymnastId,
+      depositAmount: Number(depositAmount) || 45
+    });
+    await newRental.save();
+
+    // Mettre à jour l'état du justaucorps
+    const gymnastFullName = `${gymnastObj.firstName} ${gymnastObj.lastName}`;
+    await Leotard.findByIdAndUpdate(leotardId, {
+      status: 'Loué',
+      assignedTo: gymnastId,
+      gymnast: gymnastFullName,
+      cautionAmount: Number(depositAmount) || 45
+    });
+
+    res.status(201).json(newRental);
+  } catch (err) {
+    console.error("Erreur création location :", err);
+    res.status(400).json({ message: "Erreur validation location : " + err.message });
   }
 });
 
