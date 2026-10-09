@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-950 text-slate-100">
+<html lang="fr" class="h-full bg-slate-950 text-slate-100 notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -232,6 +233,7 @@
                         <option value="ALL">Toutes les catégories</option>
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
+                        <option value="Poussines / Poussinets">Poussines / Poussinets</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
                         <option value="Cadettes">Cadettes</option>
@@ -349,6 +351,7 @@
                         <option value="">-- Sélectionner une catégorie --</option>
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
+                        <option value="Poussines / Poussinets">Poussines / Poussinets</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
                         <option value="Cadettes">Cadettes</option>
@@ -397,12 +400,15 @@
                     <select id="gym-edit-categorie" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
                         <option value="Baby Gym">Baby Gym</option>
                         <option value="GAM">GAM</option>
+                        <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
+						<option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
+						<option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
+						<option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
+						<option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
+						<option value="Débutants 6/9">Débutants 6/9</option>
+						<option value="Débutants 10/13">Débutants 10/13</option>
                         <option value="Perf">Perf</option>
                         <option value="Perf Poussines">Perf Poussines</option>
-                        <option value="Cadettes">Cadettes</option>
-                        <option value="Juniors">Juniors</option>
-                        <option value="Séniors">Séniors</option>
-                        <option value="Loisir">Loisir</option>
                         <option value="Adulte">Adulte</option>
                     </select>
                 </div>
@@ -471,22 +477,29 @@
                 return;
             }
 
-            container.innerHTML = data.map(g => `
-                <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
-                        <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${g.category || g.group || 'Général'}</span>
+            container.innerHTML = data.map(g => {
+                const safeFirstName = (g.firstName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const safeLastName = (g.lastName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const categoryName = g.category || g.group || 'Général';
+                const safeCategory = categoryName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                return `
+                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-white">${g.lastName} ${g.firstName}</h4>
+                            <span class="text-xs text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full inline-block mt-1">${categoryName}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="openEditGymnastModal('${g._id}', '${safeFirstName}', '${safeLastName}', '${safeCategory}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteGymnast('${g._id}', '${safeFirstName}', '${safeLastName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <button onclick="openEditGymnastModal('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}', '${g.category || g.group || ''}')" class="p-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition" title="Modifier">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button onclick="deleteGymnast('${g._id}', '${g.firstName.replace(/'/g, "\\'")}', '${g.lastName.replace(/'/g, "\\'")}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function filterGymnasts() {
@@ -513,17 +526,20 @@
                     return;
                 }
 
-                container.innerHTML = data.map(l => `
-                    <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-white">${l.name}</h4>
-                            <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full inline-block mt-1">Taille: ${l.size}</span>
+                container.innerHTML = data.map(l => {
+                    const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    return `
+                        <div class="glass-card p-4 rounded-xl border border-slate-800 space-y-2 flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-white">${l.name}</h4>
+                                <span class="text-xs text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-full inline-block mt-1">Taille: ${l.size}</span>
+                            </div>
+                            <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
-                        <button onclick="deleteLeotard('${l._id}', '${l.name.replace(/'/g, "\\'")}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } catch (err) {
                 console.error('Erreur chargement justaucorps:', err);
             }
