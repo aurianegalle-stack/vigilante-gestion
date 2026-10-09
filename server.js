@@ -78,21 +78,28 @@ const stockSchema = new mongoose.Schema({
 
 const Stock = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
 
-// Compétitions avec résultats & récompenses
+// Sub-schéma souple pour un résultat de compétition
+const resultItemSchema = new mongoose.Schema({
+  gymnast: { type: mongoose.Schema.Types.ObjectId, ref: 'Gymnast', required: true },
+  rank: { type: String, default: '' },
+  reward: { type: String, default: 'Participation' },
+  notes: { type: String, default: '' }
+}, { _id: true });
+
+// Compétitions
 const competitionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   startDate: { type: String, required: true },
   endDate: { type: String, default: '' },
   location: { type: String, default: 'Lieu non spécifié' },
-  results: [{
-    gymnast: { type: mongoose.Schema.Types.ObjectId, ref: 'Gymnast', required: true },
-    rank: { type: String, default: '' },
-    reward: { type: String, enum: ['Médaille d\'or', 'Médaille d\'argent', 'Médaille de bronze', 'Coupe 1ère place', 'Coupe 2ème place', 'Coupe 3ème place', 'Participation', 'Autre'], default: 'Participation' },
-    notes: { type: String, default: '' }
-  }]
+  results: [resultItemSchema]
 }, { timestamps: true });
 
-const Competition = mongoose.models.Competition || mongoose.model('Competition', competitionSchema);
+// Réinitialisation propre du modèle Mongoose pour éviter les conflits de cache
+if (mongoose.models.Competition) {
+  delete mongoose.models.Competition;
+}
+const Competition = mongoose.model('Competition', competitionSchema);
 
 
 // --- ROUTES API ---
@@ -296,20 +303,33 @@ app.post('/api/competitions', async (req, res) => {
   }
 });
 
-// Ajouter / Modifier les résultats d'une compétition
+// Route PUT /api/competitions/:id/results sécurisée
 app.put('/api/competitions/:id/results', async (req, res) => {
   try {
-    const { results } = req.body; // Tableau d'objets { gymnast, rank, reward, notes }
+    const { results } = req.body;
+
+    // S'assurer que le tableau est bien formaté
+    const cleanResults = (results || []).map(r => ({
+      gymnast: r.gymnast,
+      rank: r.rank ? String(r.rank).trim() : '',
+      reward: r.reward ? String(r.reward).trim() : 'Participation',
+      notes: r.notes ? String(r.notes).trim() : ''
+    }));
+
     const updatedComp = await Competition.findByIdAndUpdate(
       req.params.id,
-      { results },
-      { new: true, runValidators: true }
+      { $set: { results: cleanResults } },
+      { new: true, runValidators: false }
     ).populate('results.gymnast');
 
-    if (!updatedComp) return res.status(404).json({ message: "Compétition introuvable." });
+    if (!updatedComp) {
+      return res.status(404).json({ message: "Compétition introuvable." });
+    }
+
     res.json(updatedComp);
   } catch (err) {
-    res.status(400).json({ message: "Erreur mise à jour résultats", error: err.message });
+    console.error("Erreur enregistrement résultats :", err);
+    res.status(400).json({ message: "Erreur lors de la mise à jour des résultats", error: err.message });
   }
 });
 

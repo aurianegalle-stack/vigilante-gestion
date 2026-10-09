@@ -520,7 +520,7 @@
             if (reward === "Médaille d'or") return "🥇";
             if (reward === "Médaille d'argent") return "🥈";
             if (reward === "Médaille de bronze") return "🥉";
-            if (reward.includes("Coupe")) return "🏆";
+            if (reward && reward.includes("Coupe")) return "🏆";
             return "🎗️";
         }
 
@@ -607,14 +607,12 @@
             document.getElementById('results-comp-id').value = compId;
             document.getElementById('modal-comp-name-title').innerText = comp.name;
 
-            // Remplir le menu déroulant des gymnastes
             if (allGymnasts.length === 0) await fetchGymnasts();
             const selectGym = document.getElementById('res-add-gymnast');
             if (selectGym) {
                 selectGym.innerHTML = allGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('');
             }
 
-            // Charger les résultats existants
             currentTempResults = (comp.results || []).map(r => ({
                 gymnast: r.gymnast?._id || r.gymnast,
                 gymnastName: r.gymnast?.firstName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste',
@@ -712,12 +710,12 @@
 
                 if (res.ok) {
                     closeResultsModal();
-                    fetchCompetitions();
-                    fetchGymnasts();
+                    await fetchCompetitions();
+                    await fetchGymnasts();
                     alert("Palmarès mis à jour avec succès !");
                 } else {
                     const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible d'enregistrer les résultats."}`);
+                    alert(`Erreur (${res.status}) : ${errData.message || "Impossible d'enregistrer les résultats."}`);
                 }
             } catch (err) {
                 console.error("Erreur enregistrement résultats :", err);
@@ -790,7 +788,6 @@
                 const leotardBadge = rental && rental.leotard ? 
                     `<span class="text-xs text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
 
-                // Calculer les médailles gagnées par ce gymnaste
                 let userRewards = [];
                 allCompetitions.forEach(c => {
                     if (c.results) {
