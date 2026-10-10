@@ -95,7 +95,6 @@ const competitionSchema = new mongoose.Schema({
   results: [resultItemSchema]
 }, { timestamps: true });
 
-// Réinitialisation propre du modèle Mongoose pour éviter les conflits de cache
 if (mongoose.models.Competition) {
   delete mongoose.models.Competition;
 }
@@ -258,7 +257,6 @@ app.delete('/api/rentals/:id', async (req, res) => {
       return res.status(404).json({ message: "Location introuvable." });
     }
 
-    // Remettre le justaucorps en statut "Disponible"
     if (rental.leotard) {
       await Leotard.findByIdAndUpdate(rental.leotard, {
         status: 'Disponible',
@@ -274,7 +272,7 @@ app.delete('/api/rentals/:id', async (req, res) => {
   }
 });
 
-// Stocks
+// Stocks Buvette
 app.get('/api/stocks', async (req, res) => {
   try {
     const list = await Stock.find().sort({ createdAt: -1 });
@@ -287,12 +285,26 @@ app.get('/api/stocks', async (req, res) => {
 app.post('/api/stocks', async (req, res) => {
   try {
     const { name, quantity, unitPrice } = req.body;
-    if (!name) return res.status(400).json({ message: "Le nom est obligatoire." });
-    const newStock = new Stock({ name, quantity, unitPrice });
+    if (!name || !name.trim()) return res.status(400).json({ message: "Le nom est obligatoire." });
+    const newStock = new Stock({ 
+      name: name.trim(), 
+      quantity: Number(quantity) || 0, 
+      unitPrice: Number(unitPrice) || 0 
+    });
     await newStock.save();
     res.status(201).json(newStock);
   } catch (err) {
     res.status(400).json({ message: "Erreur sauvegarde stock", error: err.message });
+  }
+});
+
+app.delete('/api/stocks/:id', async (req, res) => {
+  try {
+    const deleted = await Stock.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Article introuvable." });
+    res.json({ message: "Article supprimé du stock avec succès." });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur suppression article", error: err.message });
   }
 });
 
@@ -364,7 +376,6 @@ app.put('/api/competitions/:id/results', async (req, res) => {
   try {
     const { results } = req.body;
 
-    // S'assurer que le tableau est bien formaté
     const cleanResults = (results || []).map(r => ({
       gymnast: r.gymnast,
       rank: r.rank ? String(r.rank).trim() : '',
