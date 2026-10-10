@@ -300,6 +300,50 @@
         </div>
     </div>
 
+    <!-- MODAL: EDIT COMPETITION -->
+    <div id="modal-edit-competition" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-teal-600"></i> Modifier la Compétition
+                </h3>
+                <button type="button" onclick="closeEditCompetitionModal()" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="form-edit-competition" onsubmit="handleEditCompetitionSubmit(event)" class="space-y-4">
+                <input type="hidden" id="comp-edit-id">
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de la compétition *</label>
+                    <input type="text" id="comp-edit-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début *</label>
+                        <input type="date" id="comp-edit-start-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin</label>
+                        <input type="date" id="comp-edit-end-date" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu</label>
+                    <input type="text" id="comp-edit-location" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                </div>
+
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
+                    <button type="button" onclick="closeEditCompetitionModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: ADD / EDIT COMPETITION RESULTS & REWARDS -->
     <div id="modal-comp-results" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="glass-card max-w-xl w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 max-h-[90vh] flex flex-col bg-white">
@@ -578,9 +622,14 @@
                             <div class="space-y-2">
                                 <div class="flex items-start justify-between gap-2">
                                     <h4 class="font-bold text-slate-900 text-base">${c.name || 'Compétition'}</h4>
-                                    <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition shrink-0" title="Supprimer la compétition">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
-                                    </button>
+                                    <div class="flex items-center gap-1 shrink-0">
+                                        <button onclick="openEditCompetitionModal('${c._id}')" class="p-1 text-teal-600 hover:text-teal-800 hover:bg-teal-50 rounded transition" title="Modifier la compétition">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                        </button>
+                                        <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition" title="Supprimer la compétition">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <span class="text-xs text-teal-800 bg-teal-100 border border-teal-200 px-2.5 py-1 rounded-full inline-block font-semibold">
                                     <i class="fa-regular fa-calendar-days mr-1"></i> ${dateDisplay}
@@ -757,6 +806,56 @@
                 } else {
                     const errData = await res.json().catch(() => ({}));
                     alert(`Erreur : ${errData.message || "Impossible d'enregistrer la compétition."}`);
+                }
+            } catch (err) {
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
+        function openEditCompetitionModal(id) {
+            const comp = allCompetitions.find(c => c._id === id);
+            if (!comp) return;
+
+            document.getElementById('comp-edit-id').value = comp._id;
+            document.getElementById('comp-edit-name').value = comp.name || '';
+            document.getElementById('comp-edit-start-date').value = comp.startDate || comp.date || '';
+            document.getElementById('comp-edit-end-date').value = comp.endDate || '';
+            document.getElementById('comp-edit-location').value = comp.location || '';
+
+            document.getElementById('modal-edit-competition')?.classList.remove('hidden');
+        }
+
+        function closeEditCompetitionModal() {
+            document.getElementById('modal-edit-competition')?.classList.add('hidden');
+            document.getElementById('form-edit-competition')?.reset();
+        }
+
+        async function handleEditCompetitionSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('comp-edit-id').value;
+            const startDate = document.getElementById('comp-edit-start-date').value;
+            const endDate = document.getElementById('comp-edit-end-date').value;
+
+            const updatedCompetition = {
+                name: document.getElementById('comp-edit-name').value.trim(),
+                startDate: startDate,
+                endDate: endDate || startDate,
+                location: document.getElementById('comp-edit-location').value.trim()
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/competitions/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedCompetition)
+                });
+
+                if (res.ok) {
+                    closeEditCompetitionModal();
+                    fetchCompetitions();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible de modifier la compétition."}`);
                 }
             } catch (err) {
                 alert("Impossible de contacter le serveur.");
