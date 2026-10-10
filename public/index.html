@@ -840,24 +840,34 @@
                 name: document.getElementById('comp-edit-name').value.trim(),
                 startDate: startDate,
                 endDate: endDate || startDate,
+                date: startDate,
                 location: document.getElementById('comp-edit-location').value.trim()
             };
 
             try {
-                const res = await fetch(`${API_URL}/competitions/${id}`, {
+                let res = await fetch(`${API_URL}/competitions/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedCompetition)
                 });
 
+                if (!res.ok) {
+                    res = await fetch(`${API_URL}/competitions/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedCompetition)
+                    });
+                }
+
                 if (res.ok) {
                     closeEditCompetitionModal();
-                    fetchCompetitions();
+                    await fetchCompetitions();
                 } else {
                     const errData = await res.json().catch(() => ({}));
-                    alert(`Erreur : ${errData.message || "Impossible de modifier la compétition."}`);
+                    alert(`Erreur (${res.status}) : ${errData.message || "Impossible de modifier la compétition."}`);
                 }
             } catch (err) {
+                console.error("Erreur modification compétition :", err);
                 alert("Impossible de contacter le serveur.");
             }
         }
