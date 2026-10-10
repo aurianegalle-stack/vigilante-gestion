@@ -303,6 +303,38 @@ app.post('/api/competitions', async (req, res) => {
   }
 });
 
+// Modification générale d'une compétition (Nom, Dates, Lieu)
+const updateCompetitionHandler = async (req, res) => {
+  try {
+    const { name, startDate, endDate, date, location } = req.body;
+    const sDate = startDate || date;
+
+    const updateFields = {};
+    if (name) updateFields.name = name.trim();
+    if (sDate) updateFields.startDate = sDate.trim();
+    if (endDate !== undefined) updateFields.endDate = endDate ? endDate.trim() : '';
+    if (location !== undefined) updateFields.location = location ? location.trim() : 'Lieu non spécifié';
+
+    const updatedComp = await Competition.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    ).populate('results.gymnast');
+
+    if (!updatedComp) {
+      return res.status(404).json({ message: "Compétition introuvable." });
+    }
+
+    res.json(updatedComp);
+  } catch (err) {
+    console.error("Erreur modification compétition :", err);
+    res.status(400).json({ message: "Erreur lors de la modification de la compétition", error: err.message });
+  }
+};
+
+app.put('/api/competitions/:id', updateCompetitionHandler);
+app.patch('/api/competitions/:id', updateCompetitionHandler);
+
 // Route PUT /api/competitions/:id/results sécurisée
 app.put('/api/competitions/:id/results', async (req, res) => {
   try {
