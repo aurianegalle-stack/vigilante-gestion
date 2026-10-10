@@ -250,6 +250,30 @@ app.post('/api/rentals', async (req, res) => {
   }
 });
 
+// Supprimer / Clôturer une location (Retour du justaucorps)
+app.delete('/api/rentals/:id', async (req, res) => {
+  try {
+    const rental = await Rental.findByIdAndDelete(req.params.id);
+    if (!rental) {
+      return res.status(404).json({ message: "Location introuvable." });
+    }
+
+    // Remettre le justaucorps en statut "Disponible"
+    if (rental.leotard) {
+      await Leotard.findByIdAndUpdate(rental.leotard, {
+        status: 'Disponible',
+        assignedTo: '',
+        gymnast: '-'
+      });
+    }
+
+    res.json({ message: "Justaucorps rendu avec succès." });
+  } catch (err) {
+    console.error("Erreur lors du retour du justaucorps :", err);
+    res.status(500).json({ message: "Erreur lors du retour", error: err.message });
+  }
+});
+
 // Stocks
 app.get('/api/stocks', async (req, res) => {
   try {

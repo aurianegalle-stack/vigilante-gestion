@@ -557,6 +557,27 @@
             }
         }
 
+        async function returnRental(rentalId, name) {
+            const confirmMsg = name ? `Confirmer le retour du justaucorps pour ${name} ?` : "Confirmer le retour de ce justaucorps ?";
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const res = await fetch(`${API_URL}/rentals/${rentalId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    await fetchRentals();
+                    await fetchLeotards();
+                    await fetchDashboardData();
+                    await fetchGymnasts();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible d'effectuer le retour."}`);
+                }
+            } catch (err) {
+                console.error("Erreur retour location :", err);
+                alert("Impossible de contacter le serveur.");
+            }
+        }
+
         async function fetchGymnasts() {
             try {
                 await fetchRentals();
@@ -1016,14 +1037,23 @@
                         ? `<span class="text-[10px] bg-pink-100 text-pink-700 border border-pink-200 px-2 py-0.5 rounded-full font-semibold">Loué : ${gymnastName}</span>`
                         : `<span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">Disponible</span>`;
 
+                    const returnBtn = (rental && rental._id) 
+                        ? `<button onclick="returnRental('${rental._id}', '${safeName}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left"></i> Rendre
+                           </button>` 
+                        : '';
+
                     return `
                         <div class="glass-card p-4 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between gap-2">
                                     <h4 class="font-bold text-slate-900 truncate">${l.name}</h4>
-                                    <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
-                                    </button>
+                                    <div class="flex items-center gap-1">
+                                        ${returnBtn}
+                                        <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition" title="Supprimer">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="text-xs text-pink-700 bg-pink-50 border border-pink-200 px-2 py-0.5 rounded-full font-semibold">Taille: ${l.size}</span>
@@ -1078,7 +1108,6 @@
                 const badgeGymnasts = document.getElementById('badge-gymnasts-count');
                 const dashList = document.getElementById('dash-rentals-list');
 
-                // Charger le nombre d'adhérents pour le tableau de bord
                 const resGym = await fetch(`${API_URL}/gymnasts`);
                 if (resGym.ok) {
                     allGymnasts = await resGym.json();
@@ -1099,6 +1128,8 @@
                         dashList.innerHTML = activeRentals.map(r => {
                             const leoName = r.leotard?.name || 'Justaucorps';
                             const gymName = r.gymnast?.lastName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
+                            const safeGymName = gymName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            
                             return `
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-3">
@@ -1108,7 +1139,12 @@
                                             <p class="text-xs text-slate-500">Loué par : ${gymName}</p>
                                         </div>
                                     </div>
-                                    <span class="text-xs text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-bold">Caution: ${r.depositAmount || 45} €</span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-bold">Caution: ${r.depositAmount || 45} €</span>
+                                        <button onclick="returnRental('${r._id}', '${safeGymName}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                                            <i class="fa-solid fa-rotate-left"></i> Rendre
+                                        </button>
+                                    </div>
                                 </div>
                             `;
                         }).join('');
