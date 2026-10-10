@@ -382,10 +382,9 @@
                             <option value="Médaille d'or">🥇 Médaille d'or</option>
                             <option value="Médaille d'argent">🥈 Médaille d'argent</option>
                             <option value="Médaille de bronze">🥉 Médaille de bronze</option>
-                            <option value="Coupe 1ère place">🏆 Coupe 1ère place</option>
-                            <option value="Coupe 2ème place">🏆 Coupe 2ème place</option>
-                            <option value="Coupe 3ème place">🏆 Coupe 3ème place</option>
-                            <option value="Participation">🎗️ Participation</option>
+                            <option value="Médaille d'or Equipe">🎗️ Médaille d'or Equipe</option>
+                            <option value="Médaille d'argent Equipe">🎗️ Médaille d'argent Equipe</option>
+                            <option value="Médaille de bronze Equipe">🎗️ Médaille de bronze Equipe</option>
                         </select>
                     </div>
                     <div>
@@ -574,11 +573,30 @@
         }
 
         function getRewardIcon(reward) {
-            if (reward === "Médaille d'or") return "🥇";
-            if (reward === "Médaille d'argent") return "🥈";
-            if (reward === "Médaille de bronze") return "🥉";
-            if (reward && reward.includes("Coupe")) return "🏆";
-            return "🎗️";
+            if (!reward) return '🎗️';
+            if (reward === "Médaille d'or" || reward.includes("d'or")) return '🥇';
+            if (reward === "Médaille d'argent" || reward.includes("d'argent")) return '🥈';
+            if (reward === "Médaille de bronze" || reward.includes("de bronze")) return '🥉';
+            if (reward.includes("Coupe")) return '🏆';
+            return '🎗️';
+        }
+
+        function getRewardBadgeStyle(reward) {
+            if (!reward) return 'bg-slate-100 text-slate-700 border-slate-200';
+            
+            if (reward === "Médaille d'or" || reward.includes("d'or")) {
+                return 'bg-yellow-100 text-yellow-900 border-yellow-300 font-bold';
+            }
+            if (reward === "Médaille d'argent" || reward.includes("d'argent")) {
+                return 'bg-slate-200 text-slate-800 border-slate-300 font-bold';
+            }
+            if (reward === "Médaille de bronze" || reward.includes("de bronze")) {
+                return 'bg-orange-100 text-orange-900 border-orange-300 font-bold';
+            }
+            if (reward.includes("Coupe")) {
+                return 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+            }
+            return 'bg-amber-50 text-amber-800 border-amber-200 font-semibold';
         }
 
         function formatDateDisplay(startDate, endDate, legacyDate) {
@@ -924,7 +942,10 @@
                 let rewardsHTML = '';
                 if (userRewards.length > 0) {
                     rewardsHTML = `<div class="flex items-center gap-1 flex-wrap mt-1">
-                        ${userRewards.map(rw => `<span class="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded font-semibold" title="${rw.compName}">${getRewardIcon(rw.reward)}${rw.reward}</span>`).join('')}
+                        ${userRewards.map(rw => {
+                            const styleClass = getRewardBadgeStyle(rw.reward);
+                            return `<span class="text-[10px] ${styleClass} border px-1.5 py-0.5 rounded" title="${rw.compName}">${getRewardIcon(rw.reward)}${rw.reward}</span>`;
+                        }).join('')}
                     </div>`;
                 }
 
