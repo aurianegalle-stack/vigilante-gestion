@@ -1463,7 +1463,10 @@
 
             let filtered = allStockItems;
             if (selectedCategory !== 'ALL') {
-                filtered = filtered.filter(item => (item.category || 'Boisson') === selectedCategory);
+                filtered = filtered.filter(item => {
+                    const cat = item.category || item.type || 'Boisson';
+                    return cat === selectedCategory;
+                });
             }
 
             renderStockTable(filtered);
@@ -1480,7 +1483,7 @@
 
             tbody.innerHTML = data.map(item => {
                 const safeName = (item.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                const category = item.category || 'Boisson';
+                const category = item.category || item.type || 'Boisson';
                 
                 const categoryBadge = category === 'Nourriture' 
                     ? `<span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 font-semibold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1"><i class="fa-solid fa-cookie-bite text-[10px]"></i> Nourriture</span>`
@@ -1532,6 +1535,7 @@
                     body: JSON.stringify({
                         name,
                         category,
+                        type: category, // Double envoi pour garantir la compatibilité serveur
                         quantity: Number(quantity) || 0,
                         unitPrice: Number(unitPrice) || 0
                     })
@@ -1573,17 +1577,28 @@
             const quantity = document.getElementById('stock-edit-quantity').value;
             const unitPrice = document.getElementById('stock-edit-price').value;
 
+            const payload = {
+                name,
+                category,
+                type: category, // Double envoi pour assurer la mise à jour côté serveur
+                quantity: Number(quantity) || 0,
+                unitPrice: Number(unitPrice) || 0
+            };
+
             try {
-                const res = await fetch(`${API_URL}/stocks/${id}`, {
+                let res = await fetch(`${API_URL}/stocks/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        category,
-                        quantity: Number(quantity) || 0,
-                        unitPrice: Number(unitPrice) || 0
-                    })
+                    body: JSON.stringify(payload)
                 });
+
+                if (!res.ok) {
+                    res = await fetch(`${API_URL}/stocks/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
 
                 if (res.ok) {
                     closeEditStockModal();
