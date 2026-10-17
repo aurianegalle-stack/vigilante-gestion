@@ -266,7 +266,7 @@
                             <option value="Claire">Claire</option>
                             <option value="Maryne">Maryne</option>
                             <option value="Elio">Elio</option>
-							<option value="Claire / Riwanon">Claire / Riwanon</option>
+                            <option value="Claire - Riwanon">Claire - Riwanon</option>
                         </select>
                     </div>
                 </div>
@@ -596,7 +596,7 @@
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
-						<option value="Claire - Riwanon">Claire - Riwanon</option>
+                        <option value="Claire - Riwanon">Claire - Riwanon</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
@@ -644,7 +644,7 @@
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
-						<option value="Claire - Riwanon">Claire - Riwanon</option>
+                        <option value="Claire - Riwanon">Claire - Riwanon</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
@@ -1329,7 +1329,11 @@
             }
 
             if (selectedCoach !== 'ALL') {
-                filtered = filtered.filter(g => g.coach === selectedCoach);
+                filtered = filtered.filter(g => {
+                    if (!g.coach) return false;
+                    // Recherche par inclusion sans tenir compte de la casse
+                    return g.coach.toLowerCase().includes(selectedCoach.toLowerCase());
+                });
             }
 
             const headerBadge = document.getElementById('header-gymnasts-count');
