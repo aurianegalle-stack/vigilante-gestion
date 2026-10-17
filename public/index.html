@@ -233,26 +233,41 @@
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
 
-                <div class="flex items-center gap-2">
-                    <label for="gym-filter-category" class="text-xs font-bold text-slate-500 whitespace-nowrap">
-                        <i class="fa-solid fa-filter text-teal-600 mr-1"></i> Filtrer :
-                    </label>
-                    <select id="gym-filter-category" onchange="filterGymnasts()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition">
-                        <option value="ALL">Toutes les catégories</option>
-                        <option value="Baby Gym">Baby Gym</option>
-                        <option value="GAM">GAM</option>
-                        <option value="GAM Compétition">GAM Compétition</option>
-                        <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
-                        <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
-                        <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
-                        <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
-                        <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
-                        <option value="Débutants 6/9">Débutants 6/9</option>
-                        <option value="Débutants 10/13">Débutants 10/13</option>
-                        <option value="Perf">Perf</option>
-                        <option value="Perf Poussines">Perf Poussines</option>
-                        <option value="Adulte">Adulte</option>
-                    </select>
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <label for="gym-filter-category" class="text-xs font-bold text-slate-500 whitespace-nowrap">
+                            <i class="fa-solid fa-filter text-teal-600 mr-1"></i> Catégories :
+                        </label>
+                        <select id="gym-filter-category" onchange="filterGymnasts()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition">
+                            <option value="ALL">Toutes les catégories</option>
+                            <option value="Baby Gym">Baby Gym</option>
+                            <option value="GAM">GAM</option>
+                            <option value="GAM Compétition">GAM Compétition</option>
+                            <option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option>
+                            <option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option>
+                            <option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option>
+                            <option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option>
+                            <option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option>
+                            <option value="Débutants 6/9">Débutants 6/9</option>
+                            <option value="Débutants 10/13">Débutants 10/13</option>
+                            <option value="Perf">Perf</option>
+                            <option value="Perf Poussines">Perf Poussines</option>
+                            <option value="Adulte">Adulte</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label for="gym-filter-coach" class="text-xs font-bold text-slate-500 whitespace-nowrap">
+                            <i class="fa-solid fa-whistle text-purple-600 mr-1"></i> Coach :
+                        </label>
+                        <select id="gym-filter-coach" onchange="filterGymnasts()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition">
+                            <option value="ALL">Tous les coachs</option>
+                            <option value="Riwanon">Riwanon</option>
+                            <option value="Claire">Claire</option>
+                            <option value="Maryne">Maryne</option>
+                            <option value="Elio">Elio</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div id="gymnasts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -1298,12 +1313,20 @@
         }
 
         function filterGymnasts() {
-            const select = document.getElementById('gym-filter-category');
-            const selectedCategory = select ? select.value : 'ALL';
+            const selectCategory = document.getElementById('gym-filter-category');
+            const selectCoach = document.getElementById('gym-filter-coach');
+
+            const selectedCategory = selectCategory ? selectCategory.value : 'ALL';
+            const selectedCoach = selectCoach ? selectCoach.value : 'ALL';
 
             let filtered = allGymnasts;
+
             if (selectedCategory !== 'ALL') {
-                filtered = allGymnasts.filter(g => (g.category || g.group) === selectedCategory);
+                filtered = filtered.filter(g => (g.category || g.group) === selectedCategory);
+            }
+
+            if (selectedCoach !== 'ALL') {
+                filtered = filtered.filter(g => g.coach === selectedCoach);
             }
 
             const headerBadge = document.getElementById('header-gymnasts-count');
