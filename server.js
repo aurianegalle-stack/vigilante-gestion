@@ -298,6 +298,28 @@ app.post('/api/stocks', async (req, res) => {
   }
 });
 
+// Modification d'un article du stock (Buvette)
+app.put('/api/stocks/:id', async (req, res) => {
+  try {
+    const { name, quantity, unitPrice } = req.body;
+    const updateFields = {};
+    if (name) updateFields.name = name.trim();
+    if (quantity !== undefined) updateFields.quantity = Number(quantity);
+    if (unitPrice !== undefined) updateFields.unitPrice = Number(unitPrice);
+
+    const updated = await Stock.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Article introuvable." });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: "Erreur modification stock", error: err.message });
+  }
+});
+
 app.delete('/api/stocks/:id', async (req, res) => {
   try {
     const deleted = await Stock.findByIdAndDelete(req.params.id);
