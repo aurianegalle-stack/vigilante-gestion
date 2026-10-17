@@ -5,6 +5,8 @@ const gymnastSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   group: { type: String, default: 'Général' },
   category: { type: String, default: 'Général' },
+  trainingSlot: { type: String, default: '' },
+  coach: { type: String, default: '' },
   active: { type: Boolean, default: true }
 }, { timestamps: true });
 
