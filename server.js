@@ -38,6 +38,7 @@ const gymnastSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   group: { type: String, default: 'Général' },
   category: { type: String, default: 'Général' },
+  trainingSlot: { type: String, default: '' }, // Créneau d'entraînement
   birthDate: { type: String, default: '' },
   phone: { type: String, default: '' },
   email: { type: String, default: '' }
@@ -115,7 +116,7 @@ app.get('/api/gymnasts', async (req, res) => {
 
 app.post('/api/gymnasts', async (req, res) => {
   try {
-    const { firstName, lastName, group, category, birthDate, phone, email } = req.body;
+    const { firstName, lastName, group, category, trainingSlot, birthDate, phone, email } = req.body;
     if (!firstName || !lastName) {
       return res.status(400).json({ message: "Prénom et Nom sont obligatoires." });
     }
@@ -124,6 +125,7 @@ app.post('/api/gymnasts', async (req, res) => {
       lastName: lastName.trim(),
       group: group ? group.trim() : 'Général',
       category: category ? category.trim() : 'Général',
+      trainingSlot: trainingSlot ? trainingSlot.trim() : '',
       birthDate: birthDate ? birthDate.trim() : '',
       phone: phone ? phone.trim() : '',
       email: email ? email.trim() : ''
@@ -137,14 +139,15 @@ app.post('/api/gymnasts', async (req, res) => {
 
 app.put('/api/gymnasts/:id', async (req, res) => {
   try {
-    const { firstName, lastName, category, group } = req.body;
+    const { firstName, lastName, category, group, trainingSlot } = req.body;
     const updated = await Gymnast.findByIdAndUpdate(
       req.params.id,
       { 
         firstName: firstName ? firstName.trim() : undefined,
         lastName: lastName ? lastName.trim() : undefined,
         category: category ? category.trim() : 'Général',
-        group: group ? group.trim() : (category ? category.trim() : 'Général')
+        group: group ? group.trim() : (category ? category.trim() : 'Général'),
+        trainingSlot: trainingSlot !== undefined ? trainingSlot.trim() : undefined
       },
       { new: true, runValidators: true }
     );
