@@ -71,9 +71,11 @@ const rentalSchema = new mongoose.Schema({
 
 const Rental = mongoose.models.Rental || mongoose.model('Rental', rentalSchema);
 
-// Stock Buvette
+// Stock Buvette (CORRIGÉ : Ajout des champs category et type)
 const stockSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  category: { type: String, default: 'Boisson' },
+  type: { type: String, default: 'Boisson' },
   quantity: { type: Number, default: 0 },
   unitPrice: { type: Number, default: 0 }
 }, { timestamps: true });
@@ -288,12 +290,18 @@ app.get('/api/stocks', async (req, res) => {
   }
 });
 
+// CORRIGÉ : Ajout de category / type lors de la création
 app.post('/api/stocks', async (req, res) => {
   try {
-    const { name, quantity, unitPrice } = req.body;
+    const { name, category, type, quantity, unitPrice } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ message: "Le nom est obligatoire." });
+    
+    const cat = category || type || 'Boisson';
+
     const newStock = new Stock({ 
       name: name.trim(), 
+      category: cat,
+      type: cat,
       quantity: Number(quantity) || 0, 
       unitPrice: Number(unitPrice) || 0 
     });
@@ -304,12 +312,19 @@ app.post('/api/stocks', async (req, res) => {
   }
 });
 
-// Modification d'un article du stock (Buvette)
+// CORRIGÉ : Prise en compte du changement de type lors de la modification
 app.put('/api/stocks/:id', async (req, res) => {
   try {
-    const { name, quantity, unitPrice } = req.body;
+    const { name, category, type, quantity, unitPrice } = req.body;
     const updateFields = {};
     if (name) updateFields.name = name.trim();
+    
+    const cat = category || type;
+    if (cat) {
+      updateFields.category = cat;
+      updateFields.type = cat;
+    }
+
     if (quantity !== undefined) updateFields.quantity = Number(quantity);
     if (unitPrice !== undefined) updateFields.unitPrice = Number(unitPrice);
 
