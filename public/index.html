@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-50 text-slate-800 notranslate" translate="no">
+<html lang="fr" class="h-full bg-slate-900 text-slate-100 notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,24 +13,24 @@
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
                         gym: {
-                            light: '#f8fafc',
-                            card: '#ffffff',
-                            border: '#e2e8f0',
+                            dark: '#0f172a',
+                            card: 'rgba(30, 41, 59, 0.7)',
                             pink: '#ec4899',
-                            teal: '#0d9488',
-                            purple: '#7c3aed',
-                            gold: '#d97706'
+                            rose: '#f43f5e',
+                            purple: '#8b5cf6',
+                            cyan: '#06b6d4',
+                            amber: '#f59e0b'
                         }
                     }
                 }
@@ -40,97 +40,121 @@
 
     <style>
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        .gym-gradient-text {
+            background: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
+
+        .gym-glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .gym-glass-nav {
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .gym-card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gym-card-hover:hover {
+            transform: translateY(-3px);
+            border-color: rgba(236, 72, 153, 0.3);
+            box-shadow: 0 12px 24px -10px rgba(236, 72, 153, 0.25);
+        }
+
+        .gym-bg-pattern {
+            background-color: #0f172a;
+            background-image: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.12) 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
         }
     </style>
 </head>
-<body class="h-full font-sans antialiased bg-slate-50 text-slate-800 flex flex-col md:flex-row overflow-x-hidden">
+<body class="h-full font-sans antialiased gym-bg-pattern text-slate-100 flex flex-col md:flex-row overflow-x-hidden">
 
     <!-- Sidebar Navigation -->
-    <aside id="sidebar" class="w-full md:w-64 glass-nav border-r border-slate-200 flex flex-col shrink-0 transition-all duration-300 z-30">
-        <div class="p-5 flex items-center justify-between border-b border-slate-200">
+    <aside id="sidebar" class="w-full md:w-64 gym-glass-nav flex flex-col shrink-0 transition-all duration-300 z-30">
+        <div class="p-5 flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-teal-500 flex items-center justify-center text-white shadow-md shadow-pink-500/20 font-bold text-xl">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/30 font-bold text-xl transform -rotate-3 hover:rotate-0 transition-transform">
                     <i class="fa-solid fa-person-dots-from-line"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg leading-none bg-gradient-to-r from-pink-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">GymGestion</h1>
-                    <span class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">La Vigilante Gymnastique</span>
+                    <h1 class="font-extrabold text-xl leading-none gym-gradient-text tracking-tight">GymGestion</h1>
+                    <span class="text-[10px] text-pink-400/80 font-bold tracking-widest uppercase">La Vigilante Gym</span>
                 </div>
             </div>
         </div>
 
-        <div class="p-3 mx-3 my-3 rounded-2xl bg-slate-100/80 border border-slate-200 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 overflow-hidden">
-                <img id="sidebar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-teal-500/40 shrink-0">
+        <div class="p-3 mx-3 my-4 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <img id="sidebar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Avatar" class="w-10 h-10 rounded-xl object-cover ring-2 ring-pink-500/50 shrink-0">
                 <div class="truncate">
-                    <p id="sidebar-user-name" class="text-xs font-bold text-slate-800 truncate">Administrateur</p>
-                    <p id="sidebar-user-role" class="text-[10px] text-teal-600 font-semibold truncate">Membre du Bureau (Admin)</p>
+                    <p id="sidebar-user-name" class="text-xs font-bold text-slate-200 truncate">Administrateur</p>
+                    <p id="sidebar-user-role" class="text-[10px] text-pink-400 font-semibold truncate">Membre du Bureau</p>
                 </div>
             </div>
         </div>
 
-        <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto" id="nav-links">
-            <a href="#dashboard" onclick="navigateTo('dashboard')" class="nav-item active flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm text-teal-700 bg-teal-50 border border-teal-200 shadow-sm transition">
-                <i class="fa-solid fa-chart-pie text-lg w-5 text-center"></i>
+        <nav class="flex-1 px-3 py-2 space-y-1.5 overflow-y-auto" id="nav-links">
+            <a href="#dashboard" onclick="navigateTo('dashboard')" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-pink-300 bg-gradient-to-r from-pink-500/20 to-purple-500/10 border border-pink-500/30 shadow-sm transition">
+                <i class="fa-solid fa-chart-pie text-lg w-5 text-center text-pink-400"></i>
                 <span>Tableau de Bord</span>
             </a>
-            <a href="#justaucorps" onclick="navigateTo('justaucorps')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
-                <i class="fa-solid fa-shirt text-lg w-5 text-center"></i>
+            <a href="#justaucorps" onclick="navigateTo('justaucorps')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition">
+                <i class="fa-solid fa-shirt text-lg w-5 text-center text-rose-400"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Justaucorps</span>
-                    <span id="badge-rented-count" class="text-[10px] bg-pink-100 text-pink-700 border border-pink-200 font-bold px-2 py-0.5 rounded-full">0</span>
+                    <span id="badge-rented-count" class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
-            <a href="#buvette" onclick="navigateTo('buvette')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
-                <i class="fa-solid fa-cookie-bite text-lg w-5 text-center"></i>
+            <a href="#buvette" onclick="navigateTo('buvette')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition">
+                <i class="fa-solid fa-cookie-bite text-lg w-5 text-center text-amber-400"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Stocks & Buvette</span>
                 </div>
             </a>
-            <a href="#adherents" onclick="navigateTo('adherents')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
-                <i class="fa-solid fa-user-ninja text-lg w-5 text-center"></i>
+            <a href="#adherents" onclick="navigateTo('adherents')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition">
+                <i class="fa-solid fa-user-ninja text-lg w-5 text-center text-cyan-400"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Gymnastes & Équipes</span>
-                    <span id="badge-gymnasts-count" class="text-[10px] bg-pink-100 text-pink-700 border border-pink-200 font-bold px-2 py-0.5 rounded-full">0</span>
+                    <span id="badge-gymnasts-count" class="text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
-            <a href="#competitions" onclick="navigateTo('competitions')" class="nav-item flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
-                <i class="fa-solid fa-trophy text-lg w-5 text-center"></i>
+            <a href="#competitions" onclick="navigateTo('competitions')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition">
+                <i class="fa-solid fa-trophy text-lg w-5 text-center text-purple-400"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Compétitions & Palmarès</span>
-                    <span id="badge-competitions-count" class="text-[10px] bg-pink-100 text-pink-700 border border-pink-200 font-bold px-2 py-0.5 rounded-full">0</span>
+                    <span id="badge-competitions-count" class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
         </nav>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto bg-slate-50 p-4 md:p-8">
+    <main class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto p-4 md:p-8">
 
-        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800">
             <div>
                 <div class="flex items-center gap-3">
-                    <h2 id="page-title" class="text-2xl md:text-3xl font-extrabold text-slate-900">Tableau de Bord</h2>
-                    <span id="header-gymnasts-count" class="hidden text-sm font-bold bg-teal-100 text-teal-800 border border-teal-200 px-3 py-1 rounded-full">0</span>
+                    <h2 id="page-title" class="text-2xl md:text-3xl font-black tracking-tight text-white">Tableau de Bord</h2>
+                    <span id="header-gymnasts-count" class="hidden text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-full">0</span>
                 </div>
-                <p id="page-subtitle" class="text-slate-500 text-sm mt-1">Aperçu général et administration du club</p>
+                <p id="page-subtitle" class="text-slate-400 text-xs md:text-sm mt-1">Espace de gestion sportive et logistique</p>
             </div>
 
             <div class="flex items-center gap-3">
-                <button onclick="openRentalModal()" class="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-semibold text-sm rounded-xl shadow-md shadow-pink-500/20 transition flex items-center gap-2">
+                <button onclick="openRentalModal()" class="px-5 py-2.5 bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition flex items-center gap-2">
                     <i class="fa-solid fa-shirt"></i>
                     <span>Louer Justaucorps</span>
                 </button>
@@ -140,50 +164,52 @@
         <!-- VIEW 1: DASHBOARD -->
         <section id="view-dashboard" class="view-section space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between gym-card-hover">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Adhérents Actuels</p>
-                        <h3 id="stat-gymnasts-count" class="text-3xl font-bold text-teal-600">0</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Adhérents Actuels</p>
+                        <h3 id="stat-gymnasts-count" class="text-3xl font-black text-cyan-400">0</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-users"></i>
                     </div>
                 </div>
 
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between gym-card-hover">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Justaucorps Loués</p>
-                        <h3 id="stat-rented-count" class="text-3xl font-bold text-pink-600">0</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Justaucorps Loués</p>
+                        <h3 id="stat-rented-count" class="text-3xl font-black text-rose-400">0</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-pink-50 border border-pink-200 text-pink-500 flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-shirt"></i>
                     </div>
                 </div>
 
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between gym-card-hover">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Santé Buvette</p>
-                        <h3 id="stat-stock-health" class="text-3xl font-bold text-emerald-600">OK</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Santé Buvette</p>
+                        <h3 id="stat-stock-health" class="text-3xl font-black text-emerald-400">OK</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
 
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between gym-card-hover">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cautions Garanties</p>
-                        <h3 id="stat-cautions-total" class="text-3xl font-bold text-amber-600">0 €</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cautions Garanties</p>
+                        <h3 id="stat-cautions-total" class="text-3xl font-black text-amber-400">0 €</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
                         <i class="fa-solid fa-vault"></i>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
-                    <h3 class="font-bold text-lg text-slate-900">Dernières Locations & Retours Attendus</h3>
+                <div class="lg:col-span-2 gym-glass-card rounded-2xl p-6 space-y-4">
+                    <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-pink-400"></i> Dernières Locations & Retours Attendus
+                    </h3>
                     <div id="dash-rentals-list" class="space-y-3"></div>
                 </div>
             </div>
@@ -191,12 +217,12 @@
 
         <!-- VIEW 2: LEOTARDS -->
         <section id="view-justaucorps" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+            <div class="gym-glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
-                    <button onclick="openAddLeotardModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-teal-700 border border-teal-300 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                    <button onclick="openAddLeotardModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> Nouveau Justaucorps
                     </button>
-                    <button onclick="openRentalModal()" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl text-sm shadow-md shadow-pink-500/20 transition flex items-center gap-2">
+                    <button onclick="openRentalModal()" class="px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-pink-500/20 transition flex items-center gap-2">
                         <i class="fa-solid fa-handshake"></i> Affecter / Louer
                     </button>
                 </div>
@@ -206,43 +232,40 @@
 
         <!-- VIEW 3: BUVETTE -->
         <section id="view-buvette" class="view-section hidden space-y-6">
-            <!-- BANDEAU DE SYNTHÈSE (Nombre de Références & Valeur Totale du Stock) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-teal-500">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-cyan-500">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Références en Stock</p>
-                        <h3 id="stock-banner-refs" class="text-3xl font-black text-slate-900">0</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Références en Stock</p>
+                        <h3 id="stock-banner-refs" class="text-3xl font-black text-white">0</h3>
                         <p class="text-[11px] text-slate-400 font-medium">Articles enregistrés</p>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center text-xl shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl shrink-0">
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
 
-                <div class="glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-500">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-500">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Valeur Totale de Revente</p>
-                        <h3 id="stock-banner-valeur" class="text-3xl font-black text-emerald-600">0.00 €</h3>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valeur Totale Revente</p>
+                        <h3 id="stock-banner-valeur" class="text-3xl font-black text-emerald-400">0.00 €</h3>
                         <p class="text-[11px] text-slate-400 font-medium">Prix marchandise global</p>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
                         <i class="fa-solid fa-euro-sign"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Barre d'Actions & Filtre -->
-            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                <button onclick="openAddStockItemModal()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-md shadow-teal-600/20">
+            <div class="gym-glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <button onclick="openAddStockItemModal()" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/25">
                     <i class="fa-solid fa-plus"></i> Nouvel Article Buvette
                 </button>
 
-                <!-- Filtre par type (Boisson / Nourriture) -->
                 <div class="flex items-center gap-2">
-                    <label for="stock-filter-category" class="text-xs font-bold text-slate-500 whitespace-nowrap">
-                        <i class="fa-solid fa-filter text-teal-600 mr-1"></i> Type :
+                    <label for="stock-filter-category" class="text-xs font-bold text-slate-400 whitespace-nowrap">
+                        <i class="fa-solid fa-filter text-cyan-400 mr-1"></i> Type :
                     </label>
-                    <select id="stock-filter-category" onchange="filterStock()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition font-medium">
+                    <select id="stock-filter-category" onchange="filterStock()" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500 transition">
                         <option value="ALL">Tous les articles</option>
                         <option value="Boisson">🥤 Boissons</option>
                         <option value="Nourriture">🍿 Nourriture</option>
@@ -250,23 +273,22 @@
                 </div>
             </div>
 
-            <!-- Grille de Tuiles du Stock -->
             <div id="stock-table-body" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
 
         <!-- VIEW 4: GYMNASTS -->
         <section id="view-adherents" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
+            <div class="gym-glass-card p-4 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <button type="button" onclick="openAddGymnastModal()" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/25">
                     <i class="fa-solid fa-user-plus"></i> Nouvel Adhérent
                 </button>
 
                 <div class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2">
-                        <label for="gym-filter-category" class="text-xs font-bold text-slate-500 whitespace-nowrap">
-                            <i class="fa-solid fa-filter text-teal-600 mr-1"></i> Catégories :
+                        <label for="gym-filter-category" class="text-xs font-bold text-slate-400 whitespace-nowrap">
+                            <i class="fa-solid fa-filter text-cyan-400 mr-1"></i> Catégories :
                         </label>
-                        <select id="gym-filter-category" onchange="filterGymnasts()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition">
+                        <select id="gym-filter-category" onchange="filterGymnasts()" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500 transition">
                             <option value="ALL">Toutes les catégories</option>
                             <option value="Baby Gym">Baby Gym</option>
                             <option value="GAM">GAM</option>
@@ -285,10 +307,10 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <label for="gym-filter-coach" class="text-xs font-bold text-slate-500 whitespace-nowrap">
-                            <i class="fa-solid fa-whistle text-purple-600 mr-1"></i> Coach :
+                        <label for="gym-filter-coach" class="text-xs font-bold text-slate-400 whitespace-nowrap">
+                            <i class="fa-solid fa-whistle text-purple-400 mr-1"></i> Coach :
                         </label>
-                        <select id="gym-filter-coach" onchange="filterGymnasts()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition">
+                        <select id="gym-filter-coach" onchange="filterGymnasts()" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500 transition">
                             <option value="ALL">Tous les coachs</option>
                             <option value="Riwanon">Riwanon</option>
                             <option value="Claire">Claire</option>
@@ -296,7 +318,6 @@
                             <option value="Elio">Elio</option>
                             <option value="Sandra">Sandra</option>
                             <option value="Claire - Riwanon">Claire - Riwanon</option>
-							<option value="Claire - Maryne">Claire - Maryne</option>
                             <option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
                             <option value="Maryne - Elio">Maryne - Elio</option>
                             <option value="Lorelie - Elio">Lorelie - Elio</option>
@@ -312,8 +333,8 @@
 
         <!-- VIEW 5: COMPETITIONS -->
         <section id="view-competitions" class="view-section hidden space-y-6">
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
-                <button onclick="openAddCompetitionModal()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition flex items-center gap-2">
+            <div class="gym-glass-card p-4 rounded-2xl flex items-center justify-between">
+                <button onclick="openAddCompetitionModal()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-lg shadow-purple-600/25">
                     <i class="fa-solid fa-plus"></i> Nouvelle Compétition
                 </button>
             </div>
@@ -323,26 +344,26 @@
     </main>
 
     <!-- MODAL: ADD STOCK ITEM (BUVETTE) -->
-    <div id="modal-add-stock-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-cookie-bite text-teal-600"></i> Ajouter un Article (Buvette)
+    <div id="modal-add-stock-item" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cookie-bite text-amber-400"></i> Ajouter un Article (Buvette)
                 </h3>
-                <button type="button" onclick="closeAddStockItemModal()" class="text-slate-400 hover:text-slate-700">
+                <button type="button" onclick="closeAddStockItemModal()" class="text-slate-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
             <form id="form-add-stock-item" onsubmit="handleAddStockItemSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'article *</label>
-                    <input type="text" id="stock-add-name" required placeholder="Ex: Coca-Cola / Crepe Sucre" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom de l'article *</label>
+                    <input type="text" id="stock-add-name" required placeholder="Ex: Coca-Cola / Crêpe Sucre" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Type d'article *</label>
-                    <select id="stock-add-category" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Type d'article *</label>
+                    <select id="stock-add-category" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="Boisson">🥤 Boisson</option>
                         <option value="Nourriture">🍿 Nourriture</option>
                     </select>
@@ -350,31 +371,31 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Quantité en stock</label>
-                        <input type="number" id="stock-add-quantity" min="0" value="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Quantité en stock</label>
+                        <input type="number" id="stock-add-quantity" min="0" value="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix de Revente (€)</label>
-                        <input type="number" id="stock-add-price" step="0.10" min="0" value="1.00" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Prix de Revente (€)</label>
+                        <input type="number" id="stock-add-price" step="0.10" min="0" value="1.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
 
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeAddStockItemModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">Enregistrer</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeAddStockItemModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs transition">Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: EDIT STOCK ITEM (BUVETTE) -->
-    <div id="modal-edit-stock-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-teal-600"></i> Modifier l'Article
+    <div id="modal-edit-stock-item" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-cyan-400"></i> Modifier l'Article
                 </h3>
-                <button type="button" onclick="closeEditStockModal()" class="text-slate-400 hover:text-slate-700">
+                <button type="button" onclick="closeEditStockModal()" class="text-slate-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
@@ -383,13 +404,13 @@
                 <input type="hidden" id="stock-edit-id">
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'article *</label>
-                    <input type="text" id="stock-edit-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom de l'article *</label>
+                    <input type="text" id="stock-edit-name" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Type d'article *</label>
-                    <select id="stock-edit-category" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Type d'article *</label>
+                    <select id="stock-edit-category" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="Boisson">🥤 Boisson</option>
                         <option value="Nourriture">🍿 Nourriture</option>
                     </select>
@@ -397,73 +418,73 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Quantité en stock</label>
-                        <input type="number" id="stock-edit-quantity" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Quantité en stock</label>
+                        <input type="number" id="stock-edit-quantity" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix de Revente (€)</label>
-                        <input type="number" id="stock-edit-price" step="0.10" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Prix de Revente (€)</label>
+                        <input type="number" id="stock-edit-price" step="0.10" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                     </div>
                 </div>
 
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeEditStockModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">Mettre à jour</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeEditStockModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs transition">Mettre à jour</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: ADD COMPETITION -->
-    <div id="modal-add-competition" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-trophy text-teal-600"></i> Ajouter une Compétition
+    <div id="modal-add-competition" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-purple-400"></i> Ajouter une Compétition
                 </h3>
-                <button type="button" onclick="closeAddCompetitionModal()" class="text-slate-400 hover:text-slate-700">
+                <button type="button" onclick="closeAddCompetitionModal()" class="text-slate-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
             <form id="form-add-competition" onsubmit="handleAddCompetitionSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de la compétition *</label>
-                    <input type="text" id="comp-add-name" required placeholder="Ex: Championnat Régional" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom de la compétition *</label>
+                    <input type="text" id="comp-add-name" required placeholder="Ex: Championnat Régional" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début *</label>
-                        <input type="date" id="comp-add-start-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de début *</label>
+                        <input type="date" id="comp-add-start-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin (optionnel)</label>
-                        <input type="date" id="comp-add-end-date" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de fin</label>
+                        <input type="date" id="comp-add-end-date" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu</label>
-                    <input type="text" id="comp-add-location" placeholder="Ex: Gymnase Municipal, Rennes" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Lieu</label>
+                    <input type="text" id="comp-add-location" placeholder="Ex: Gymnase Municipal, Rennes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                 </div>
 
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeAddCompetitionModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">Enregistrer</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeAddCompetitionModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs transition">Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: EDIT COMPETITION -->
-    <div id="modal-edit-competition" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-teal-600"></i> Modifier la Compétition
+    <div id="modal-edit-competition" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-purple-400"></i> Modifier la Compétition
                 </h3>
-                <button type="button" onclick="closeEditCompetitionModal()" class="text-slate-400 hover:text-slate-700">
+                <button type="button" onclick="closeEditCompetitionModal()" class="text-slate-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
@@ -472,58 +493,58 @@
                 <input type="hidden" id="comp-edit-id">
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de la compétition *</label>
-                    <input type="text" id="comp-edit-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom de la compétition *</label>
+                    <input type="text" id="comp-edit-name" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début *</label>
-                        <input type="date" id="comp-edit-start-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de début *</label>
+                        <input type="date" id="comp-edit-start-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin</label>
-                        <input type="date" id="comp-edit-end-date" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Date de fin</label>
+                        <input type="date" id="comp-edit-end-date" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Lieu</label>
-                    <input type="text" id="comp-edit-location" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Lieu</label>
+                    <input type="text" id="comp-edit-location" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-500">
                 </div>
 
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeEditCompetitionModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition">Mettre à jour</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeEditCompetitionModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs transition">Mettre à jour</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT COMPETITION RESULTS & REWARDS -->
-    <div id="modal-comp-results" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-xl w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 max-h-[90vh] flex flex-col bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-award text-amber-500"></i> Palmarès & Récompenses : <span id="modal-comp-name-title" class="text-teal-600"></span>
+    <!-- MODAL: ADD / EDIT COMPETITION RESULTS -->
+    <div id="modal-comp-results" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-xl w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-award text-amber-400"></i> Palmarès : <span id="modal-comp-name-title" class="text-pink-400"></span>
                 </h3>
-                <button type="button" onclick="closeResultsModal()" class="text-slate-400 hover:text-slate-700">
+                <button type="button" onclick="closeResultsModal()" class="text-slate-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
             <input type="hidden" id="results-comp-id">
 
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider"><i class="fa-solid fa-plus text-teal-600 mr-1"></i> Attribuer une récompense</p>
+            <div class="p-3 bg-slate-900/80 border border-slate-700/60 rounded-xl space-y-3">
+                <p class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-plus text-purple-400 mr-1"></i> Attribuer une récompense</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] text-slate-600 mb-1">Gymnaste *</label>
-                        <select id="res-add-gymnast" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800"></select>
+                        <label class="block text-[11px] text-slate-400 mb-1">Gymnaste *</label>
+                        <select id="res-add-gymnast" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500"></select>
                     </div>
                     <div>
-                        <label class="block text-[11px] text-slate-600 mb-1">Récompense *</label>
-                        <select id="res-add-reward" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800">
+                        <label class="block text-[11px] text-slate-400 mb-1">Récompense *</label>
+                        <select id="res-add-reward" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
                             <option value="Médaille d'or">🥇 Médaille d'or</option>
                             <option value="Médaille d'argent">🥈 Médaille d'argent</option>
                             <option value="Médaille de bronze">🥉 Médaille de bronze</option>
@@ -533,124 +554,123 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] text-slate-600 mb-1">Classement (ex: 1er / 12)</label>
-                        <input type="text" id="res-add-rank" placeholder="Ex: 1ère" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800">
+                        <label class="block text-[11px] text-slate-400 mb-1">Classement</label>
+                        <input type="text" id="res-add-rank" placeholder="Ex: 1ère" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-slate-600 mb-1">Note / Remarque</label>
-                        <input type="text" id="res-add-notes" placeholder="Ex: Categorie Perf" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-800">
+                        <label class="block text-[11px] text-slate-400 mb-1">Note / Remarque</label>
+                        <input type="text" id="res-add-notes" placeholder="Ex: Catégorie Perf" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-purple-500">
                     </div>
                 </div>
-                <button type="button" onclick="addResultToTempList()" class="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1">
+                <button type="button" onclick="addResultToTempList()" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1">
                     <i class="fa-solid fa-check"></i> Ajouter au palmarès
                 </button>
             </div>
 
             <div class="flex-1 overflow-y-auto space-y-2 pr-1">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tableau d'honneur (<span id="results-count">0</span>)</p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tableau d'honneur (<span id="results-count">0</span>)</p>
                 <div id="modal-results-list" class="space-y-2"></div>
             </div>
 
-            <div class="pt-3 flex justify-end gap-3 border-t border-slate-200 shrink-0">
-                <button type="button" onclick="closeResultsModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">Annuler</button>
+            <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60 shrink-0">
+                <button type="button" onclick="closeResultsModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">Annuler</button>
                 <button type="button" onclick="saveCompetitionResults()" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs shadow-md transition">Enregistrer le Palmarès</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL: RENTAL -->
-    <div id="modal-rental" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2"><i class="fa-solid fa-shirt text-pink-500"></i> Nouvelle Location</h3>
-                <button onclick="closeRentalModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-rental" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-pink-400"></i> Nouvelle Location</h3>
+                <button onclick="closeRentalModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="form-rental" onsubmit="handleRentalSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Choisir le Justaucorps *</label>
-                    <select id="rent-select-leotard" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800"></select>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Choisir le Justaucorps *</label>
+                    <select id="rent-select-leotard" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-pink-500"></select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Gymnaste Bénéficiaire *</label>
-                    <select id="rent-select-gymnast" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800"></select>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Gymnaste Bénéficiaire *</label>
+                    <select id="rent-select-gymnast" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-pink-500"></select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Montant Caution (€)</label>
-                    <input type="number" id="rent-caution-amount" value="45" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Montant Caution (€)</label>
+                    <input type="number" id="rent-caution-amount" value="45" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-pink-500">
                 </div>
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeRentalModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-xs shadow-md shadow-pink-500/20">Valider la Location</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeRentalModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold rounded-xl text-xs shadow-lg shadow-pink-500/20">Valider la Location</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: ADD LEOTARD -->
-    <div id="modal-add-leotard" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900"><i class="fa-solid fa-shirt text-teal-600"></i> Ajouter un Justaucorps</h3>
-                <button onclick="closeAddLeotardModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-add-leotard" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-rose-400"></i> Ajouter un Justaucorps</h3>
+                <button onclick="closeAddLeotardModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="form-add-leotard" onsubmit="handleAddLeotardSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom du Justaucorps *</label>
-                    <input type="text" id="leo-add-name" required placeholder="Ex: Pink Star #02" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom du Justaucorps *</label>
+                    <input type="text" id="leo-add-name" required placeholder="Ex: Pink Star #02" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Taille *</label>
-                    <select id="leo-add-size" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
+                    <select id="leo-add-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
                         <option value="6 ans">6 ans</option><option value="8 ans">8 ans</option><option value="10 ans">10 ans</option><option value="12 ans">12 ans</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>
                     </select>
                 </div>
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeAddLeotardModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs">Enregistrer</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeAddLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs">Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: ADD GYMNAST -->
-    <div id="modal-add-gymnast" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900"><i class="fa-solid fa-user-plus text-teal-600"></i> Ajouter un Adhérent</h3>
-                <button type="button" onclick="closeAddGymnastModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-add-gymnast" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-400"></i> Ajouter un Adhérent</h3>
+                <button type="button" onclick="closeAddGymnastModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="form-add-gymnast" onsubmit="handleAddGymnastSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom *</label>
-                    <input type="text" id="gym-add-nom" required placeholder="Ex: Dupont" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
+                    <input type="text" id="gym-add-nom" required placeholder="Ex: Dupont" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Prénom *</label>
-                    <input type="text" id="gym-add-prenom" required placeholder="Ex: Marie" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
+                    <input type="text" id="gym-add-prenom" required placeholder="Ex: Marie" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Catégorie *</label>
-                    <select id="gym-add-categorie" required onchange="updateTrainingSlotsOptions()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Catégorie *</label>
+                    <select id="gym-add-categorie" required onchange="updateTrainingSlotsOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="">-- Sélectionner une catégorie --</option>
                         <option value="Baby Gym">Baby Gym</option><option value="GAM">GAM</option><option value="GAM Compétition">GAM Compétition</option><option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option><option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option><option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option><option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option><option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option><option value="Débutants 6/9">Débutants 6/9</option><option value="Débutants 10/13">Débutants 10/13</option><option value="Perf">Perf</option><option value="Perf Poussines">Perf Poussines</option><option value="Adulte">Adulte</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Créneau d'entraînement</label>
-                    <select id="gym-add-creneau" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Créneau d'entraînement</label>
+                    <select id="gym-add-creneau" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="">-- Veuillez d'abord choisir une catégorie --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Entraîneur principal</label>
-                    <select id="gym-add-coach" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Entraîneur principal</label>
+                    <select id="gym-add-coach" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="Riwanon">Riwanon</option>
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
                         <option value="Sandra">Sandra</option>
                         <option value="Claire - Riwanon">Claire - Riwanon</option>
-						<option value="Claire - Maryne">Claire - Maryne</option>
                         <option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
                         <option value="Maryne - Elio">Maryne - Elio</option>
                         <option value="Lorelie - Elio">Lorelie - Elio</option>
@@ -659,54 +679,53 @@
                         <option value="Bruno (Bénévole)">Bruno (Bénévole)</option>
                     </select>
                 </div>
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeAddGymnastModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs">Enregistrer</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeAddGymnastModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs">Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: EDIT GYMNAST -->
-    <div id="modal-edit-gymnast" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4 bg-white">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="font-bold text-lg text-slate-900"><i class="fa-solid fa-user-pen text-teal-600"></i> Modifier l'Adhérent</h3>
-                <button type="button" onclick="closeEditGymnastModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-edit-gymnast" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-user-pen text-cyan-400"></i> Modifier l'Adhérent</h3>
+                <button type="button" onclick="closeEditGymnastModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="form-edit-gymnast" onsubmit="handleEditGymnastSubmit(event)" class="space-y-4">
                 <input type="hidden" id="gym-edit-id">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nom *</label>
-                    <input type="text" id="gym-edit-nom" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom *</label>
+                    <input type="text" id="gym-edit-nom" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Prénom *</label>
-                    <input type="text" id="gym-edit-prenom" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Prénom *</label>
+                    <input type="text" id="gym-edit-prenom" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Catégorie *</label>
-                    <select id="gym-edit-categorie" required onchange="updateEditTrainingSlotsOptions()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Catégorie *</label>
+                    <select id="gym-edit-categorie" required onchange="updateEditTrainingSlotsOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="">-- Sélectionner une catégorie --</option>
                         <option value="Baby Gym">Baby Gym</option><option value="GAM">GAM</option><option value="GAM Compétition">GAM Compétition</option><option value="Interclub 1 cours 7/10">Interclub 1 cours 7/10</option><option value="Interclub 1 cours 11/13">Interclub 1 cours 11/13</option><option value="Interclub 2 cours 7/10">Interclub 2 cours 7/10</option><option value="Interclub 2 cours 11/13">Interclub 2 cours 11/13</option><option value="Interclub 2 cours 14+">Interclub 2 cours 14+</option><option value="Débutants 6/9">Débutants 6/9</option><option value="Débutants 10/13">Débutants 10/13</option><option value="Perf">Perf</option><option value="Perf Poussines">Perf Poussines</option><option value="Adulte">Adulte</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Créneau d'entraînement</label>
-                    <select id="gym-edit-creneau" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Créneau d'entraînement</label>
+                    <select id="gym-edit-creneau" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="">-- Veuillez d'abord choisir une catégorie --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Entraîneur principal</label>
-                    <select id="gym-edit-coach" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Entraîneur principal</label>
+                    <select id="gym-edit-coach" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
                         <option value="Riwanon">Riwanon</option>
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
                         <option value="Sandra">Sandra</option>
                         <option value="Claire - Riwanon">Claire - Riwanon</option>
-						<option value="Claire - Maryne">Claire - Maryne</option>
                         <option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
                         <option value="Maryne - Elio">Maryne - Elio</option>
                         <option value="Lorelie - Elio">Lorelie - Elio</option>
@@ -715,9 +734,9 @@
                         <option value="Bruno (Bénévole)">Bruno (Bénévole)</option>
                     </select>
                 </div>
-                <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
-                    <button type="button" onclick="closeEditGymnastModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Annuler</button>
-                    <button type="submit" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs">Mettre à jour</button>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeEditGymnastModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl text-xs">Mettre à jour</button>
                 </div>
             </form>
         </div>
@@ -762,14 +781,13 @@
                 'Jeudi 17h00 - 18h30'
             ],
             'Interclub 2 cours 7/10': [
-                'Mercredi 13h15 - 14h45 & Vendredi 17h00 - 18h30'
-				
+                'Mercredi 13h30 - 15h00 & Samedi 11h15 - 12h45'
             ],
             'Interclub 2 cours 11/13': [
-                'Mercredi 13h15 - 14h45 & Samedi 13h30 - 15h00'
+                'Mercredi 15h00 - 16h30 & Vendredi 18h00 - 19h30'
             ],
             'Interclub 2 cours 14+': [
-                'Mercredi 18h30 - 20h00 & Vendredi 18h15 - 19h45'
+                'Mardi 19h00 - 20h30 & Jeudi 19h00 - 20h30'
             ],
             'Débutants 6/9': [
                 'Mercredi 14h00 - 15h30',
@@ -837,14 +855,14 @@
             if (targetView) targetView.classList.remove('hidden');
 
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('active', 'text-teal-700', 'bg-teal-50', 'border', 'border-teal-200', 'shadow-sm');
-                el.classList.add('text-slate-600');
+                el.classList.remove('active', 'text-pink-300', 'bg-gradient-to-r', 'from-pink-500/20', 'to-purple-500/10', 'border', 'border-pink-500/30', 'shadow-sm');
+                el.classList.add('text-slate-400');
             });
 
             const activeLink = document.querySelector(`a[onclick="navigateTo('${viewId}')"]`);
             if (activeLink) {
-                activeLink.classList.add('active', 'text-teal-700', 'bg-teal-50', 'border', 'border-teal-200', 'shadow-sm');
-                activeLink.classList.remove('text-slate-600');
+                activeLink.classList.add('active', 'text-pink-300', 'bg-gradient-to-r', 'from-pink-500/20', 'to-purple-500/10', 'border', 'border-pink-500/30', 'shadow-sm');
+                activeLink.classList.remove('text-slate-400');
             }
 
             document.getElementById('page-title').innerText = pageTitles[viewId] || 'GymGestion';
@@ -918,21 +936,18 @@
         }
 
         function getRewardBadgeStyle(reward) {
-            if (!reward) return 'bg-slate-100 text-slate-700 border-slate-200';
+            if (!reward) return 'bg-slate-800 text-slate-300 border-slate-700';
 
             if (reward === "Médaille d'or" || reward.includes("d'or")) {
-                return 'bg-yellow-100 text-yellow-900 border-yellow-300 font-bold';
+                return 'bg-amber-500/20 text-amber-300 border-amber-500/30 font-bold';
             }
             if (reward === "Médaille d'argent" || reward.includes("d'argent")) {
-                return 'bg-slate-200 text-slate-800 border-slate-300 font-bold';
+                return 'bg-slate-500/20 text-slate-200 border-slate-500/30 font-bold';
             }
             if (reward === "Médaille de bronze" || reward.includes("de bronze")) {
-                return 'bg-orange-100 text-orange-900 border-orange-300 font-bold';
+                return 'bg-orange-500/20 text-orange-300 border-orange-500/30 font-bold';
             }
-            if (reward.includes("Coupe")) {
-                return 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
-            }
-            return 'bg-amber-50 text-amber-800 border-amber-200 font-semibold';
+            return 'bg-amber-500/10 text-amber-300 border-amber-500/20 font-semibold';
         }
 
         function formatDateDisplay(startDate, endDate, legacyDate) {
@@ -954,7 +969,7 @@
                 if (!container) return;
 
                 if (!allCompetitions || allCompetitions.length === 0) {
-                    container.innerHTML = `<p class="text-slate-500 text-sm col-span-full">Aucune compétition enregistrée.</p>`;
+                    container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucune compétition enregistrée.</p>`;
                     return;
                 }
 
@@ -966,14 +981,14 @@
                     let resultsPreviewHTML = '';
                     if (c.results && c.results.length > 0) {
                         resultsPreviewHTML = `
-                            <div class="mt-2 pt-2 border-t border-slate-200 space-y-1">
-                                <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Palmarès (${resultsCount}) :</p>
+                            <div class="mt-2 pt-2 border-t border-slate-700/60 space-y-1">
+                                <p class="text-[11px] font-bold text-amber-400 uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Palmarès (${resultsCount}) :</p>
                                 <div class="space-y-1 max-h-24 overflow-y-auto">
                                     ${c.results.map(r => {
                                         const gName = r.gymnast ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
-                                        return `<div class="text-xs text-slate-700 flex items-center justify-between bg-slate-100 px-2 py-1 rounded">
+                                        return `<div class="text-xs text-slate-300 flex items-center justify-between bg-slate-900/60 px-2.5 py-1 rounded-lg border border-slate-800">
                                             <span>${getRewardIcon(r.reward)} <strong>${gName}</strong> (${r.reward})</span>
-                                            <span class="text-[10px] text-teal-700 font-semibold">${r.rank || ''}</span>
+                                            <span class="text-[10px] text-pink-400 font-semibold">${r.rank || ''}</span>
                                         </div>`;
                                     }).join('')}
                                 </div>
@@ -982,30 +997,30 @@
                     }
 
                     return `
-                        <div class="glass-card p-4 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
+                        <div class="gym-glass-card p-5 rounded-2xl border border-slate-700/60 space-y-3 flex flex-col justify-between gym-card-hover">
                             <div class="space-y-2">
                                 <div class="flex items-start justify-between gap-2">
-                                    <h4 class="font-bold text-slate-900 text-base">${c.name || 'Compétition'}</h4>
+                                    <h4 class="font-bold text-white text-base">${c.name || 'Compétition'}</h4>
                                     <div class="flex items-center gap-1 shrink-0">
-                                        <button onclick="openEditCompetitionModal('${c._id}')" class="p-1 text-teal-600 hover:text-teal-800 hover:bg-teal-50 rounded transition" title="Modifier la compétition">
+                                        <button onclick="openEditCompetitionModal('${c._id}')" class="p-1.5 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 rounded-lg transition" title="Modifier la compétition">
                                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                                         </button>
-                                        <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition" title="Supprimer la compétition">
+                                        <button onclick="deleteCompetition('${c._id}', '${safeName}')" class="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer la compétition">
                                             <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <span class="text-xs text-teal-800 bg-teal-100 border border-teal-200 px-2.5 py-1 rounded-full inline-block font-semibold">
+                                <span class="text-xs text-purple-300 bg-purple-500/20 border border-purple-500/30 px-2.5 py-1 rounded-full inline-block font-semibold">
                                     <i class="fa-regular fa-calendar-days mr-1"></i> ${dateDisplay}
                                 </span>
-                                <p class="text-xs text-slate-500 flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot text-slate-400"></i> ${c.location || 'Lieu non spécifié'}
+                                <p class="text-xs text-slate-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-slate-500"></i> ${c.location || 'Lieu non spécifié'}
                                 </p>
                                 ${resultsPreviewHTML}
                             </div>
 
-                            <button onclick="openResultsModal('${c._id}')" class="w-full mt-2 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-trophy text-amber-600"></i>
+                            <button onclick="openResultsModal('${c._id}')" class="w-full mt-2 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-trophy text-amber-400"></i>
                                 <span>Gérer Palmarès / Médailles</span>
                             </button>
                         </div>
@@ -1084,20 +1099,20 @@
 
             if (!container) return;
             if (currentTempResults.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 italic">Aucune récompense attribuée pour le moment.</p>`;
+                container.innerHTML = `<p class="text-xs text-slate-500 italic">Aucune récompense attribuée pour le moment.</p>`;
                 return;
             }
 
             container.innerHTML = currentTempResults.map((r, i) => `
-                <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-2">
+                <div class="p-2.5 bg-slate-900/80 border border-slate-700/60 rounded-xl flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2 overflow-hidden">
                         <span class="text-lg">${getRewardIcon(r.reward)}</span>
                         <div class="truncate">
-                            <p class="text-xs font-bold text-slate-800 truncate">${r.gymnastName}</p>
-                            <p class="text-[10px] text-teal-700 font-medium">${r.reward} ${r.rank ? '• Rang: ' + r.rank : ''} ${r.notes ? '• ' + r.notes : ''}</p>
+                            <p class="text-xs font-bold text-slate-200 truncate">${r.gymnastName}</p>
+                            <p class="text-[10px] text-pink-400 font-medium">${r.reward} ${r.rank ? '• Rang: ' + r.rank : ''} ${r.notes ? '• ' + r.notes : ''}</p>
                         </div>
                     </div>
-                    <button onclick="removeTempResult(${i})" class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition">
+                    <button onclick="removeTempResult(${i})" class="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
@@ -1251,7 +1266,7 @@
             if (!container) return;
 
             if (!data || data.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 text-sm col-span-full">Aucun adhérent trouvé.</p>`;
+                container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucun adhérent trouvé.</p>`;
                 return;
             }
 
@@ -1262,21 +1277,19 @@
 
                 const rental = activeRentals.find(r => (r.gymnast?._id || r.gymnast) === g._id);
                 const leotardBadge = rental && rental.leotard ? 
-                    `<span class="text-xs text-pink-700 bg-pink-50 border border-pink-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
+                    `<span class="text-xs text-rose-300 bg-rose-500/20 border border-rose-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
 
-                // Badge Entraîneur
                 const coachBadge = g.coach ? 
                     `<div class="mt-1">
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                            <i class="fa-solid fa-whistle text-purple-600"></i> Coach : ${g.coach}
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                            <i class="fa-solid fa-whistle text-purple-400"></i> Coach : ${g.coach}
                         </span>
                     </div>` : '';
 
-                // Badge de créneau
                 const slotBadge = g.trainingSlot ? 
                     `<div class="mt-1">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                            <i class="fa-regular fa-clock text-teal-600"></i> ${g.trainingSlot}
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                            <i class="fa-regular fa-clock text-cyan-400"></i> ${g.trainingSlot}
                         </span>
                     </div>` : '';
 
@@ -1296,28 +1309,28 @@
                     rewardsHTML = `<div class="flex items-center gap-1 flex-wrap mt-1">
                         ${userRewards.map(rw => {
                             const styleClass = getRewardBadgeStyle(rw.reward);
-                            return `<span class="text-[10px] ${styleClass} border px-1.5 py-0.5 rounded" title="${rw.compName}">${getRewardIcon(rw.reward)}${rw.reward}</span>`;
+                            return `<span class="text-[10px] ${styleClass} border px-1.5 py-0.5 rounded-md" title="${rw.compName}">${getRewardIcon(rw.reward)}${rw.reward}</span>`;
                         }).join('')}
                     </div>`;
                 }
 
                 return `
-                    <div class="glass-card p-4 rounded-xl border border-slate-200 space-y-2 flex justify-between items-start">
+                    <div class="gym-glass-card p-5 rounded-2xl border border-slate-700/60 space-y-2 flex justify-between items-start gym-card-hover">
                         <div class="space-y-1">
-                            <h4 class="font-bold text-slate-900">${g.lastName} ${g.firstName}</h4>
+                            <h4 class="font-bold text-white text-base">${g.lastName} ${g.firstName}</h4>
                             ${coachBadge}
                             ${slotBadge}
                             <div class="flex items-center gap-1.5 flex-wrap pt-1">
-                                <span class="text-xs text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full inline-block font-semibold">${categoryName}</span>
+                                <span class="text-xs text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full inline-block font-semibold">${categoryName}</span>
                                 ${leotardBadge}
                             </div>
                             ${rewardsHTML}
                         </div>
                         <div class="flex items-center gap-1">
-                            <button onclick="openEditGymnastModal('${g._id}')" class="p-2 text-teal-600 hover:text-teal-800 hover:bg-teal-50 rounded-lg transition" title="Modifier">
+                            <button onclick="openEditGymnastModal('${g._id}')" class="p-2 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition" title="Modifier">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
-                            <button onclick="deleteGymnast('${g._id}', '${safeFirstName}', '${safeLastName}')" class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition" title="Supprimer">
+                            <button onclick="deleteGymnast('${g._id}', '${safeFirstName}', '${safeLastName}')" class="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition" title="Supprimer">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -1426,7 +1439,7 @@
                 if (!container) return;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = `<p class="text-slate-500 text-sm col-span-full">Aucun justaucorps en stock.</p>`;
+                    container.innerHTML = `<p class="text-slate-400 text-sm col-span-full">Aucun justaucorps en stock.</p>`;
                     return;
                 }
 
@@ -1442,29 +1455,29 @@
                     }
 
                     const statusBadge = isRented 
-                        ? `<span class="text-[10px] bg-pink-100 text-pink-700 border border-pink-200 px-2 py-0.5 rounded-full font-semibold">Loué : ${gymnastName}</span>`
-                        : `<span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">Disponible</span>`;
+                        ? `<span class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Loué : ${gymnastName}</span>`
+                        : `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Disponible</span>`;
 
                     const returnBtn = (rental && rental._id) 
-                        ? `<button onclick="returnRental('${rental._id}', '${safeName}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                        ? `<button onclick="returnRental('${rental._id}', '${safeName}')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1">
                             <i class="fa-solid fa-rotate-left"></i> Rendre
                            </button>` 
                         : '';
 
                     return `
-                        <div class="glass-card p-4 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
-                            <div class="space-y-1.5">
+                        <div class="gym-glass-card p-5 rounded-2xl border border-slate-700/60 space-y-3 flex flex-col justify-between gym-card-hover">
+                            <div class="space-y-2">
                                 <div class="flex items-center justify-between gap-2">
-                                    <h4 class="font-bold text-slate-900 truncate">${l.name}</h4>
+                                    <h4 class="font-bold text-white truncate">${l.name}</h4>
                                     <div class="flex items-center gap-1">
                                         ${returnBtn}
-                                        <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition" title="Supprimer">
+                                        <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition" title="Supprimer">
                                             <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <span class="text-xs text-pink-700 bg-pink-50 border border-pink-200 px-2 py-0.5 rounded-full font-semibold">Taille: ${l.size}</span>
+                                    <span class="text-xs text-rose-300 bg-rose-500/20 border border-rose-500/30 px-2.5 py-0.5 rounded-full font-semibold">Taille: ${l.size}</span>
                                     ${statusBadge}
                                 </div>
                             </div>
@@ -1493,16 +1506,13 @@
                 const res = await fetch(`${API_URL}/stocks`);
                 allStockItems = await res.json();
 
-                // Mise à jour du BANDEAU D'EN-TÊTE
                 updateStockBanner();
-
                 filterStock();
             } catch (err) {
                 console.error('Erreur chargement buvette:', err);
             }
         }
 
-        // Calcul et affichage du BANDEAU Buvette
         function updateStockBanner() {
             const bannerRefs = document.getElementById('stock-banner-refs');
             const bannerValeur = document.getElementById('stock-banner-valeur');
@@ -1541,8 +1551,8 @@
 
             if (!data || data.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full glass-card p-8 rounded-2xl text-center text-slate-500">
-                        <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-300"></i>
+                    <div class="col-span-full gym-glass-card p-8 rounded-2xl text-center text-slate-400">
+                        <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-600"></i>
                         <p class="font-medium text-sm">Aucun article trouvé.</p>
                     </div>`;
                 return;
@@ -1553,50 +1563,46 @@
                 const category = item.category || item.type || 'Boisson';
                 const isFood = category === 'Nourriture';
 
-                const iconClass = isFood ? 'fa-solid fa-cookie-bite text-amber-500' : 'fa-solid fa-wine-glass text-sky-500';
+                const iconClass = isFood ? 'fa-solid fa-cookie-bite text-amber-400' : 'fa-solid fa-wine-glass text-cyan-400';
                 const badgeStyle = isFood 
-                    ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                    : 'bg-sky-50 text-sky-700 border-sky-200';
-                const iconBg = isFood ? 'bg-amber-100/60' : 'bg-sky-100/60';
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' 
+                    : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+                const iconBg = isFood ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-cyan-500/10 border border-cyan-500/20';
 
                 return `
-                    <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:shadow-lg transition-all duration-200 relative overflow-hidden group">
-                        <div class="absolute -right-2 -top-2 opacity-10 text-7xl pointer-events-none group-hover:scale-110 transition-transform duration-300">
-                            <i class="${iconClass}"></i>
-                        </div>
-
+                    <div class="gym-glass-card p-5 rounded-2xl border border-slate-700/60 flex flex-col justify-between gym-card-hover relative overflow-hidden group">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between gap-3">
-                                <div class="w-12 h-12 rounded-2xl ${iconBg} flex items-center justify-center text-2xl shadow-inner shrink-0">
+                                <div class="w-12 h-12 rounded-2xl ${iconBg} flex items-center justify-center text-2xl shrink-0">
                                     <i class="${iconClass}"></i>
                                 </div>
-                                <span class="text-xs ${badgeStyle} border font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                                <span class="text-xs ${badgeStyle} border font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
                                     ${isFood ? '🍿 Nourriture' : '🥤 Boisson'}
                                 </span>
                             </div>
 
                             <div>
-                                <h4 class="font-bold text-slate-900 text-lg leading-tight truncate" title="${item.name}">${item.name}</h4>
-                                <p class="text-xs text-slate-400 font-medium mt-0.5">Prix unitaire : <span class="font-bold text-slate-700">${(item.unitPrice || 0).toFixed(2)} €</span></p>
+                                <h4 class="font-bold text-white text-lg leading-tight truncate" title="${item.name}">${item.name}</h4>
+                                <p class="text-xs text-slate-400 font-medium mt-0.5">Prix unitaire : <span class="font-bold text-slate-200">${(item.unitPrice || 0).toFixed(2)} €</span></p>
                             </div>
                         </div>
 
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between">
                             <div>
-                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">En stock</span>
-                                <span class="text-xl font-extrabold ${item.quantity <= 5 ? 'text-rose-600' : 'text-teal-600'}">
-                                    ${item.quantity} <span class="text-xs font-semibold text-slate-500">unités</span>
+                                <span class="text-[10px] uppercase font-black text-slate-400 tracking-widest block">En stock</span>
+                                <span class="text-xl font-black ${item.quantity <= 5 ? 'text-rose-400' : 'text-cyan-400'}">
+                                    ${item.quantity} <span class="text-xs font-semibold text-slate-400">unités</span>
                                 </span>
                             </div>
 
                             <div class="flex items-center gap-1">
                                 <button onclick="openEditStockModal('${item._id}', '${safeName}', '${category}', ${item.quantity}, ${item.unitPrice || 0})" 
-                                        class="w-8 h-8 flex items-center justify-center text-teal-600 hover:text-teal-800 hover:bg-teal-50 rounded-xl transition" 
+                                        class="w-8 h-8 flex items-center justify-center text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition" 
                                         title="Modifier cet article">
                                     <i class="fa-solid fa-pen-to-square text-sm"></i>
                                 </button>
                                 <button onclick="deleteStockItem('${item._id}', '${safeName}')" 
-                                        class="w-8 h-8 flex items-center justify-center text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition" 
+                                        class="w-8 h-8 flex items-center justify-center text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition" 
                                         title="Supprimer cet article">
                                     <i class="fa-solid fa-trash-can text-sm"></i>
                                 </button>
@@ -1754,7 +1760,7 @@
 
                 if (dashList) {
                     if (activeRentals.length === 0) {
-                        dashList.innerHTML = `<p class="text-slate-500 text-sm">Aucune location en cours.</p>`;
+                        dashList.innerHTML = `<p class="text-slate-400 text-sm">Aucune location en cours.</p>`;
                     } else {
                         dashList.innerHTML = activeRentals.map(r => {
                             const leoName = r.leotard?.name || 'Justaucorps';
@@ -1762,17 +1768,17 @@
                             const safeGymName = gymName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                             return `
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-sm">
+                                <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-3">
-                                        <i class="fa-solid fa-shirt text-pink-500"></i>
+                                        <i class="fa-solid fa-shirt text-rose-400"></i>
                                         <div>
-                                            <p class="font-bold text-slate-800">${leoName}</p>
-                                            <p class="text-xs text-slate-500">Loué par : ${gymName}</p>
+                                            <p class="font-bold text-white">${leoName}</p>
+                                            <p class="text-xs text-slate-400">Loué par : ${gymName}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <span class="text-xs text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-bold">Caution: ${r.depositAmount || 45} €</span>
-                                        <button onclick="returnRental('${r._id}', '${safeGymName}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                                        <span class="text-xs text-amber-300 bg-amber-500/20 px-2.5 py-1 rounded-lg border border-amber-500/30 font-bold">Caution: ${r.depositAmount || 45} €</span>
+                                        <button onclick="returnRental('${r._id}', '${safeGymName}')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1">
                                             <i class="fa-solid fa-rotate-left"></i> Rendre
                                         </button>
                                     </div>
