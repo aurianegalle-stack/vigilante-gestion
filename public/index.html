@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -37,13 +37,13 @@
             }
         }
     </script>
-    
+
     <style>
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
+
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -206,7 +206,7 @@
 
         <!-- VIEW 3: BUVETTE -->
         <section id="view-buvette" class="view-section hidden space-y-6">
-            <!-- BANDEAU DE SYNTHÈSE -->
+            <!-- BANDEAU DE SYNTHÈSE (Nombre de Références & Valeur Totale du Stock) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-teal-500">
                     <div class="space-y-1">
@@ -221,7 +221,7 @@
 
                 <div class="glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-500">
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Valeur Totale du Stock</p>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Valeur Totale de Revente</p>
                         <h3 id="stock-banner-valeur" class="text-3xl font-black text-emerald-600">0.00 €</h3>
                         <p class="text-[11px] text-slate-400 font-medium">Prix marchandise global</p>
                     </div>
@@ -237,6 +237,7 @@
                     <i class="fa-solid fa-plus"></i> Nouvel Article Buvette
                 </button>
 
+                <!-- Filtre par type (Boisson / Nourriture) -->
                 <div class="flex items-center gap-2">
                     <label for="stock-filter-category" class="text-xs font-bold text-slate-500 whitespace-nowrap">
                         <i class="fa-solid fa-filter text-teal-600 mr-1"></i> Type :
@@ -293,7 +294,15 @@
                             <option value="Claire">Claire</option>
                             <option value="Maryne">Maryne</option>
                             <option value="Elio">Elio</option>
+							<option value="Sandra">Sandra</option>
                             <option value="Claire - Riwanon">Claire - Riwanon</option>
+							<option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
+							<option value="Maryne - Elio">Maryne - Elio</option>
+							<option value="Lorelie - Elio">Lorelie - Elio</option>
+							<option value="Sébastien">Sébastien</option>
+							<option value="Fabien (Bénévole)">Fabien (Bénévole)</option>
+							<option value="Bruno (Bénévole)">Bruno (Bénévole)</option>
+
                         </select>
                     </div>
                 </div>
@@ -345,7 +354,7 @@
                         <input type="number" id="stock-add-quantity" min="0" value="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix Unitaire (€)</label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix de Revente (€)</label>
                         <input type="number" id="stock-add-price" step="0.10" min="0" value="1.00" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
                     </div>
                 </div>
@@ -392,7 +401,7 @@
                         <input type="number" id="stock-edit-quantity" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix Unitaire (€)</label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prix de Revente (€)</label>
                         <input type="number" id="stock-edit-price" step="0.10" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
                     </div>
                 </div>
@@ -639,7 +648,14 @@
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
+						<option value="Sandra">Sandra</option>
                         <option value="Claire - Riwanon">Claire - Riwanon</option>
+						<option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
+						<option value="Maryne - Elio">Maryne - Elio</option>
+						<option value="Lorelie - Elio">Lorelie - Elio</option>
+						<option value="Sébastien">Sébastien</option>
+						<option value="Fabien (Bénévole)">Fabien (Bénévole)</option>
+						<option value="Bruno (Bénévole)">Bruno (Bénévole)</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
@@ -687,7 +703,14 @@
                         <option value="Claire">Claire</option>
                         <option value="Maryne">Maryne</option>
                         <option value="Elio">Elio</option>
+						<option value="Sandra">Sandra</option>
                         <option value="Claire - Riwanon">Claire - Riwanon</option>
+						<option value="Sandra - Maryne - Lorelie - Elio">Sandra - Maryne - Lorelie - Elio</option>
+						<option value="Maryne - Elio">Maryne - Elio</option>
+						<option value="Lorelie - Elio">Lorelie - Elio</option>
+						<option value="Sébastien">Sébastien</option>
+						<option value="Fabien (Bénévole)">Fabien (Bénévole)</option>
+						<option value="Bruno (Bénévole)">Bruno (Bénévole)</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-200">
@@ -727,12 +750,15 @@
                 'Samedi 14h00 - 16h30'
             ],
             'Interclub 1 cours 7/10': [
-                'Mercredi 13h30 - 15h00',
-                'Samedi 11h15 - 12h45'
+                'Mercredi 13h15 - 14h45',
+                'Jeudi 17h00 - 18h30'
             ],
             'Interclub 1 cours 11/13': [
                 'Mercredi 15h00 - 16h30',
                 'Vendredi 18h00 - 19h30'
+                'Mercredi 13h15 - 14h45'
+				'Jeudi 17h00 - 18h30',
+                
             ],
             'Interclub 2 cours 7/10': [
                 'Mercredi 13h30 - 15h00 & Samedi 11h15 - 12h45'
@@ -891,7 +917,7 @@
 
         function getRewardBadgeStyle(reward) {
             if (!reward) return 'bg-slate-100 text-slate-700 border-slate-200';
-            
+
             if (reward === "Médaille d'or" || reward.includes("d'or")) {
                 return 'bg-yellow-100 text-yellow-900 border-yellow-300 font-bold';
             }
@@ -942,7 +968,7 @@
                                 <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Palmarès (${resultsCount}) :</p>
                                 <div class="space-y-1 max-h-24 overflow-y-auto">
                                     ${c.results.map(r => {
-                                        const gName = r.gymnast ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
+                                        const gName = r.gymnast ? `${r.gymnast.firstName}${r.gymnast.lastName}` : 'Gymnaste';
                                         return `<div class="text-xs text-slate-700 flex items-center justify-between bg-slate-100 px-2 py-1 rounded">
                                             <span>${getRewardIcon(r.reward)} <strong>${gName}</strong> (${r.reward})</span>
                                             <span class="text-[10px] text-teal-700 font-semibold">${r.rank || ''}</span>
@@ -1236,6 +1262,7 @@
                 const leotardBadge = rental && rental.leotard ? 
                     `<span class="text-xs text-pink-700 bg-pink-50 border border-pink-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold"><i class="fa-solid fa-shirt"></i> ${rental.leotard.name || 'Justaucorps'}</span>` : '';
 
+                // Badge Entraîneur
                 const coachBadge = g.coach ? 
                     `<div class="mt-1">
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
@@ -1243,6 +1270,7 @@
                         </span>
                     </div>` : '';
 
+                // Badge de créneau
                 const slotBadge = g.trainingSlot ? 
                     `<div class="mt-1">
                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
@@ -1303,7 +1331,7 @@
             document.getElementById('gym-edit-id').value = gymnast._id;
             document.getElementById('gym-edit-nom').value = gymnast.lastName || '';
             document.getElementById('gym-edit-prenom').value = gymnast.firstName || '';
-            
+
             const catSelect = document.getElementById('gym-edit-categorie');
             const categoryValue = gymnast.category || gymnast.group || '';
             catSelect.value = categoryValue;
@@ -1402,7 +1430,7 @@
 
                 container.innerHTML = data.map(l => {
                     const safeName = (l.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                    
+
                     const rental = activeRentals.find(r => (r.leotard?._id || r.leotard) === l._id);
                     const isRented = !!rental || l.status === 'Loué';
 
@@ -1463,13 +1491,16 @@
                 const res = await fetch(`${API_URL}/stocks`);
                 allStockItems = await res.json();
 
+                // Mise à jour du BANDEAU D'EN-TÊTE
                 updateStockBanner();
+
                 filterStock();
             } catch (err) {
                 console.error('Erreur chargement buvette:', err);
             }
         }
 
+        // Calcul et affichage du BANDEAU Buvette
         function updateStockBanner() {
             const bannerRefs = document.getElementById('stock-banner-refs');
             const bannerValeur = document.getElementById('stock-banner-valeur');
@@ -1525,7 +1556,6 @@
                     ? 'bg-amber-50 text-amber-700 border-amber-200' 
                     : 'bg-sky-50 text-sky-700 border-sky-200';
                 const iconBg = isFood ? 'bg-amber-100/60' : 'bg-sky-100/60';
-                const unitPriceFormatted = (Number(item.unitPrice) || 0).toFixed(2);
 
                 return `
                     <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:shadow-lg transition-all duration-200 relative overflow-hidden group">
@@ -1544,8 +1574,8 @@
                             </div>
 
                             <div>
-                                <h4 class="font-bold text-slate-900 text-lg leading-tight truncate">${item.name || ''}</h4>
-                                <p class="text-xs text-slate-400 font-medium mt-0.5">Prix unitaire : <span class="font-bold text-slate-700">${unitPriceFormatted} €</span></p>
+                                <h4 class="font-bold text-slate-900 text-lg leading-tight truncate" title="${item.name}">${item.name}</h4>
+                                <p class="text-xs text-slate-400 font-medium mt-0.5">Prix unitaire : <span class="font-bold text-slate-700">${(item.unitPrice || 0).toFixed(2)} €</span></p>
                             </div>
                         </div>
 
@@ -1553,12 +1583,12 @@
                             <div>
                                 <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">En stock</span>
                                 <span class="text-xl font-extrabold ${item.quantity <= 5 ? 'text-rose-600' : 'text-teal-600'}">
-                                    ${item.quantity || 0} <span class="text-xs font-semibold text-slate-500">unités</span>
+                                    ${item.quantity} <span class="text-xs font-semibold text-slate-500">unités</span>
                                 </span>
                             </div>
 
                             <div class="flex items-center gap-1">
-                                <button onclick="openEditStockModal('${item._id}', '${safeName}', '${category}', ${item.quantity || 0}, ${item.unitPrice || 0})" 
+                                <button onclick="openEditStockModal('${item._id}', '${safeName}', '${category}', ${item.quantity}, ${item.unitPrice || 0})" 
                                         class="w-8 h-8 flex items-center justify-center text-teal-600 hover:text-teal-800 hover:bg-teal-50 rounded-xl transition" 
                                         title="Modifier cet article">
                                     <i class="fa-solid fa-pen-to-square text-sm"></i>
@@ -1699,7 +1729,7 @@
         async function fetchDashboardData() {
             try {
                 await fetchRentals();
-                
+
                 const statRented = document.getElementById('stat-rented-count');
                 const badgeRented = document.getElementById('badge-rented-count');
                 const statCautions = document.getElementById('stat-cautions-total');
@@ -1728,7 +1758,7 @@
                             const leoName = r.leotard?.name || 'Justaucorps';
                             const gymName = r.gymnast?.lastName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
                             const safeGymName = gymName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                            
+
                             return `
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-3">
@@ -1919,4 +1949,3 @@
         });
     </script>
 </body>
-</html>
