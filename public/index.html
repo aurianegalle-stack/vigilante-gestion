@@ -1236,13 +1236,16 @@
             if (allGymnasts.length === 0) await fetchGymnasts();
             const selectGym = document.getElementById('res-add-gymnast');
             if (selectGym) {
-                // Tri alphabétique des gymnastes dans le palmarès aussi
+                // Tri alphabétique des gymnastes dans le palmarès
                 const sortedGymnasts = [...allGymnasts].sort((a, b) => {
-                    const nameA = `${a.lastName || ''} ${a.firstName || ''}`.toLowerCase();
-                    const nameB = `${b.lastName || ''} ${b.firstName || ''}`.toLowerCase();
-                    return nameA.localeCompare(nameB);
+                    const nameA = `${a.lastName || ''} ${a.firstName || ''}`.trim();
+                    const nameB = `${b.lastName || ''} ${b.firstName || ''}`.trim();
+                    return nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' });
                 });
-                selectGym.innerHTML = sortedGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('');
+                selectGym.innerHTML = sortedGymnasts.map(g => {
+                    const fullName = `${g.lastName || ''} ${g.firstName || ''}`.trim() || 'Sans nom';
+                    return `<option value="${g._id}">${fullName} (${g.category || 'Général'})</option>`;
+                }).join('');
             }
 
             currentTempResults = (comp.results || []).map(r => ({
@@ -1273,7 +1276,7 @@
             }
 
             const gym = allGymnasts.find(g => g._id === gymnastId);
-            const gymnastName = gym ? `${gym.firstName} ${gym.lastName}` : 'Gymnaste';
+            const gymnastName = gym ? `${gym.firstName || ''} ${gym.lastName || ''}`.trim() : 'Gymnaste';
 
             currentTempResults.push({
                 gymnast: gymnastId,
@@ -1518,7 +1521,7 @@
                 return `
                     <div class="gym-glass-card p-5 rounded-2xl border border-slate-700/60 space-y-2 flex justify-between items-start gym-card-hover">
                         <div class="space-y-1">
-                            <h4 class="font-bold text-white text-base">${g.lastName} ${g.firstName}</h4>
+                            <h4 class="font-bold text-white text-base">${g.lastName || ''} ${g.firstName || ''}</h4>
                             ${coachBadge}
                             ${slotBadge}
                             <div class="flex items-center gap-1.5 flex-wrap pt-1">
@@ -2092,7 +2095,7 @@
                     } else {
                         dashList.innerHTML = activeRentals.map(r => {
                             const leoName = r.leotard?.name || 'Justaucorps';
-                            const gymName = r.gymnast?.lastName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : 'Gymnaste';
+                            const gymName = r.gymnast?.lastName ? `${r.gymnast.firstName} ${r.gymnast.lastName}` : (r.gymnast?.firstName || 'Gymnaste');
                             const safeGymName = gymName.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                             return `
@@ -2153,20 +2156,26 @@
                     ? '<option value="">-- Sélectionner un justaucorps --</option>' + availableLeotards.map(l => `<option value="${l._id}" ${l._id === preselectedLeotardId ? 'selected' : ''}>${l.name} (Taille: ${l.size})</option>`).join('')
                     : '<option value="">Aucun justaucorps disponible</option>';
 
-                // Tri de la liste des gymnastes par ordre alphabétique (Nom puis Prénom)
-                const sortedGymnasts = (gymnasts || []).sort((a, b) => {
-                    const lastNameA = (a.lastName || '').toLowerCase();
-                    const lastNameB = (b.lastName || '').toLowerCase();
-                    if (lastNameA !== lastNameB) {
-                        return lastNameA.localeCompare(lastNameB, 'fr', { sensitivity: 'base' });
+                // Construction de la liste formatée avec nom complet
+                const formattedGymnasts = (gymnasts || []).map(g => {
+                    let labelName = '';
+                    if (g.lastName && g.firstName) {
+                        labelName = `${g.lastName.trim()} ${g.firstName.trim()}`;
+                    } else {
+                        labelName = (g.lastName || g.firstName || 'Gymnaste sans nom').trim();
                     }
-                    const firstNameA = (a.firstName || '').toLowerCase();
-                    const firstNameB = (b.firstName || '').toLowerCase();
-                    return firstNameA.localeCompare(firstNameB, 'fr', { sensitivity: 'base' });
+                    return {
+                        id: g._id,
+                        label: `${labelName} (${g.category || 'Général'})`,
+                        sortKey: labelName.toLowerCase()
+                    };
                 });
 
-                selectGymnast.innerHTML = sortedGymnasts.length > 0 
-                    ? '<option value="">-- Sélectionner un gymnaste --</option>' + sortedGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('')
+                // Tri strict par ordre alphabétique français
+                formattedGymnasts.sort((a, b) => a.sortKey.localeCompare(b.sortKey, 'fr', { sensitivity: 'base' }));
+
+                selectGymnast.innerHTML = formattedGymnasts.length > 0 
+                    ? '<option value="">-- Sélectionner un gymnaste --</option>' + formattedGymnasts.map(g => `<option value="${g.id}">${g.label}</option>`).join('')
                     : '<option value="">Aucun gymnaste enregistré</option>';
 
             } catch (err) {
