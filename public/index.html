@@ -441,6 +441,33 @@
 
     </main>
 
+    <!-- MODAL: EDIT LEOTARD -->
+    <div id="modal-edit-leotard" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-rose-400"></i> Modifier le Justaucorps</h3>
+                <button onclick="closeEditLeotardModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-edit-leotard" onsubmit="handleEditLeotardSubmit(event)" class="space-y-4">
+                <input type="hidden" id="leo-edit-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nom du Justaucorps *</label>
+                    <input type="text" id="leo-edit-name" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
+                    <select id="leo-edit-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
+                        <option value="6 ans">6 ans</option><option value="8 ans">8 ans</option><option value="10 ans">10 ans</option><option value="12 ans">12 ans</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>
+                    </select>
+                </div>
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
+                    <button type="button" onclick="closeEditLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Annuler</button>
+                    <button type="submit" class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: ADD STOCK ITEM (BUVETTE) -->
     <div id="modal-add-stock-item" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="gym-glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
@@ -681,7 +708,7 @@
     <div id="modal-rental" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="gym-glass-card max-w-lg w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
-                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-pink-400"></i> Nouvelle Location</h3>
+                <h3 class="font-bold text-lg text-white flex items-center gap-2"><i class="fa-solid fa-shirt text-pink-400"></i> Nouvelle Location / Affectation</h3>
                 <button onclick="closeRentalModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="form-rental" onsubmit="handleRentalSubmit(event)" class="space-y-4">
@@ -1694,13 +1721,18 @@
                                 }
 
                                 return `
-                                    <div class="gym-glass-card p-3 rounded-xl border border-slate-700/60 flex flex-col justify-between gym-card-hover space-y-2">
+                                    <div onclick="openRentalModal('${l._id}')" class="gym-glass-card p-3 rounded-xl border border-slate-700/60 flex flex-col justify-between gym-card-hover space-y-2 cursor-pointer group hover:border-pink-500/50">
                                         <div>
                                             <div class="flex items-start justify-between gap-1">
-                                                <h5 class="font-bold text-slate-100 text-xs truncate" title="${l.name}">${l.name}</h5>
-                                                <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="text-slate-500 hover:text-rose-400 p-0.5 rounded transition shrink-0" title="Supprimer">
-                                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                                </button>
+                                                <h5 class="font-bold text-slate-100 text-xs truncate group-hover:text-pink-300 transition" title="${l.name}">${l.name}</h5>
+                                                <div class="flex items-center gap-1 shrink-0" onclick="event.stopPropagation()">
+                                                    <button onclick="openEditLeotardModal('${l._id}')" class="text-slate-500 hover:text-cyan-400 p-0.5 rounded transition" title="Modifier le justaucorps">
+                                                        <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                                                    </button>
+                                                    <button onclick="deleteLeotard('${l._id}', '${safeName}')" class="text-slate-500 hover:text-rose-400 p-0.5 rounded transition" title="Supprimer">
+                                                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <div class="mt-1.5">
@@ -1716,7 +1748,7 @@
                                         </div>
 
                                         ${(rental && rental._id) ? `
-                                            <button onclick="returnRental('${rental._id}', '${safeName}')" class="w-full py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1">
+                                            <button onclick="event.stopPropagation(); returnRental('${rental._id}', '${safeName}')" class="w-full py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1">
                                                 <i class="fa-solid fa-rotate-left"></i> Rendre
                                             </button>
                                         ` : ''}
@@ -1727,6 +1759,58 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function openEditLeotardModal(id) {
+            const leo = allLeotards.find(l => l._id === id);
+            if (!leo) return;
+
+            document.getElementById('leo-edit-id').value = leo._id;
+            document.getElementById('leo-edit-name').value = leo.name || '';
+            document.getElementById('leo-edit-size').value = leo.size || '6 ans';
+
+            document.getElementById('modal-edit-leotard')?.classList.remove('hidden');
+        }
+
+        function closeEditLeotardModal() {
+            document.getElementById('modal-edit-leotard')?.classList.add('hidden');
+            document.getElementById('form-edit-leotard')?.reset();
+        }
+
+        async function handleEditLeotardSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('leo-edit-id').value;
+            const updatedLeotard = {
+                name: document.getElementById('leo-edit-name').value.trim(),
+                size: document.getElementById('leo-edit-size').value
+            };
+
+            try {
+                let res = await fetch(`${API_URL}/leotards/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedLeotard)
+                });
+
+                if (!res.ok) {
+                    res = await fetch(`${API_URL}/leotards/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedLeotard)
+                    });
+                }
+
+                if (res.ok) {
+                    closeEditLeotardModal();
+                    await fetchLeotards();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alert(`Erreur : ${errData.message || "Impossible de modifier le justaucorps."}`);
+                }
+            } catch (err) {
+                console.error("Erreur modification justaucorps :", err);
+                alert("Impossible de contacter le serveur.");
+            }
         }
 
         async function deleteLeotard(id, name) {
@@ -2030,7 +2114,7 @@
             }
         }
 
-        async function openRentalModal() {
+        async function openRentalModal(preselectedLeotardId = null) {
             const modal = document.getElementById('modal-rental');
             const selectLeotard = document.getElementById('rent-select-leotard');
             const selectGymnast = document.getElementById('rent-select-gymnast');
@@ -2056,11 +2140,12 @@
                 const availableLeotards = (leotards || []).filter(l => {
                     const isRentedByStatus = l.status === 'Loué';
                     const isRentedByRental = activeRentals.some(r => (r.leotard?._id || r.leotard) === l._id);
-                    return !isRentedByStatus && !isRentedByRental;
+                    // Autorise la sélection si disponible OU si c'est celui explicitement pré-sélectionné
+                    return (!isRentedByStatus && !isRentedByRental) || l._id === preselectedLeotardId;
                 });
 
                 selectLeotard.innerHTML = availableLeotards.length > 0 
-                    ? '<option value="">-- Sélectionner un justaucorps --</option>' + availableLeotards.map(l => `<option value="${l._id}">${l.name} (Taille: ${l.size})</option>`).join('')
+                    ? '<option value="">-- Sélectionner un justaucorps --</option>' + availableLeotards.map(l => `<option value="${l._id}" ${l._id === preselectedLeotardId ? 'selected' : ''}>${l.name} (Taille: ${l.size})</option>`).join('')
                     : '<option value="">Aucun justaucorps disponible</option>';
 
                 selectGymnast.innerHTML = gymnasts && gymnasts.length > 0 
