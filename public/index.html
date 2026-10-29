@@ -1236,7 +1236,13 @@
             if (allGymnasts.length === 0) await fetchGymnasts();
             const selectGym = document.getElementById('res-add-gymnast');
             if (selectGym) {
-                selectGym.innerHTML = allGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('');
+                // Tri alphabétique des gymnastes dans le palmarès aussi
+                const sortedGymnasts = [...allGymnasts].sort((a, b) => {
+                    const nameA = `${a.lastName || ''} ${a.firstName || ''}`.toLowerCase();
+                    const nameB = `${b.lastName || ''} ${b.firstName || ''}`.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+                selectGym.innerHTML = sortedGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('');
             }
 
             currentTempResults = (comp.results || []).map(r => ({
@@ -2140,7 +2146,6 @@
                 const availableLeotards = (leotards || []).filter(l => {
                     const isRentedByStatus = l.status === 'Loué';
                     const isRentedByRental = activeRentals.some(r => (r.leotard?._id || r.leotard) === l._id);
-                    // Autorise la sélection si disponible OU si c'est celui explicitement pré-sélectionné
                     return (!isRentedByStatus && !isRentedByRental) || l._id === preselectedLeotardId;
                 });
 
@@ -2148,8 +2153,20 @@
                     ? '<option value="">-- Sélectionner un justaucorps --</option>' + availableLeotards.map(l => `<option value="${l._id}" ${l._id === preselectedLeotardId ? 'selected' : ''}>${l.name} (Taille: ${l.size})</option>`).join('')
                     : '<option value="">Aucun justaucorps disponible</option>';
 
-                selectGymnast.innerHTML = gymnasts && gymnasts.length > 0 
-                    ? '<option value="">-- Sélectionner un gymnaste --</option>' + gymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('')
+                // Tri de la liste des gymnastes par ordre alphabétique (Nom puis Prénom)
+                const sortedGymnasts = (gymnasts || []).sort((a, b) => {
+                    const lastNameA = (a.lastName || '').toLowerCase();
+                    const lastNameB = (b.lastName || '').toLowerCase();
+                    if (lastNameA !== lastNameB) {
+                        return lastNameA.localeCompare(lastNameB, 'fr', { sensitivity: 'base' });
+                    }
+                    const firstNameA = (a.firstName || '').toLowerCase();
+                    const firstNameB = (b.firstName || '').toLowerCase();
+                    return firstNameA.localeCompare(firstNameB, 'fr', { sensitivity: 'base' });
+                });
+
+                selectGymnast.innerHTML = sortedGymnasts.length > 0 
+                    ? '<option value="">-- Sélectionner un gymnaste --</option>' + sortedGymnasts.map(g => `<option value="${g._id}">${g.lastName} ${g.firstName} (${g.category || 'Général'})</option>`).join('')
                     : '<option value="">Aucun gymnaste enregistré</option>';
 
             } catch (err) {
