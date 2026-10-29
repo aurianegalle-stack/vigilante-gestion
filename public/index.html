@@ -134,7 +134,7 @@
                 <i class="fa-solid fa-shirt text-lg w-5 text-center text-rose-400"></i>
                 <div class="flex-1 flex justify-between items-center">
                     <span>Justaucorps</span>
-                    <span id="badge-rented-count" class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
+                    <span id="badge-leotards-total-count" class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
             </a>
             <a href="#buvette" onclick="navigateTo('buvette')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition">
@@ -236,6 +236,42 @@
 
         <!-- VIEW 2: LEOTARDS -->
         <section id="view-justaucorps" class="view-section hidden space-y-6">
+            <!-- Bannière Récapitulative Totale Justaucorps -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-rose-500">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Stock</p>
+                        <h3 id="leo-summary-total" class="text-3xl font-black text-white">0</h3>
+                        <p class="text-[11px] text-slate-400 font-medium">Justaucorps enregistrés</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+                </div>
+
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-500">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Disponibles</p>
+                        <h3 id="leo-summary-dispo" class="text-3xl font-black text-emerald-400">0</h3>
+                        <p class="text-[11px] text-slate-400 font-medium">Prêts à être loués</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+
+                <div class="gym-glass-card p-5 rounded-2xl flex items-center justify-between border-l-4 border-l-amber-500">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">En Location</p>
+                        <h3 id="leo-summary-loue" class="text-3xl font-black text-amber-400">0</h3>
+                        <p class="text-[11px] text-slate-400 font-medium">Actuellement affectés</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                </div>
+            </div>
+
             <div class="gym-glass-card p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <button onclick="openAddLeotardModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
@@ -269,11 +305,9 @@
                             <option value="8 ans">8 ans</option>
                             <option value="10 ans">10 ans</option>
                             <option value="12 ans">12 ans</option>
-							<option value="14 ans">14 ans</option>
-                            <option value="T0">T0</option>
-                            <option value="T1">T1</option>
-                            <option value="T2">T2</option>
-							<option value="T3">T3</option>
+                            <option value="36">36</option>
+                            <option value="38">38</option>
+                            <option value="40">40</option>
                         </select>
                     </div>
                 </div>
@@ -686,15 +720,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Taille *</label>
                     <select id="leo-add-size" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
-                        <option value="6 ans">6 ans</option>
-						<option value="8 ans">8 ans</option>
-						<option value="10 ans">10 ans</option>
-						<option value="12 ans">12 ans</option>
-						<option value="14 ans">14 ans</option>
-                        <option value="T0">T0</option>
-                        <option value="T1">T1</option>
-                        <option value="T2">T2</option>
-					    <option value="T3">T3</option>
+                        <option value="6 ans">6 ans</option><option value="8 ans">8 ans</option><option value="10 ans">10 ans</option><option value="12 ans">12 ans</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>
                     </select>
                 </div>
                 <div class="pt-3 flex justify-end gap-3 border-t border-slate-700/60">
@@ -1576,8 +1602,22 @@
                 const res = await fetch(`${API_URL}/leotards`);
                 allLeotards = await res.json();
 
-                const badgeRented = document.getElementById('badge-rented-count');
-                if (badgeRented) badgeRented.innerText = activeRentals.length;
+                // Mise à jour du badge dans le menu latéral (nombre total)
+                const badgeTotalNav = document.getElementById('badge-leotards-total-count');
+                if (badgeTotalNav) badgeTotalNav.innerText = allLeotards.length;
+
+                // Mise à jour du récapitulatif total de la page Justaucorps
+                const summaryTotal = document.getElementById('leo-summary-total');
+                const summaryLoue = document.getElementById('leo-summary-loue');
+                const summaryDispo = document.getElementById('leo-summary-dispo');
+
+                const totalCount = allLeotards.length;
+                const loueCount = activeRentals.length;
+                const dispoCount = totalCount - loueCount;
+
+                if (summaryTotal) summaryTotal.innerText = totalCount;
+                if (summaryLoue) summaryLoue.innerText = loueCount;
+                if (summaryDispo) summaryDispo.innerText = Math.max(0, dispoCount);
 
                 renderLeotardsList();
             } catch (err) {
@@ -1628,9 +1668,9 @@
                 return a.localeCompare(b);
             });
 
-            // Rendu sous forme de sections groupées
+            // Rendu sous forme de sections groupées avec petites cartes compactes
             container.innerHTML = sortedSizes.map(size => {
-                // Tri des justaucorps par nom/numéro de série dans l'ordre croissant (ex: 6AF001 -> 6AF009)
+                // Tri naturel croissant des numéros de série (ex: 6AF001 -> 6AF009)
                 const items = groupedBySize[size].sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { numeric: true, sensitivity: 'base' }));
 
                 return `
@@ -1939,7 +1979,6 @@
                 await fetchRentals();
 
                 const statRented = document.getElementById('stat-rented-count');
-                const badgeRented = document.getElementById('badge-rented-count');
                 const statCautions = document.getElementById('stat-cautions-total');
                 const statGymnasts = document.getElementById('stat-gymnasts-count');
                 const badgeGymnasts = document.getElementById('badge-gymnasts-count');
@@ -1953,7 +1992,6 @@
                 }
 
                 if (statRented) statRented.innerText = activeRentals.length;
-                if (badgeRented) badgeRented.innerText = activeRentals.length;
 
                 const totalCautions = activeRentals.reduce((sum, r) => sum + (r.depositAmount || 45), 0);
                 if (statCautions) statCautions.innerText = `${totalCautions} €`;
